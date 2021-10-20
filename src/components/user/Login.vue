@@ -4,7 +4,7 @@
   <el-card class="box-card">
     <!-- 欢迎语 -->
     <div slot="header" class="clearfix">
-      <span>请登录</span>
+      <h2 align="center">请登录</h2>
     </div>
 
     <!-- 登录信息 -->
@@ -24,7 +24,7 @@
         </el-form-item>
 
         <el-form-item >
-          <el-button type="primary" style="width: 100%;" @click='submit'>登录</el-button>
+          <el-button type="primary" style="width: 100%;" @click='login'>登录</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -42,7 +42,10 @@ export default {
   		},
   		checked: '',
       loginRules: {
-  			username: [{ required: true, message: '请输入用户名', trigger: 'blur' }],
+  			username: [
+          { required: true, message: '请输入用户名', trigger: 'blur' },
+          { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+        ],
   			password: [{ required: true, message: '请输入密码', trigger: 'blur' }]
   		}
   	}
@@ -68,6 +71,9 @@ export default {
 }
 
 .box-card {
-  width: 480px;
+  margin-top: 10%;/* 上边距 */
+  margin-left: 35%;/* 左边距 */
+  border-radius: 30px;/* 圆角 */
+  width: 450px;/* 大小 */
 }
 </style>
