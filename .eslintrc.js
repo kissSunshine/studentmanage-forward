@@ -27,7 +27,10 @@ module.exports = {
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
     'space-before-function-paren': 'off',//函数名与小括号间需要空格  关闭
     'no-mixed-spaces-and-tabs': 'off',//空格和tab不能混用  关闭
-    'no-tabs': 'off',//
-    'no-multi-spaces': 'off' //禁止连续多个空格  关闭
+    'no-tabs': 'off',
+    'no-multi-spaces': 'off', //禁止连续多个空格  关闭
+    'keyword-spacing': 'off', //关键词与小括号间要有空格  关闭
+    'space-before-blocks': 'off', //方法小括号与大括号间要有空格  关闭
+    'padded-blocks': 'off'
   }
 }

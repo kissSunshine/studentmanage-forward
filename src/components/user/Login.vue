@@ -1,4 +1,5 @@
 // eslint-disable-next-line
+ /* eslint-disable */
 <template>
   <!-- 登录卡片 -->
   <el-card class="box-card">
@@ -10,9 +11,10 @@
     <!-- 登录信息 -->
     <div>
       <!-- 内容（表格） -->
+      <!-- loginRules：校验规则；form：表单名 -->
       <el-form :model="loginForm" :rules="loginRules" ref="form">
-        <el-form-item  prop="username">
-          <el-input type="text" auto-complete="false" v-model="loginForm.username" placeholder="请输入用户名"/>
+        <el-form-item  prop="nickname"> <!-- 【prop】校验规则对应字段 -->
+          <el-input type="text" auto-complete="false" v-model="loginForm.nickname" placeholder="请输入用户名"/>
         </el-form-item>
 
         <el-form-item  prop="password">
@@ -21,9 +23,11 @@
 
         <el-form-item>
           <el-checkbox v-model="checked">记住我</el-checkbox>
+          <el-switch v-model="loginForm.userType" active-color="#13ce66" active-value="Stu" active-text="学生" inactive-color="#5555ff" inactive-value="Tea" inactive-text="教师">
+          </el-switch>
         </el-form-item>
 
-        <el-form-item >
+        <el-form-item>
           <el-button type="primary" style="width: 100%;" @click='login'>登录</el-button>
         </el-form-item>
       </el-form>
@@ -37,18 +41,63 @@ export default {
   data() {
   	return {
   		loginForm: {
-  			username: '',
-  			password: ''
+  			nickname: '', // 昵称
+  			password: '', // 密码
+        userType: 'Tea' // 用户类型
   		},
-  		checked: '',
+  		checked: '', // 记住密码
       loginRules: {
-  			username: [
+  			nickname: [
           { required: true, message: '请输入用户名', trigger: 'blur' },
-          { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+          { min: 1, max: 20, message: '昵称在20个字符以内', trigger: 'blur' }
         ],
   			password: [{ required: true, message: '请输入密码', trigger: 'blur' }]
   		}
   	}
+  },
+  methods: {
+    login() {
+      // 1、校验
+      // 调用表单【form】的校验回调函数
+      // 【form】与【el-form】的【ref】值相同
+      this.$refs.form.validate((valid) => {
+        // 校验失败，则阻断提示
+        if (!valid) {
+          this.$message({
+          	showClose: true,
+          	message: '请按照要求，重新输入!',
+          	type: 'error'
+          })
+          return false
+        }
+        // 2、校验成功，发送ajax请求
+        this.axios({
+          method: 'post',
+          url: 'http://localhost:8090/user/login',
+          data: {
+            nickname: this.loginForm.nickname,
+            password: this.loginForm.password,
+            userType: this.loginForm.userType
+          }
+        }).then(function (res) {
+          const data = res.data
+          //登录失败
+          if(data.status != '1') {
+            this.$message({
+            	showClose: true,
+            	message: data.msg,
+            	type: 'error'
+            })
+            return false
+          }
+          
+          //登录成功，保存信息，并跳转页面 TODO
+          
+        }).catch(function (error) {
+          console.log(error)
+        })
+      })
+    }
   }
 }
 </script>
