@@ -84,9 +84,9 @@ export default {
           }
 
           // 登录成功
-          this.$router.push("/main") // 跳转页面
           sessionStorage.setItem('USER', data.data) // 保存学生对象
-
+          this.$router.push("/main") // 跳转页面
+          
         }).catch((error) => {
           const data = error.data
           this.$message({showClose: true, message: data.msg,type: 'error'})

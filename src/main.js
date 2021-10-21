@@ -13,20 +13,20 @@ Vue.use(ElementUI)
 Vue.prototype.axios = axios
 Vue.use(Vuex)
 
-// router.beforeEach((to,from,next) => {
-//   let user = sessionStorage.getItem('USER')
-//   // 没登录，跳转登录页
-//   if(user == null){
-//     next('/login')
-//   }
-//   // 主动登出，清除信息，跳转登录页
-//   if(to.path == '/logout'){
-//     sessionStorage.clear()
-//     next('/login')
-//   }
-//   // 其余路径，正常跳转
-//   next()
-// })
+router.beforeEach((to,from,next) => {
+  let user = sessionStorage.getItem('USER')
+  // 没登录，跳转登录页
+  if(user == null && to.path != '/'){
+    next('/')
+  }
+  // 主动登出，清除信息，跳转登录页
+  if(to.path == '/logout'){
+    sessionStorage.clear()
+    next('/login')
+  }
+  // 其余路径，正常跳转
+  next()
+})
 
 /* eslint-disable no-new */
 new Vue({
