@@ -63,7 +63,7 @@ export default {
       this.$refs.form.validate((valid) => {
         // 校验失败，则阻断提示
         if (!valid) {
-          this.$message({ showClose: true, message: '请按照要求，重新输入!', type: 'error'})
+          this.$message({showClose: true, message: '请按照要求，重新输入!', type: 'error'})
           return false
         }
         // 2、校验成功，发送ajax请求
@@ -75,21 +75,22 @@ export default {
             password: this.loginForm.password,
             userType: this.loginForm.userType
           }
-        }).then(function (res) {
+        }).then((res) => {
           const data = res.data
           //登录失败
-          if(data.status != '1') {
-            this.$message({ showClose: true, message: data.msg, type: 'error'})
+          if(data.status !== 1) {
+            this.$message({showClose: true, message: data.msg,type: 'error'})
             return false
           }
 
           // 登录成功
-          //this.$router.push("/main") // 跳转页面
-          sessionStorage.setItem('USER',data.data) // 保存学生对象
+          this.$router.push("/main") // 跳转页面
+          sessionStorage.setItem('USER', data.data) // 保存学生对象
 
-        }).catch(function (error) {
+        }).catch((error) => {
           const data = error.data
-          this.$message({ showClose: true, message: data.msg, type: 'error'})
+          this.$message({showClose: true, message: data.msg,type: 'error'})
+          return false
         })
       })
     }
