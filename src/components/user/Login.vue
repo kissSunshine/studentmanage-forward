@@ -86,7 +86,7 @@ export default {
           // 登录成功
           sessionStorage.setItem('USER', data.data) // 保存学生对象
           this.$router.push("/main") // 跳转页面
-          
+          alert(123)
         }).catch((error) => {
           const data = error.data
           this.$message({showClose: true, message: data.msg,type: 'error'})
