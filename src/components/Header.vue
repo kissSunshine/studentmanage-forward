@@ -2,7 +2,7 @@
   <header>
 
     <div class="l-content">
-      <el-button icon="el-icon-menu" size="mini"></el-button>
+      <el-button icon="el-icon-menu" size="mini" @click="handleMenu"></el-button>
       <h3>首页</h3>
     </div>
 
@@ -27,6 +27,11 @@ export default {
   data () {
     return {
       userImg: require('../assets/img/profile/Winnie.jpg')
+    }
+  },
+  methods: {
+    handleMenu () {
+      this.$store.commit('collapseMenu')
     }
   }
 }
