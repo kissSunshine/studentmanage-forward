@@ -1,7 +1,5 @@
 <template>
-  <el-menu default-active="" class="">
-
-    <h3 style="margin-left: 30px;margin-right: 40px;">大熊数学</h3>
+  <div>
     <!-- 没有子菜单 -->
     <el-menu-item v-for="(item,index) in noChildren" :index="item.id" :key="item.id">
       <i :class="item.icon"></i>
@@ -16,15 +14,14 @@
         <span slot="title">{{item.name}}</span>
       </template>
       <!-- 子级 -->
-      <Aside :menuList="item.children"></Aside>
+      <MenuList :menuList="item.children"></MenuList>
     </el-submenu>
-
-  </el-menu>
+  </div>
 </template>
 
 <script>
 export default {
-  name: 'Aside',
+  name: 'MenuList',
   props: ['menuList'],
   computed: {
     noChildren () {

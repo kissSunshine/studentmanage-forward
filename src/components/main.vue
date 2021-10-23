@@ -2,7 +2,10 @@
   <el-container style="height: 100%;">
     <!-- 左侧导航 -->
     <el-aside width="200px">
-      <Aside style="height: 100%;" :menuList="this.menuList"></Aside>
+      <el-menu :unique-opened="true">
+        <h3 style="margin-left: 30px;margin-right: 40px;">大熊数学</h3>
+        <MenuList style="height: 100%;" :menuList="this.menuList"></MenuList>
+      </el-menu>
     </el-aside>
     <!-- 右侧内容 -->
     <el-container>
@@ -20,13 +23,13 @@
 </template>
 
 <script>
-import Aside from './Aside.vue'
+import MenuList from './MenuList.vue'
 import Header from './Header.vue'
 
 export default {
   name: 'Main',
   components: {
-    Aside,
+    MenuList,
     Header
   },
   data() {
@@ -51,7 +54,16 @@ export default {
               name: '增加',
               parentId: 'Men2',
               path: '/add',
-              icon: 'el-icon-user-solid'
+              icon: 'el-icon-user-solid',
+              children: [
+                {
+                  id: 'Men211',
+                  name: '增加',
+                  parentId: 'Men21',
+                  path: '/add',
+                  icon: 'el-icon-user-solid'
+                }
+              ]
             },
             {
               id: 'Men22',
