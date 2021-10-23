@@ -1,10 +1,10 @@
 <template>
   <el-container style="height: 100%;">
     <!-- 左侧导航 -->
-    <el-aside width="auto">
-      <el-menu :unique-opened="true" width="auto" style="height: 100%;" background-color="#acacac" :collapse="isCollapse">
-        <h3 style="margin-left: 30px;margin-right: 40px;" v-show="!isCollapse">学生管理系统</h3>
-        <h3 style="margin-left: 30px;margin-right: 40px;" v-show="isCollapse">管理</h3>
+    <el-aside width="200px">
+      <el-menu background-color="#2a2a2a" style="height: 100%;" :unique-opened="true" :collapse="isCollapse" text-color="#fff" :router="true">
+        <h3 style="margin-left: 30px;color: #fff;" v-show="!isCollapse">学生管理系统</h3>
+        <h3 style="margin-left: 30px;margin-right: 40px;" v-show="isCollapse"></h3>
         <MenuList :menuList="this.menuList"></MenuList>
       </el-menu>
     </el-aside>
@@ -16,7 +16,7 @@
       </el-header>
       <!-- 主体展示 -->
       <el-main>
-        Main
+        <router-view></router-view>
       </el-main>
     </el-container>
 
@@ -48,39 +48,7 @@ export default {
           name: '活动管理',
           parentId: 'Men0',
           path: '/activityManage',
-          icon: 'el-icon-user-solid',
-          children: [
-            {
-              id: 'Men21',
-              name: '增加',
-              parentId: 'Men2',
-              path: '/add',
-              icon: 'el-icon-user-solid',
-              children: [
-                {
-                  id: 'Men211',
-                  name: '增加',
-                  parentId: 'Men21',
-                  path: '/add',
-                  icon: 'el-icon-user-solid'
-                }
-              ]
-            },
-            {
-              id: 'Men22',
-              name: '删除',
-              parentId: 'Men2',
-              path: '/delete',
-              icon: 'el-icon-user-solid'
-            },
-            {
-              id: 'Men23',
-              name: '修改',
-              parentId: 'Men2',
-              path: '/update',
-              icon: 'el-icon-user-solid'
-            }
-          ]
+          icon: 'el-icon-user-solid'
         },
         {
           id: 'Men3',
@@ -108,30 +76,7 @@ export default {
           name: '菜单管理',
           parentId: 'Men0',
           path: '/menuManage',
-          icon: 'el-icon-user-solid',
-          children: [
-            {
-              id: 'Men61',
-              name: '增加',
-              parentId: 'Men6',
-              path: '/add',
-              icon: 'el-icon-user-solid'
-            },
-            {
-              id: 'Men62',
-              name: '删除',
-              parentId: 'Men6',
-              path: '/delete',
-              icon: 'el-icon-user-solid'
-            },
-            {
-              id: 'Men63',
-              name: '修改',
-              parentId: 'Men6',
-              path: '/update',
-              icon: 'el-icon-user-solid'
-            }
-          ]
+          icon: 'el-icon-user-solid'
         }
       ]
     }
@@ -147,6 +92,7 @@ export default {
 
 <style scoped="scoped">
 .el-header {
-  background: #acacac;
+  background-color: #2a2a2a;
 }
+
 </style>

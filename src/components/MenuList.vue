@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- 没有子菜单 -->
-    <el-menu-item v-for="(item,index) in noChildren" :index="item.id" :key="item.id">
+    <el-menu-item v-for="(item,index) in noChildren" :index="item.id" :key="item.id" :route="item.path">
       <i :class="item.icon"></i>
       <span slot="title">{{item.name}}</span>
     </el-menu-item>
@@ -14,7 +14,10 @@
         <span slot="title">{{item.name}}</span>
       </template>
       <!-- 子级 -->
-      <MenuList :menuList="item.children"></MenuList>
+      <el-menu-item v-for="(child,index) in item.children" :index="child.id" :key="child.id" :route="child.path">
+        <i :class="child.icon"></i>
+        <span slot="title">{{child.name}}</span>
+      </el-menu-item>
     </el-submenu>
   </div>
 </template>

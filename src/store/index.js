@@ -4,7 +4,7 @@ import Vuex from 'vuex'
 Vue.use(Vuex)
 // 数据仓库
 const state = {
-  isCollapse: true
+  isCollapse: false
 }
 // 接收组件中dispatch触发的方法，如：this.$store.dispatch('handlerAdd', value)
 const actions = {
