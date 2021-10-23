@@ -18,26 +18,30 @@
               <el-input v-model="studentForm.nickname"></el-input>
             </el-form-item>
           </el-col>
-          <!-- 列：3 -->
-          <el-col :span="6">
-            <el-form-item label="性别">
-              <el-input v-model="studentForm.gender"></el-input>
-            </el-form-item>
-          </el-col>
         </el-row>
 
         <!-- 行：2 -->
         <el-row :gutter="20">
           <!-- 列：1 -->
           <el-col :span="6">
-            <el-form-item label="状态">
-              <el-input v-model="studentForm.name"></el-input>
+            <el-form-item label="性别">
+              <el-select v-model="studentForm.gender" clearable placeholder="请选择">
+                <el-option v-for="item in genderOptions" :key="item.value" :label="item.label" :value="item.value"/>
+              </el-select>
             </el-form-item>
           </el-col>
           <!-- 列：2 -->
-          <el-col :span="6" offset="6">
+          <el-col :span="6">
+            <el-form-item label="状态">
+              <el-select v-model="studentForm.status" clearable placeholder="请选择">
+                <el-option v-for="item in statusOptions" :key="item.value" :label="item.label" :value="item.value"/>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <!-- 列：3 -->
+          <el-col :span="6">
             <el-form-item>
-              <el-button type="primary">查询</el-button>
+              <el-button type="primary" @click="queryStudentList">查询</el-button>
             </el-form-item>
           </el-col>
         </el-row>
@@ -46,7 +50,15 @@
     </div>
     <!-- 结果展示区 -->
     <div>
-      表格
+      <el-table :data="studentList" style="width: 100%" stripe>
+        <el-table-column prop="name" label="姓名"/>
+        <el-table-column prop="nickname" label="昵称"/>
+        <el-table-column prop="birthday" label="生日"/>
+        <el-table-column prop="gender" label="性别"/>
+        <el-table-column prop="schoolid" label="校区"/>
+        <el-table-column prop="phone" label="手机"/>
+        <el-table-column prop="status" label="状态"/>
+      </el-table>
     </div>
   </el-card>
 </template>
@@ -61,37 +73,60 @@ export default {
         nickname: '',
         gender: '',
         status: ''
+      },
+      genderOptions: [{ value: '0',label: '女' }, { value: '1',label: '男' }],
+      statusOptions: [{ value: '0',label: '离校' }, { value: '1',label: '在校' }],
+      studentList: []
+    }
+  },
+  methods: {
+    queryStudentList(){
+      this.axios({
+        method: 'post',
+        url: 'http://localhost:8090/student/query',
+        data: {
+          name: this.studentForm.name,
+          nickname: this.studentForm.nickname,
+          gender: this.studentForm.gender,
+          status: this.studentForm.status
+        }
+      }).then((res) => {
+        debugger
+        const data = res.data
+        //查询失败
+        if(data.status !== 1) {
+          this.$message({showClose: true, message: data.msg,type: 'error'})
+          return false
+        }
+
+        // 查询成功
+        this.studentList = data.data
+
+      }).catch((error) => {
+        const data = error.data
+        this.$message({showClose: true, message: data.msg,type: 'error'})
+        return false
+      })
+    },
+    tableRowClassName({row, rowIndex}) {
+      debugger
+      if (rowIndex === 0) {
+        return 'warning-row'
+      } else if (rowIndex === 1) {
+        return 'success-row'
       }
+      return '';
     }
   }
 }
 </script>
 
 <style scoped="scoped">
-.el-row {
-    margin-bottom: 20px;
-    &:last-child {
-      margin-bottom: 0;
-    }
-  }
-  .el-col {
-    border-radius: 4px;
-  }
-  .bg-purple-dark {
-    background: #99a9bf;
-  }
-  .bg-purple {
-    background: #d3dce6;
-  }
-  .bg-purple-light {
-    background: #e5e9f2;
-  }
-  .grid-content {
-    border-radius: 4px;
-    min-height: 36px;
-  }
-  .row-bg {
-    padding: 10px 0;
-    background-color: #f9fafc;
-  }
+.el-table .warning-row {
+  background: #e2e200;
+}
+
+.el-table .success-row {
+  background: #39ab00;
+}
 </style>
