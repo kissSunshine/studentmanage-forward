@@ -2,9 +2,9 @@
   <el-container style="height: 100%;">
     <!-- 左侧导航 -->
     <el-aside width="200px">
-      <el-menu :unique-opened="true">
+      <el-menu :unique-opened="true" width="auto" style="height: 100%;" background-color="#acacac">
         <h3 style="margin-left: 30px;margin-right: 40px;">大熊数学</h3>
-        <MenuList style="height: 100%;" :menuList="this.menuList"></MenuList>
+        <MenuList :menuList="this.menuList"></MenuList>
       </el-menu>
     </el-aside>
     <!-- 右侧内容 -->
@@ -139,5 +139,8 @@ export default {
 
 </script>
 
-<style>
+<style scoped="scoped">
+.el-header {
+  background: #acacac;
+}
 </style>
