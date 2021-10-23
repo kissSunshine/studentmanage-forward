@@ -3,20 +3,20 @@
 
     <h3 style="margin-left: 30px;margin-right: 40px;">大熊数学</h3>
     <!-- 没有子菜单 -->
-    <el-menu-item v-for="item in noChildren" :index="item.id" :key="item.id">
+    <el-menu-item v-for="(item,index) in noChildren" :index="item.id" :key="item.id">
       <i :class="item.icon"></i>
       <span slot="title">{{item.name}}</span>
     </el-menu-item>
 
     <!-- 有子菜单 -->
-    <el-submenu v-for="item in hasChildren" :index="item.id" :key="item.id">
+    <el-submenu v-for="(item,index) in hasChildren" :index="item.id" :key="item.id">
       <!-- 父级 -->
       <template slot="title">
-        <i class="item.icon"></i>
+        <i :class="item.icon"></i>
         <span slot="title">{{item.name}}</span>
       </template>
       <!-- 子级 -->
-      <Aside :menuList="this.menuList"></aside>
+      <Aside :menuList="item.children"></Aside>
     </el-submenu>
 
   </el-menu>

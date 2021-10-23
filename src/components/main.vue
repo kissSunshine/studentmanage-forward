@@ -30,50 +30,98 @@ export default {
     Header
   },
   data() {
-    menuList: [
-      {
-        id: 'Men1',
-        name: '学生管理',
-        parentId: 'Men0',
-        path: '/studentManage',
-        icon: 'el-icon-user-solid'
-      },
-      {
-        id: 'Men2',
-        name: '活动管理',
-        parentId: 'Men0',
-        path: '/activityManage',
-        icon: 'el-icon-user-solid'
-      },
-      {
-        id: 'Men3',
-        name: '教师管理',
-        parentId: 'Men0',
-        path: '/teacherManage',
-        icon: 'el-icon-user-solid'
-      },
-      {
-        id: 'Men4',
-        name: '班级管理',
-        parentId: 'Men0',
-        path: '/classManage',
-        icon: 'el-icon-user-solid'
-      },
-      {
-        id: 'Men5',
-        name: '校区管理',
-        parentId: 'Men0',
-        path: '/schoolManage',
-        icon: 'el-icon-user-solid'
-      },
-      {
-        id: 'Men6',
-        name: '菜单管理',
-        parentId: 'Men0',
-        path: '/menuManage',
-        icon: 'el-icon-user-solid'
-      }
-    ]
+    return {
+      menuList: [
+        {
+          id: 'Men1',
+          name: '学生管理',
+          parentId: 'Men0',
+          path: '/studentManage',
+          icon: 'el-icon-user-solid'
+        },
+        {
+          id: 'Men2',
+          name: '活动管理',
+          parentId: 'Men0',
+          path: '/activityManage',
+          icon: 'el-icon-user-solid',
+          children: [
+            {
+              id: 'Men21',
+              name: '增加',
+              parentId: 'Men2',
+              path: '/add',
+              icon: 'el-icon-user-solid'
+            },
+            {
+              id: 'Men22',
+              name: '删除',
+              parentId: 'Men2',
+              path: '/delete',
+              icon: 'el-icon-user-solid'
+            },
+            {
+              id: 'Men23',
+              name: '修改',
+              parentId: 'Men2',
+              path: '/update',
+              icon: 'el-icon-user-solid'
+            }
+          ]
+        },
+        {
+          id: 'Men3',
+          name: '教师管理',
+          parentId: 'Men0',
+          path: '/teacherManage',
+          icon: 'el-icon-user-solid'
+        },
+        {
+          id: 'Men4',
+          name: '班级管理',
+          parentId: 'Men0',
+          path: '/classManage',
+          icon: 'el-icon-user-solid'
+        },
+        {
+          id: 'Men5',
+          name: '校区管理',
+          parentId: 'Men0',
+          path: '/schoolManage',
+          icon: 'el-icon-user-solid'
+        },
+        {
+          id: 'Men6',
+          name: '菜单管理',
+          parentId: 'Men0',
+          path: '/menuManage',
+          icon: 'el-icon-user-solid',
+          children: [
+            {
+              id: 'Men61',
+              name: '增加',
+              parentId: 'Men6',
+              path: '/add',
+              icon: 'el-icon-user-solid'
+            },
+            {
+              id: 'Men62',
+              name: '删除',
+              parentId: 'Men6',
+              path: '/delete',
+              icon: 'el-icon-user-solid'
+            },
+            {
+              id: 'Men63',
+              name: '修改',
+              parentId: 'Men6',
+              path: '/update',
+              icon: 'el-icon-user-solid'
+            }
+          ]
+        }
+      ]
+    }
   }
 }
 
