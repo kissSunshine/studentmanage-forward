@@ -116,7 +116,7 @@
 <script>
 export default {
   name: 'StudentDialogAdd',
-  props: ['dialogFormVisible'],
+  props: ['dialogFormVisible','genderOptions','statusOptions'],
   data(){
     return {
       studentFormAdd: {

@@ -18,6 +18,12 @@
               <el-input v-model="studentForm.nickname"></el-input>
             </el-form-item>
           </el-col>
+          <!-- 列：3 -->
+          <el-col :span="3">
+            <el-form-item>
+              <el-button type="primary" @click="queryStudentList">查询</el-button>
+            </el-form-item>
+          </el-col>
         </el-row>
 
         <!-- 行：2 -->
@@ -41,17 +47,14 @@
           <!-- 列：3 -->
           <el-col :span="3">
             <el-form-item>
-              <el-button type="primary" @click="queryStudentList">查询</el-button>
-            </el-form-item>
-          </el-col>
-          <!-- 列：4 -->
-          <el-col :span="3">
-            <el-form-item>
               <el-button type="success" @click="dialogFormVisible = true">新增</el-button>
             </el-form-item>
 
             <!-- 点击新增，弹出对话框填写学生信息 -->
-            <StudentDialogAdd :dialogFormVisible="dialogFormVisible" @changeDialogFormVisible="changeDialogFormVisible"></StudentDialogAdd>
+            <StudentDialogAdd @changeDialogFormVisible="changeDialogFormVisible"
+              :dialogFormVisible="dialogFormVisible" :genderOptions="genderOptions" :statusOptions="statusOptions">
+
+            </StudentDialogAdd>
           </el-col>
         </el-row>
 
@@ -68,6 +71,12 @@
         <el-table-column prop="schoolid" label="校区"/>
         <el-table-column prop="phone" label="手机"/>
         <el-table-column prop="status" label="状态"/>
+        <el-table-column label="操作">
+          <!-- 更新 -->
+          <el-button type="warning" icon="el-icon-edit"></el-button>
+          <!-- 删除 -->
+          <el-button type="danger" icon="el-icon-delete"></el-button>
+        </el-table-column>
       </el-table>
     </div>
 
