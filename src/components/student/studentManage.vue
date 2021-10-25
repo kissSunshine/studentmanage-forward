@@ -39,15 +39,25 @@
             </el-form-item>
           </el-col>
           <!-- 列：3 -->
-          <el-col :span="6">
+          <el-col :span="3">
             <el-form-item>
               <el-button type="primary" @click="queryStudentList">查询</el-button>
             </el-form-item>
+          </el-col>
+          <!-- 列：4 -->
+          <el-col :span="3">
+            <el-form-item>
+              <el-button type="success" @click="dialogFormVisible = true">新增</el-button>
+            </el-form-item>
+
+            <!-- 点击新增，弹出对话框填写学生信息 -->
+            <StudentDialogAdd :dialogFormVisible="dialogFormVisible" @changeDialogFormVisible="changeDialogFormVisible"></StudentDialogAdd>
           </el-col>
         </el-row>
 
       </el-form>
     </div>
+
     <!-- 结果展示区 -->
     <div>
       <el-table :data="studentList" style="width: 100%" stripe>
@@ -60,12 +70,18 @@
         <el-table-column prop="status" label="状态"/>
       </el-table>
     </div>
+
   </el-card>
 </template>
 
 <script>
+import StudentDialogAdd from '@/components/student/studentDialogAdd.vue'
+
 export default {
   name: 'studentManage',
+  components: {
+    StudentDialogAdd,
+  },
   data(){
     return {
       studentForm: {
@@ -74,9 +90,10 @@ export default {
         gender: '',
         status: ''
       },
-      genderOptions: [{ value: '0',label: '女' }, { value: '1',label: '男' }],
+      genderOptions: [{ value: '0',label: '女' }, { value: '1',label: '男' }], // 查询条件
       statusOptions: [{ value: '0',label: '离校' }, { value: '1',label: '在校' }],
-      studentList: []
+      studentList: [], // 查询出的学生信息
+      dialogFormVisible: false //新增学生对话框是否显示；true-显示；false-隐藏
     }
   },
   methods: {
@@ -116,6 +133,9 @@ export default {
         return 'success-row'
       }
       return '';
+    },
+    changeDialogFormVisible(){
+      this.dialogFormVisible = false;
     }
   }
 }
