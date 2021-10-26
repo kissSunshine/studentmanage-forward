@@ -1,5 +1,5 @@
 <template>
-  <el-dialog title="添加学生" :visible.sync="dialogFormVisible" width="80%" center :show-close="false">
+  <el-dialog title="添加学生" :visible.sync="dialogFormVisible" width="80%" center :show-close="false" :close-on-press-escape="false" :close-on-click-modal="false">
     <el-form ref="studentFormAdd" :model="studentFormAdd" :rules="addRules" label-width="80px">
 
       <!-- 行：1 -->
