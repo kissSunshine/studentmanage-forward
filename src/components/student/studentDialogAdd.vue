@@ -236,7 +236,7 @@ export default {
     },
     // 关闭添加学生对话框
     changeDialogFormVisible(){
-      this.$emit("changeDialogFormVisible")
+      this.$emit("changeDialogFormAdd")
     }
   }
 }

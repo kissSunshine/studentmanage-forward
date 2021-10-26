@@ -48,12 +48,12 @@
           <!-- 列：3 -->
           <el-col :span="3">
             <el-form-item>
-              <el-button type="success" @click="opeanDialogFormVisible">新增</el-button>
+              <el-button type="success" @click="opeanDialogFormAdd">新增</el-button>
             </el-form-item>
 
             <!-- 点击新增，弹出对话框填写学生信息 -->
-            <StudentDialogAdd @changeDialogFormVisible="closeDialogFormVisible"
-              :dialogFormVisible="dialogFormVisible" :genderOptions="genderOptions" :statusOptions="statusOptions" :schoolOptions="schoolOptions">
+            <StudentDialogAdd @changeDialogFormAdd="closeDialogFormAdd"
+              :dialogFormVisible="dialogFormAdd" :genderOptions="genderOptions" :statusOptions="statusOptions" :schoolOptions="schoolOptions">
             </StudentDialogAdd>
           </el-col>
         </el-row>
@@ -63,7 +63,7 @@
 
     <!-- 结果展示区 -->
     <div>
-      <el-table :data="studentList" style="width: 100%" stripe>
+      <el-table :data="studentList" style="width: 100%" stripe @cell-click="cellClick">
         <el-table-column prop="name" label="姓名"/>
         <el-table-column prop="nickname" label="昵称"/>
         <el-table-column prop="birthday" label="生日"/>
@@ -73,9 +73,9 @@
         <el-table-column prop="status" label="状态"/>
         <el-table-column label="操作">
           <!-- 更新 -->
-          <el-button type="warning" icon="el-icon-edit"></el-button>
+          <el-button id="updateStudent" type="warning" icon="el-icon-edit"></el-button>
           <!-- 删除 -->
-          <el-button type="danger" icon="el-icon-delete"></el-button>
+          <el-button id="deleteStudent" type="danger" icon="el-icon-delete"></el-button>
         </el-table-column>
       </el-table>
       <!-- 分页 -->
@@ -108,7 +108,7 @@ export default {
       genderOptions: [{ value: '0',label: '女' }, { value: '1',label: '男' }], // 查询条件
       statusOptions: [{ value: '0',label: '离校' }, { value: '1',label: '在校' }],
       studentList: [], // 查询出的学生信息
-      dialogFormVisible: false, //新增学生对话框是否显示；true-显示；false-隐藏
+      dialogFormAdd: false, //新增学生对话框是否显示；true-显示；false-隐藏
       schoolList: [], //初始化查询校区
       schoolOptions: [], // 校区下拉选
       pageComponents: {
@@ -155,7 +155,7 @@ export default {
       }
       return '';
     },
-    opeanDialogFormVisible(){
+    opeanDialogFormAdd(){
       if(this.schoolOptions.length === 0){
         for(let i = 0; i < this.schoolList.length; i++ ){
           let school = { value: '', label: ''}
@@ -165,11 +165,11 @@ export default {
         }
       }
 
-      this.dialogFormVisible = false;
-      this.dialogFormVisible = true;
+      this.dialogFormAdd = false;
+      this.dialogFormAdd = true;
     },
-    closeDialogFormVisible(){
-      this.dialogFormVisible = false;
+    closeDialogFormAdd(){
+      this.dialogFormAdd = false;
     },
     querySchoolList(){
        this.axios({
@@ -192,7 +192,45 @@ export default {
     },
     queryCurrentPage(currentPage){
       this.queryStudentList(currentPage,this.pageComponents.pageSize)
+    },
+    cellClick(row, column, cell, event){
+      debugger
+      // 如果点击的修改按钮，则去进行修改操作
+      if(event.target.id == "updateStudent"){
+        this.opeanDialogFormDelete(row)
+      }
+      // 如果点击的删除按钮，则直接进行删除操作
+      if(event.target.id == "deleteStudent"){
+        this.deleteStudent(row.id)
+      }
+    },
+    opeanDialogFormDelete(){
+
+    },
+    deleteStudent(id){
+      this.axios({
+        method: 'post',
+        url: 'http://localhost:8090/student/delete',
+        data: {
+          id,
+        }
+      }).then((res) => {
+        debugger
+        const resVo = res.data
+        // 删除失败
+        if(resVo.status !== 1) {
+          this.$message({showClose: true, message: resVo.msg, type: 'error'})
+          return false
+        }
+
+        // 删除成功
+        this.$message({showClose: true, message: resVo.msg, type: 'success'})
+
+      }).catch((error) => {
+        this.$message({showClose: true, message: "服务器错误，请重试或联系管理员", type: 'error'})
+      })
     }
+
   },
   mounted() {
     this.querySchoolList()
