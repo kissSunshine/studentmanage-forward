@@ -47,13 +47,12 @@
           <!-- 列：3 -->
           <el-col :span="3">
             <el-form-item>
-              <el-button type="success" @click="dialogFormVisible = true">新增</el-button>
+              <el-button type="success" @click="opeanDialogFormVisible">新增</el-button>
             </el-form-item>
 
             <!-- 点击新增，弹出对话框填写学生信息 -->
-            <StudentDialogAdd @changeDialogFormVisible="changeDialogFormVisible"
+            <StudentDialogAdd @changeDialogFormVisible="closeDialogFormVisible"
               :dialogFormVisible="dialogFormVisible" :genderOptions="genderOptions" :statusOptions="statusOptions">
-
             </StudentDialogAdd>
           </el-col>
         </el-row>
@@ -143,7 +142,11 @@ export default {
       }
       return '';
     },
-    changeDialogFormVisible(){
+    opeanDialogFormVisible(){
+      this.dialogFormVisible = false;
+      this.dialogFormVisible = true;
+    },
+    closeDialogFormVisible(){
       this.dialogFormVisible = false;
     }
   }
@@ -157,5 +160,9 @@ export default {
 
 .el-table .success-row {
   background: #39ab00;
+}
+
+.el-card {
+  background-color: #d6d6d6;
 }
 </style>
