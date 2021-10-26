@@ -21,7 +21,8 @@
           <!-- 列：3 -->
           <el-col :span="3">
             <el-form-item>
-              <el-button type="primary" @click="queryStudentList">查询</el-button>
+              <!-- 查询按钮默认都查询第1页 -->
+              <el-button type="primary" @click="queryStudentList(1,pageComponents.pageSize)">查询</el-button>
             </el-form-item>
           </el-col>
         </el-row>
@@ -77,6 +78,12 @@
           <el-button type="danger" icon="el-icon-delete"></el-button>
         </el-table-column>
       </el-table>
+      <!-- 分页 -->
+      <!-- @current-change:当前页码改变时触发 -->
+      <el-pagination background layout="prev, pager, next" :hide-on-single-page="true" 
+        :total="pageComponents.total" :page-size="pageComponents.pageSize"
+        @current-change="queryCurrentPage">
+      </el-pagination>
     </div>
 
   </el-card>
@@ -103,36 +110,40 @@ export default {
       studentList: [], // 查询出的学生信息
       dialogFormVisible: false, //新增学生对话框是否显示；true-显示；false-隐藏
       schoolList: [], //初始化查询校区
-      schoolOptions: []
+      schoolOptions: [], // 校区下拉选
+      pageComponents: {
+        total: 0, // 查询出的学生总人数
+        pageSize: 5, // 分页组件每页显示数量
+      }
     }
   },
   methods: {
-    queryStudentList(){
+    queryStudentList(currentPage,pageSize){
       this.axios({
-        method: 'post',
+        method: 'get',
         url: 'http://localhost:8090/student/query',
-        data: {
+        params: {
           name: this.studentForm.name,
           nickname: this.studentForm.nickname,
           gender: this.studentForm.gender,
-          status: this.studentForm.status
+          status: this.studentForm.status,
+          currentPage,
+          pageSize,
         }
       }).then((res) => {
-        debugger
-        const data = res.data
+        const resVo = res.data
         //查询失败
-        if(data.status !== 1) {
-          this.$message({showClose: true, message: data.msg,type: 'error'})
+        if(resVo.status !== 1) {
+          this.$message({showClose: true, message: resVo.msg, type: 'error'})
           return false
         }
 
         // 查询成功
-        this.studentList = data.data
+        this.studentList = resVo.data.data
+        this.pageComponents.total = resVo.data.total
 
       }).catch((error) => {
-        const data = error.data
-        this.$message({showClose: true, message: data.msg,type: 'error'})
-        return false
+        this.$message({showClose: true, message: "服务器错误，请重试或联系管理员", type: 'error'})
       })
     },
     tableRowClassName({row, rowIndex}) {
@@ -170,15 +181,17 @@ export default {
         if(data.status !== 1) {
           return false
         }
-
         // 查询成功
         this.schoolList = data.data
-        console.log(this.schoolList)
+
       }).catch((error) => {
         const data = error.data
         this.$message({showClose: true, message: data.msg,type: 'error'})
         return false
       })
+    },
+    queryCurrentPage(currentPage){
+      this.queryStudentList(currentPage,this.pageComponents.pageSize)
     }
   },
   mounted() {
@@ -198,5 +211,9 @@ export default {
 
 .el-card {
   background-color: #d6d6d6;
+}
+
+.el-pagination {
+  margin-top: 20px;
 }
 </style>
