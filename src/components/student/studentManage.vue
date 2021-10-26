@@ -86,16 +86,23 @@
       </el-pagination>
     </div>
 
+    <!-- 点击新增，弹出对话框填写学生信息 -->
+    <StudentDialogUpdate @changeDialogFormUpdate="closeDialogFormUpdate" :studentForm="studentFormUpdate"
+      :dialogFormVisible="dialogFormUpdate" :genderOptions="genderOptions" :statusOptions="statusOptions" :schoolOptions="schoolOptions">
+    </StudentDialogUpdate>
+
   </el-card>
 </template>
 
 <script>
 import StudentDialogAdd from '@/components/student/studentDialogAdd.vue'
+import StudentDialogUpdate from '@/components/student/StudentDialogUpdate.vue'
 
 export default {
   name: 'studentManage',
   components: {
     StudentDialogAdd,
+    StudentDialogUpdate
   },
   data(){
     return {
@@ -114,7 +121,9 @@ export default {
       pageComponents: {
         total: 0, // 查询出的学生总人数
         pageSize: 5, // 分页组件每页显示数量
-      }
+      },
+      dialogFormUpdate: false, //修改学生对话框是否显示；true-显示；false-隐藏
+      studentFormUpdate: [], // 需要修改的学生信息
     }
   },
   methods: {
@@ -194,18 +203,30 @@ export default {
       this.queryStudentList(currentPage,this.pageComponents.pageSize)
     },
     cellClick(row, column, cell, event){
-      debugger
       // 如果点击的修改按钮，则去进行修改操作
       if(event.target.id == "updateStudent"){
-        this.opeanDialogFormDelete(row)
+        this.opeanDialogFormUpdate(row)
       }
       // 如果点击的删除按钮，则直接进行删除操作
       if(event.target.id == "deleteStudent"){
         this.deleteStudent(row.id)
       }
     },
-    opeanDialogFormDelete(){
-
+    opeanDialogFormUpdate(row){
+      this.studentFormUpdate = row
+      if(this.schoolOptions.length === 0){
+        for(let i = 0; i < this.schoolList.length; i++ ){
+          let school = { value: '', label: ''}
+          school.value = this.schoolList[i].id
+          school.label = this.schoolList[i].name
+          this.schoolOptions.push(school)
+        }
+      }
+      this.dialogFormUpdate = false
+      this.dialogFormUpdate = true
+    },
+    closeDialogFormUpdate(){
+      this.dialogFormUpdate = false
     },
     deleteStudent(id){
       this.axios({
@@ -215,7 +236,6 @@ export default {
           id,
         }
       }).then((res) => {
-        debugger
         const resVo = res.data
         // 删除失败
         if(resVo.status !== 1) {
@@ -225,6 +245,7 @@ export default {
 
         // 删除成功
         this.$message({showClose: true, message: resVo.msg, type: 'success'})
+        this.queryStudentList(1,this.pageComponents.pageSize)
 
       }).catch((error) => {
         this.$message({showClose: true, message: "服务器错误，请重试或联系管理员", type: 'error'})

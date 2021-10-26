@@ -1,25 +1,25 @@
 <template>
-  <el-dialog title="添加学生" :visible.sync="dialogFormVisible" width="80%" center :show-close="false" :close-on-press-escape="false" :close-on-click-modal="false">
-    <el-form ref="studentFormAdd" :model="studentFormAdd" :rules="addRules" label-width="80px">
+  <el-dialog title="修改信息" :visible.sync="dialogFormVisible" width="80%" center :show-close="false" :close-on-press-escape="false" :close-on-click-modal="false">
+    <el-form ref="studentFormUpdate" :model="studentFormUpdate" :rules="updateRules" label-width="80px">
 
       <!-- 行：1 -->
       <el-row :gutter="20">
         <!-- 列：1 -->
         <el-col :span="8">
           <el-form-item label="姓名" prop="name">
-            <el-input v-model="studentFormAdd.name" autocomplete="off" placeholder="20个字符以内"></el-input>
+            <el-input v-model="studentFormUpdate.name" autocomplete="off" placeholder="20个字符以内"></el-input>
           </el-form-item>
         </el-col>
         <!-- 列：2 -->
         <el-col :span="8">
           <el-form-item label="昵称" prop="nickname">
-            <el-input v-model="studentFormAdd.nickname" placeholder="20个字符以内"></el-input>
+            <el-input v-model="studentFormUpdate.nickname" placeholder="20个字符以内"></el-input>
           </el-form-item>
         </el-col>
         <!-- 列：3 -->
         <el-col :span="8">
           <el-form-item label="身份证号" prop="idcard">
-            <el-input v-model="studentFormAdd.idcard" placeholder="非必填"></el-input>
+            <el-input v-model="studentFormUpdate.idcard" placeholder="非必填"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
@@ -29,7 +29,7 @@
         <!-- 列：1 -->
         <el-col :span="8">
           <el-form-item label="性别" prop="gender">
-            <el-select v-model="studentFormAdd.gender" clearable placeholder="请选择">
+            <el-select v-model="studentFormUpdate.gender" clearable placeholder="请选择">
               <el-option v-for="item in genderOptions" :key="item.value" :label="item.label" :value="item.value"/>
             </el-select>
           </el-form-item>
@@ -37,13 +37,13 @@
         <!-- 列：2 -->
         <el-col :span="8">
           <el-form-item label="出生日期" prop="birthday">
-            <el-date-picker v-model="studentFormAdd.birthday" type="date" placeholder="选择日期"></el-date-picker>
+            <el-date-picker v-model="studentFormUpdate.birthday" type="date" placeholder="选择日期"></el-date-picker>
           </el-form-item>
         </el-col>
         <!-- 列：3 -->
         <el-col :span="8">
           <el-form-item label="手机" prop="phone">
-            <el-input v-model="studentFormAdd.phone" placeholder="11位"></el-input>
+            <el-input v-model="studentFormUpdate.phone" placeholder="11位"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
@@ -53,7 +53,7 @@
         <!-- 列：1 -->
         <el-col :span="8">
           <el-form-item label="状态" prop="status">
-            <el-select v-model="studentFormAdd.status" clearable placeholder="请选择">
+            <el-select v-model="studentFormUpdate.status" clearable placeholder="请选择">
               <el-option v-for="item in statusOptions" :key="item.value" :label="item.label" :value="item.value"/>
             </el-select>
           </el-form-item>
@@ -61,7 +61,7 @@
         <!-- 列：2 -->
         <el-col :span="8">
           <el-form-item label="校区" prop="schoolid">
-            <el-select v-model="studentFormAdd.schoolid" clearable placeholder="请选择">
+            <el-select v-model="studentFormUpdate.schoolid" clearable placeholder="请选择">
               <el-option v-for="item in schoolOptions" :key="item.value" :label="item.label" :value="item.value"/>
             </el-select>
           </el-form-item>
@@ -72,33 +72,17 @@
       <el-row :gutter="20">
         <!-- 列：1 -->
         <el-col :span="8">
-          <el-form-item label="密码" prop="password">
-            <el-input type="password" v-model="studentFormAdd.password" autocomplete="off" placeholder="6到20个字符"></el-input>
-          </el-form-item>
-        </el-col>
-        <!-- 列：2 -->
-        <el-col :span="8">
-          <el-form-item label="再次输入" prop="passwordsecond">
-            <el-input type="password" v-model="studentFormAdd.passwordsecond" autocomplete="off"></el-input>
-          </el-form-item>
-        </el-col>
-      </el-row>
-
-      <!-- 行：5 -->
-      <el-row :gutter="20">
-        <!-- 列：1 -->
-        <el-col :span="8">
           <el-form-item label="家庭地址" prop="homeaddress">
-            <el-input type="textarea" v-model="studentFormAdd.homeaddress" placeholder="500个字符以内"></el-input>
+            <el-input type="textarea" v-model="studentFormUpdate.homeaddress" placeholder="500个字符以内"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
 
-      <!-- 添加按钮 -->
+      <!-- 修改按钮 -->
       <el-row :gutter="20">
         <el-col :span="8">
           <el-form-item label="">
-            <el-button type="primary" @click="addStudent">添 加</el-button>
+            <el-button type="primary" @click="updateStudent">修 改</el-button>
           </el-form-item>
         </el-col>
         <el-col :span="8">
@@ -115,8 +99,8 @@
 
 <script>
 export default {
-  name: 'StudentDialogAdd',
-  props: ['dialogFormVisible','genderOptions','statusOptions','schoolOptions'],
+  name: 'StudentDialogUpdate',
+  props: ['dialogFormVisible','genderOptions','statusOptions','schoolOptions','studentForm'],
   data(){
     // 自定义校验规则
     var genderRule = (rule, value, callback) => {
@@ -139,22 +123,22 @@ export default {
       callback()
     };
     return {
-      studentFormAdd: {
+      studentFormUpdate: {
+        id: '',
         name: '',
         nickname: '',
         idcard: '',
-        gender: '1',
+        gender: '',
         birthday: '',
         phone: '',
-        status: '1',
+        status: '',
         schoolid: '',
-        password: '',
         homeaddress: ''
       },
       passwordsecond: '', // 再次输入密码
 
-      // 校验添加的学生信息
-      addRules: {
+      // 校验学生信息
+      updateRules: {
         name: [
           { required: true, message: '请输入姓名', trigger: 'blur' },
           { min: 1, max: 20, message: '姓名在20个字符以内', trigger: 'blur' }
@@ -188,9 +172,10 @@ export default {
   },
   methods: {
     // 添加学生
-    addStudent(){
+    updateStudent(){
+      console.log(this.studentForm.name)
       // 1、校验
-      this.$refs.studentFormAdd.validate((valid) => {
+      this.$refs.studentFormUpdate.validate((valid) => {
         // 校验失败，则阻断提示
         if (!valid) {
           this.$message({showClose: true, message: '请按照要求，重新输入!', type: 'error'})
@@ -200,18 +185,18 @@ export default {
         // 2、校验成功，发送ajax请求
         this.axios({
           method: 'post',
-          url: 'http://localhost:8090/student/add',
+          url: 'http://localhost:8090/student/update',
           data: {
-            name: this.studentFormAdd.name,
-            nickname: this.studentFormAdd.nickname,
-            idcard: this.studentFormAdd.idcard,
-            gender: this.studentFormAdd.gender,
-            birthday: this.studentFormAdd.birthday,
-            phone: this.studentFormAdd.phone,
-            status: this.studentFormAdd.status,
-            schoolid: this.studentFormAdd.schoolid,
-            password: this.studentFormAdd.password,
-            homeaddress: this.studentFormAdd.homeaddress,
+            name: this.studentFormUpdate.name,
+            nickname: this.studentFormUpdate.nickname,
+            idcard: this.studentFormUpdate.idcard,
+            gender: this.studentFormUpdate.gender,
+            birthday: this.studentFormUpdate.birthday,
+            phone: this.studentFormUpdate.phone,
+            status: this.studentFormUpdate.status,
+            schoolid: this.studentFormUpdate.schoolid,
+            password: this.studentFormUpdate.password,
+            homeaddress: this.studentFormUpdate.homeaddress,
             updatedPerson: "Tea666" // 待调整
           }
         }).then((res) => {
@@ -227,15 +212,19 @@ export default {
           this.changeDialogFormVisible();
 
         }).catch((error) => {
-         this.$message({showClose: true, message: "服务器错误，请重试或联系管理员", type: 'error'})
+          this.$message({showClose: true, message: "服务器错误，请重试或联系管理员", type: 'error'})
         })
 
       })
     },
     // 关闭添加学生对话框
     changeDialogFormVisible(){
-      this.$emit("changeDialogFormAdd")
+      this.$emit("changeDialogFormUpdate")
     }
+  },
+  mounted(){
+    this.studentFormUpdate.name = this.studentForm.name
+    this.studentFormUpdate.nickname = this.studentForm.nickname
   }
 }
 </script>
