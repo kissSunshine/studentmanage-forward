@@ -52,7 +52,7 @@
 
             <!-- 点击新增，弹出对话框填写学生信息 -->
             <StudentDialogAdd @changeDialogFormVisible="closeDialogFormVisible"
-              :dialogFormVisible="dialogFormVisible" :genderOptions="genderOptions" :statusOptions="statusOptions">
+              :dialogFormVisible="dialogFormVisible" :genderOptions="genderOptions" :statusOptions="statusOptions" :schoolOptions="schoolOptions">
             </StudentDialogAdd>
           </el-col>
         </el-row>
@@ -101,7 +101,9 @@ export default {
       genderOptions: [{ value: '0',label: '女' }, { value: '1',label: '男' }], // 查询条件
       statusOptions: [{ value: '0',label: '离校' }, { value: '1',label: '在校' }],
       studentList: [], // 查询出的学生信息
-      dialogFormVisible: false //新增学生对话框是否显示；true-显示；false-隐藏
+      dialogFormVisible: false, //新增学生对话框是否显示；true-显示；false-隐藏
+      schoolList: [], //初始化查询校区
+      schoolOptions: []
     }
   },
   methods: {
@@ -143,12 +145,44 @@ export default {
       return '';
     },
     opeanDialogFormVisible(){
+      if(this.schoolOptions.length === 0){
+        for(let i = 0; i < this.schoolList.length; i++ ){
+          let school = { value: '', label: ''}
+          school.value = this.schoolList[i].id
+          school.label = this.schoolList[i].name
+          this.schoolOptions.push(school)
+        }
+      }
+
       this.dialogFormVisible = false;
       this.dialogFormVisible = true;
     },
     closeDialogFormVisible(){
       this.dialogFormVisible = false;
+    },
+    querySchoolList(){
+       this.axios({
+        method: 'post',
+        url: 'http://localhost:8090/school/queryAll'
+      }).then((res) => {
+        const data = res.data
+        //查询失败
+        if(data.status !== 1) {
+          return false
+        }
+
+        // 查询成功
+        this.schoolList = data.data
+        console.log(this.schoolList)
+      }).catch((error) => {
+        const data = error.data
+        this.$message({showClose: true, message: data.msg,type: 'error'})
+        return false
+      })
     }
+  },
+  mounted() {
+    this.querySchoolList()
   }
 }
 </script>

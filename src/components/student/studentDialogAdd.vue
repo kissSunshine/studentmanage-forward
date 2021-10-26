@@ -62,7 +62,7 @@
         <el-col :span="8">
           <el-form-item label="校区" prop="schoolid">
             <el-select v-model="studentFormAdd.schoolid" clearable placeholder="请选择">
-              <el-option v-for="item in statusOptions" :key="item.value" :label="item.label" :value="item.value"/>
+              <el-option v-for="item in schoolOptions" :key="item.value" :label="item.label" :value="item.value"/>
             </el-select>
           </el-form-item>
         </el-col>
@@ -116,7 +116,7 @@
 <script>
 export default {
   name: 'StudentDialogAdd',
-  props: ['dialogFormVisible','genderOptions','statusOptions'],
+  props: ['dialogFormVisible','genderOptions','statusOptions','schoolOptions'],
   data(){
     // 自定义校验规则
     var genderRule = (rule, value, callback) => {
