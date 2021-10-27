@@ -63,7 +63,7 @@
 
     <!-- 结果展示区 -->
     <div>
-      <el-table :data="studentList" style="width: 100%" stripe @cell-click="cellClick">
+      <el-table :data="studentList" style="width: 100%" stripe>
         <el-table-column prop="name" label="姓名"/>
         <el-table-column prop="nickname" label="昵称"/>
         <el-table-column prop="birthday" label="生日"/>
@@ -72,10 +72,12 @@
         <el-table-column prop="phone" label="手机"/>
         <el-table-column prop="status" label="状态"/>
         <el-table-column label="操作">
-          <!-- 更新 -->
-          <el-button id="updateStudent" type="warning" icon="el-icon-edit"></el-button>
-          <!-- 删除 -->
-          <el-button id="deleteStudent" type="danger" icon="el-icon-delete"></el-button>
+          <template slot-scope="scope">
+            <!-- 更新 -->
+            <el-button id="updateStudent" type="warning" icon="el-icon-edit" @click="opeanDialogFormUpdate(scope.row)"></el-button>
+            <!-- 删除 -->
+            <el-button id="deleteStudent" type="danger" icon="el-icon-delete" @click="deleteStudent(scope.row.id)"></el-button>
+          </template>
         </el-table-column>
       </el-table>
       <!-- 分页 -->
@@ -204,16 +206,6 @@ export default {
     },
     queryCurrentPage(currentPage){
       this.queryStudentList(currentPage,this.pageComponents.pageSize)
-    },
-    cellClick(row, column, cell, event){
-      // 如果点击的修改按钮，则去进行修改操作
-      if(event.target.id == "updateStudent"){
-        this.opeanDialogFormUpdate(row)
-      }
-      // 如果点击的删除按钮，则直接进行删除操作
-      if(event.target.id == "deleteStudent"){
-        this.deleteStudent(row.id)
-      }
     },
     opeanDialogFormUpdate(row){
       this.studentFormUpdate = row
