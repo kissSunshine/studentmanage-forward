@@ -227,8 +227,11 @@ export default {
     }
   },
   watch: {
-    studentForm(){
-      this.studentFormUpdate = this.studentForm
+    studentForm: {
+      handler(){
+        this.studentFormUpdate = this.studentForm
+      },
+      immediate: true // 代表第一次就执行；不加则第一次进入修改信息页面带不出数据
     }
   }
 }
