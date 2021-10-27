@@ -87,9 +87,11 @@
     </div>
 
     <!-- 点击新增，弹出对话框填写学生信息 -->
-    <StudentDialogUpdate @changeDialogFormUpdate="closeDialogFormUpdate" :studentForm="studentFormUpdate"
-      :dialogFormVisible="dialogFormUpdate" :genderOptions="genderOptions" :statusOptions="statusOptions" :schoolOptions="schoolOptions">
-    </StudentDialogUpdate>
+    <el-dialog :visible.sync="dialogFormUpdate" width="80%" :destroy-on-close="true" :show-close="false" :close-on-press-escape="false" :close-on-click-modal="false">
+      <StudentDialogUpdate @changeDialogFormUpdate="closeDialogFormUpdate" :studentForm="studentFormUpdate"
+        :genderOptions="genderOptions" :statusOptions="statusOptions" :schoolOptions="schoolOptions">
+      </StudentDialogUpdate>
+    </el-dialog>
 
   </el-card>
 </template>

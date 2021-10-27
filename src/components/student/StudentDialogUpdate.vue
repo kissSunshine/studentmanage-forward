@@ -1,5 +1,10 @@
 <template>
-  <el-dialog title="修改信息" :visible.sync="dialogFormVisible" width="80%" center :show-close="false" :close-on-press-escape="false" :close-on-click-modal="false">
+  <el-card>
+
+    <div slot="header">
+      <h3 style="text-align:center">修改信息</h3>
+    </div>
+
     <el-form ref="studentFormUpdate" :model="studentFormUpdate" :rules="updateRules" label-width="80px">
 
       <!-- 行：1 -->
@@ -94,13 +99,13 @@
 
     </el-form>
 
-  </el-dialog>
+  </el-card>
 </template>
 
 <script>
 export default {
   name: 'StudentDialogUpdate',
-  props: ['dialogFormVisible','genderOptions','statusOptions','schoolOptions','studentForm'],
+  props: ['genderOptions','statusOptions','schoolOptions','studentForm'],
   data(){
     // 自定义校验规则
     var genderRule = (rule, value, callback) => {
@@ -222,15 +227,16 @@ export default {
       this.$emit("changeDialogFormUpdate")
     }
   },
-  mounted(){
-    this.studentFormUpdate.name = this.studentForm.name
-    this.studentFormUpdate.nickname = this.studentForm.nickname
+  watch: {
+    studentForm(){
+      this.studentFormUpdate = this.studentForm
+    }
   }
 }
 </script>
 
-<style>
-.el-dialog {
-  background-color: #d6d6d6;
+<style scoped="scoped">
+.el-card {
+  margin-bottom: 30px;
 }
 </style>
