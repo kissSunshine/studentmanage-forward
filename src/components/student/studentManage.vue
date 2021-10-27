@@ -116,8 +116,8 @@ export default {
         gender: '',
         status: ''
       },
-      genderOptions: [{ value: '0',label: '女' }, { value: '1',label: '男' }], // 查询条件
-      statusOptions: [{ value: '0',label: '离校' }, { value: '1',label: '在校' }],
+      genderOptions: [{ value: 0, label: '女' }, { value: 1, label: '男' }], // 查询条件
+      statusOptions: [{ value: 0, label: '离校' }, { value: 1, label: '在校' }],
       studentList: [], // 查询出的学生信息
       dialogFormAdd: false, //新增学生对话框是否显示；true-显示；false-隐藏
       schoolList: [], //初始化查询校区
