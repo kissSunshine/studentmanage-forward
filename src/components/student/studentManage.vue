@@ -68,7 +68,7 @@
         <el-table-column prop="nickname" label="昵称"/>
         <el-table-column prop="birthday" label="生日"/>
         <el-table-column prop="genderName" label="性别"/>
-        <el-table-column prop="schoolid" label="校区"/>
+        <el-table-column prop="schoolName" label="校区"/>
         <el-table-column prop="phone" label="手机"/>
         <el-table-column prop="statusName" label="状态"/>
         <el-table-column label="操作">
