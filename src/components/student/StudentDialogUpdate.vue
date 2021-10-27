@@ -178,7 +178,6 @@ export default {
   methods: {
     // 添加学生
     updateStudent(){
-      console.log(this.studentForm.name)
       // 1、校验
       this.$refs.studentFormUpdate.validate((valid) => {
         // 校验失败，则阻断提示
@@ -192,6 +191,7 @@ export default {
           method: 'post',
           url: 'http://localhost:8090/student/update',
           data: {
+            id: this.studentFormUpdate.id,
             name: this.studentFormUpdate.name,
             nickname: this.studentFormUpdate.nickname,
             idcard: this.studentFormUpdate.idcard,
@@ -200,9 +200,8 @@ export default {
             phone: this.studentFormUpdate.phone,
             status: this.studentFormUpdate.status,
             schoolid: this.studentFormUpdate.schoolid,
-            password: this.studentFormUpdate.password,
             homeaddress: this.studentFormUpdate.homeaddress,
-            updatedPerson: "Tea666" // 待调整
+            updatedPerson: this.studentFormUpdate.updatedPerson
           }
         }).then((res) => {
           const data = res.data

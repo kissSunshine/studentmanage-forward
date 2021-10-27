@@ -80,7 +80,7 @@
       </el-table>
       <!-- 分页 -->
       <!-- @current-change:当前页码改变时触发 -->
-      <el-pagination background layout="prev, pager, next" :hide-on-single-page="true" 
+      <el-pagination background layout="prev, pager, next" :hide-on-single-page="true"
         :total="pageComponents.total" :page-size="pageComponents.pageSize"
         @current-change="queryCurrentPage">
       </el-pagination>
@@ -180,6 +180,7 @@ export default {
       this.dialogFormAdd = true;
     },
     closeDialogFormAdd(){
+      this.queryStudentList(1,this.pageComponents.pageSize)
       this.dialogFormAdd = false;
     },
     querySchoolList(){
@@ -228,6 +229,7 @@ export default {
       this.dialogFormUpdate = true
     },
     closeDialogFormUpdate(){
+      this.queryStudentList(1,this.pageComponents.pageSize)
       this.dialogFormUpdate = false
     },
     deleteStudent(id){
