@@ -50,11 +50,6 @@
             <el-form-item>
               <el-button type="success" @click="opeanDialogFormAdd">新增</el-button>
             </el-form-item>
-
-            <!-- 点击新增，弹出对话框填写学生信息 -->
-            <StudentDialogAdd @changeDialogFormAdd="closeDialogFormAdd"
-              :dialogFormVisible="dialogFormAdd" :genderOptions="genderOptions" :statusOptions="statusOptions" :schoolOptions="schoolOptions">
-            </StudentDialogAdd>
           </el-col>
         </el-row>
 
@@ -89,6 +84,13 @@
     </div>
 
     <!-- 点击新增，弹出对话框填写学生信息 -->
+    <el-dialog :visible.sync="dialogFormAdd" width="80%" :show-close="false" :close-on-press-escape="false" :close-on-click-modal="false">
+      <StudentDialogAdd @changeDialogFormAdd="closeDialogFormAdd"
+        :dialogFormVisible="dialogFormAdd" :genderOptions="genderOptions" :statusOptions="statusOptions" :schoolOptions="schoolOptions">
+      </StudentDialogAdd>
+    </el-dialog>
+
+    <!-- 点击修改，弹出对话框修改学生信息 -->
     <el-dialog :visible.sync="dialogFormUpdate" width="80%" :destroy-on-close="true" :show-close="false" :close-on-press-escape="false" :close-on-click-modal="false">
       <StudentDialogUpdate @changeDialogFormUpdate="closeDialogFormUpdate" :studentForm="studentFormUpdate"
         :genderOptions="genderOptions" :statusOptions="statusOptions" :schoolOptions="schoolOptions">
@@ -181,8 +183,11 @@ export default {
       this.dialogFormAdd = false;
       this.dialogFormAdd = true;
     },
-    closeDialogFormAdd(){
-      this.queryStudentList(1,this.pageComponents.pageSize)
+    closeDialogFormAdd(addFlag){
+      // 添加过新生才重新查询
+      if(addFlag){
+        this.queryStudentList(1,this.pageComponents.pageSize)
+      }
       this.dialogFormAdd = false;
     },
     querySchoolList(){
@@ -220,8 +225,11 @@ export default {
       this.dialogFormUpdate = false
       this.dialogFormUpdate = true
     },
-    closeDialogFormUpdate(){
-      this.queryStudentList(1,this.pageComponents.pageSize)
+    closeDialogFormUpdate(updateFlag){
+      // 更新过信息才重新查询
+      if(updateFlag){
+        this.queryStudentList(1,this.pageComponents.pageSize)
+      }
       this.dialogFormUpdate = false
     },
     deleteStudentConfirm(id){
@@ -277,12 +285,16 @@ export default {
 .el-table .success-row {
   background: #39ab00;
 }
-
+/* 卡片组件 */
 .el-card {
   background-color: #d6d6d6;
 }
-
+/* 分页组件 */
 .el-pagination {
   margin-top: 20px;
+}
+/* 对话框组件 */
+.el-dialog {
+  background-color: #d6d6d6;
 }
 </style>

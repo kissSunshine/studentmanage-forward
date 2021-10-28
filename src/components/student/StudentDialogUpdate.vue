@@ -92,7 +92,8 @@
         </el-col>
         <el-col :span="8">
           <el-form-item label="">
-            <el-button @click="changeDialogFormVisible">取 消</el-button>
+            <!-- 直接关闭更新卡片，更新标志就是false -->
+            <el-button @click="changeDialogFormVisible(false)">取 消</el-button>
           </el-form-item>
         </el-col>
       </el-row>
@@ -141,6 +142,7 @@ export default {
         homeaddress: ''
       },
       passwordsecond: '', // 再次输入密码
+      updateFlag: false, // 判断是否进行了信息变更
 
       // 校验学生信息
       updateRules: {
@@ -180,6 +182,12 @@ export default {
     updateStudent(){
       // 1、校验
       this.$refs.studentFormUpdate.validate((valid) => {
+        // 校验是否更改了页面的学生信息，没更改，直接阻断提示
+        if(!this.updateFlag){
+          this.$message({showClose: true, message: '未修改学生信息', type: 'error'})
+          return false
+        }
+
         // 校验失败，则阻断提示
         if (!valid) {
           this.$message({showClose: true, message: '请按照要求，重新输入!', type: 'error'})
@@ -213,7 +221,8 @@ export default {
 
           // 4、添加学生成功
           this.$message({showClose: true, message: data.msg,type: 'success'})
-          this.changeDialogFormVisible();
+          // 5、关闭添加卡片，更新标志置为true
+          this.changeDialogFormVisible(true);
 
         }).catch((error) => {
           this.$message({showClose: true, message: "服务器错误，请重试或联系管理员", type: 'error'})
@@ -222,8 +231,8 @@ export default {
       })
     },
     // 关闭添加学生对话框
-    changeDialogFormVisible(){
-      this.$emit("changeDialogFormUpdate")
+    changeDialogFormVisible(updateFlag){
+      this.$emit("changeDialogFormUpdate",updateFlag)
     }
   },
   watch: {
@@ -232,6 +241,12 @@ export default {
         this.studentFormUpdate = this.studentForm
       },
       immediate: true // 代表第一次就执行；不加则第一次进入修改信息页面带不出数据
+    },
+    studentFormUpdat: {
+      handler(){
+         this.updateFlag = true // 更改了页面的学生信息，标记为true
+      },
+      immediate: true // 代表第一次就执行；
     }
   }
 }

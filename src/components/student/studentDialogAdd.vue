@@ -1,5 +1,10 @@
 <template>
-  <el-dialog title="添加学生" :visible.sync="dialogFormVisible" width="80%" center :show-close="false" :close-on-press-escape="false" :close-on-click-modal="false">
+  <el-card>
+
+    <div slot="header">
+      <h3 style="text-align:center">添加新生</h3>
+    </div>
+
     <el-form ref="studentFormAdd" :model="studentFormAdd" :rules="addRules" label-width="80px">
 
       <!-- 行：1 -->
@@ -103,14 +108,15 @@
         </el-col>
         <el-col :span="8">
           <el-form-item label="">
-            <el-button @click="changeDialogFormVisible">取 消</el-button>
+            <!-- 直接关闭新增卡片，新增标志就是false -->
+            <el-button @click="changeDialogFormVisible(false)">取 消</el-button>
           </el-form-item>
         </el-col>
       </el-row>
 
     </el-form>
 
-  </el-dialog>
+  </el-card>
 </template>
 
 <script>
@@ -143,10 +149,10 @@ export default {
         name: '',
         nickname: '',
         idcard: '',
-        gender: '1',
+        gender: 1,
         birthday: '',
         phone: '',
-        status: '1',
+        status: 1,
         schoolid: '',
         password: '',
         homeaddress: ''
@@ -224,7 +230,7 @@ export default {
 
           // 4、添加学生成功
           this.$message({showClose: true, message: data.msg,type: 'success'})
-          this.changeDialogFormVisible();
+          this.changeDialogFormVisible(true);
 
         }).catch((error) => {
          this.$message({showClose: true, message: "服务器错误，请重试或联系管理员", type: 'error'})
@@ -233,15 +239,12 @@ export default {
       })
     },
     // 关闭添加学生对话框
-    changeDialogFormVisible(){
-      this.$emit("changeDialogFormAdd")
+    changeDialogFormVisible(addFlag){
+      this.$emit("changeDialogFormAdd",addFlag)
     }
   }
 }
 </script>
 
 <style>
-.el-dialog {
-  background-color: #d6d6d6;
-}
 </style>
