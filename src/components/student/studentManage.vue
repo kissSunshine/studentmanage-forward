@@ -76,7 +76,7 @@
             <!-- 更新 -->
             <el-button id="updateStudent" type="warning" icon="el-icon-edit" @click="opeanDialogFormUpdate(scope.row)"></el-button>
             <!-- 删除 -->
-            <el-button id="deleteStudent" type="danger" icon="el-icon-delete" @click="deleteStudent(scope.row.id)"></el-button>
+            <el-button id="deleteStudent" type="danger" icon="el-icon-delete" @click="deleteStudentConfirm(scope.row.id)"></el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -223,6 +223,20 @@ export default {
     closeDialogFormUpdate(){
       this.queryStudentList(1,this.pageComponents.pageSize)
       this.dialogFormUpdate = false
+    },
+    deleteStudentConfirm(id){
+      this.$confirm('此操作将永久删除该学生, 是否继续？', '警告', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'error'
+      }).then(() => {
+        this.deleteStudent(id)
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消'
+        });
+      });
     },
     deleteStudent(id){
       this.axios({
