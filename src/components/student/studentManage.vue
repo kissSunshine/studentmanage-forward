@@ -294,7 +294,7 @@ export default {
   margin-top: 20px;
 }
 /* 对话框组件 */
-.el-dialog {
-  background-color: #d6d6d6;
+ .el-card >>> .el-dialog {
+  background-color: #f0f9eb;
 }
 </style>
