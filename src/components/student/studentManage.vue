@@ -84,7 +84,7 @@
     </div>
 
     <!-- 点击新增，弹出对话框填写学生信息 -->
-    <el-dialog :visible.sync="dialogFormAdd" width="80%" :show-close="false" :close-on-press-escape="false" :close-on-click-modal="false">
+    <el-dialog :visible.sync="dialogFormAdd" width="80%" :show-close="false" :close-on-press-escape="false" >
       <StudentDialogAdd @changeDialogFormAdd="closeDialogFormAdd"
         :dialogFormVisible="dialogFormAdd" :genderOptions="genderOptions" :statusOptions="statusOptions" :schoolOptions="schoolOptions">
       </StudentDialogAdd>
@@ -162,12 +162,12 @@ export default {
       })
     },
     tableRowClassName({row, rowIndex}) {
-      if ((rowIndex / 3) == 0) {
-        return 'warning-row'
-      } else if ((rowIndex / 3) == 1) {
-        return 'success-row'
+      if((rowIndex % 5) == 1){
+        return 'rowOne'
+      } else if((rowIndex % 5) == 3){
+        return 'rowTwo'
       }
-      return '';
+      return ''
     },
     opeanDialogFormAdd(){
       if(this.schoolOptions.length === 0){
@@ -277,13 +277,14 @@ export default {
 </script>
 
 <style scoped="scoped">
-.el-table >>> .warning-row {
-  background: #e2e200;
+.el-table >>> .rowOne {
+  background: oldlace;
 }
 
-.el-table >>> .success-row {
-  background: #39ab00;
+.el-table >>> .rowTwo {
+  background: #f0f9eb;
 }
+
 /* 卡片组件 */
 .el-card {
   background-color: #d6d6d6;
