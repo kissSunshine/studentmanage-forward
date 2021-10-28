@@ -21,11 +21,19 @@
           <el-input type="password" auto-complete="false" v-model="loginForm.password" placeholder="请输入密码"/>
         </el-form-item>
 
-        <el-form-item>
-          <el-checkbox v-model="checked">记住我</el-checkbox>
-          <el-switch v-model="loginForm.userType" active-color="#13ce66" active-value="Stu" active-text="学生" inactive-color="#5555ff" inactive-value="Tea" inactive-text="教师">
-          </el-switch>
-        </el-form-item>
+        <el-row :gutter="20">
+          <el-col :span="8">
+            <el-form-item>
+              <el-checkbox v-model="checked">记住我</el-checkbox>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8" :offset="8">
+            <el-form-item label-width="20px">
+              <el-switch v-model="loginForm.userType" active-color="#13ce66" active-value="Stu" active-text="生" inactive-color="#5555ff" inactive-value="Tea" inactive-text="师">
+              </el-switch>
+            </el-form-item>
+          </el-col>
+        </el-row>
 
         <el-form-item>
           <el-button type="primary" style="width: 100%;" @click='login'>登录</el-button>
@@ -86,13 +94,13 @@ export default {
           // 登录成功
           sessionStorage.setItem('USER', data.data) // 保存学生对象
           this.$router.push("/main") // 跳转页面
-          
+
         }).catch((error) => {
           const data = error.data
           this.$message({showClose: true, message: data.msg,type: 'error'})
           return false
         })
-        
+
       })
     }
   }
