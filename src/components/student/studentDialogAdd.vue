@@ -246,5 +246,8 @@ export default {
 }
 </script>
 
-<style>
+<style scoped="scoped">
+.el-card {
+  margin-bottom: 30px;
+}
 </style>

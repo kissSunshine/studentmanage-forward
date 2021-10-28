@@ -58,7 +58,7 @@
 
     <!-- 结果展示区 -->
     <div>
-      <el-table :data="studentList" style="width: 100%" stripe>
+      <el-table :data="studentList" style="width: 100%" :row-class-name="tableRowClassName">
         <el-table-column prop="name" label="姓名"/>
         <el-table-column prop="nickname" label="昵称"/>
         <el-table-column prop="birthday" label="生日"/>
@@ -162,10 +162,9 @@ export default {
       })
     },
     tableRowClassName({row, rowIndex}) {
-      debugger
-      if (rowIndex === 0) {
+      if ((rowIndex / 3) == 0) {
         return 'warning-row'
-      } else if (rowIndex === 1) {
+      } else if ((rowIndex / 3) == 1) {
         return 'success-row'
       }
       return '';
@@ -278,11 +277,11 @@ export default {
 </script>
 
 <style scoped="scoped">
-.el-table .warning-row {
+.el-table >>> .warning-row {
   background: #e2e200;
 }
 
-.el-table .success-row {
+.el-table >>> .success-row {
   background: #39ab00;
 }
 /* 卡片组件 */
