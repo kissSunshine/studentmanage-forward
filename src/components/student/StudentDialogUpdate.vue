@@ -180,14 +180,15 @@ export default {
   methods: {
     // 添加学生
     updateStudent(){
+      // 0、先判断是否页面信息是否更改过
+      this.getUpdateFlag(this.studentForm,this.studentFormUpdate)
+      // 没更改，直接阻断提示
+      if(!this.updateFlag){
+        this.$message({showClose: true, message: '未修改学生信息', type: 'error'})
+        return false
+      }
       // 1、校验
       this.$refs.studentFormUpdate.validate((valid) => {
-        // 校验是否更改了页面的学生信息，没更改，直接阻断提示
-        if(!this.updateFlag){
-          this.$message({showClose: true, message: '未修改学生信息', type: 'error'})
-          return false
-        }
-
         // 校验失败，则阻断提示
         if (!valid) {
           this.$message({showClose: true, message: '请按照要求，重新输入!', type: 'error'})
@@ -233,20 +234,32 @@ export default {
     // 关闭添加学生对话框
     changeDialogFormVisible(updateFlag){
       this.$emit("changeDialogFormUpdate",updateFlag)
+    },
+    getUpdateFlag(oldForm,newForm){
+      for(let key in oldForm){
+        if(oldForm[key] != newForm[key]){
+          this.updateFlag = true
+          break
+        }
+      }
     }
   },
   watch: {
     studentForm: {
       handler(){
-        this.studentFormUpdate = this.studentForm
+        this.studentFormUpdate.id = this.studentForm.id
+        this.studentFormUpdate.name = this.studentForm.name
+        this.studentFormUpdate.nickname = this.studentForm.nickname
+        this.studentFormUpdate.idcard = this.studentForm.idcard
+        this.studentFormUpdate.gender = this.studentForm.gender
+        this.studentFormUpdate.birthday = this.studentForm.birthday
+        this.studentFormUpdate.phone = this.studentForm.phone
+        this.studentFormUpdate.status = this.studentForm.status
+        this.studentFormUpdate.schoolid = this.studentForm.schoolid
+        this.studentFormUpdate.homeaddress = this.studentForm.homeaddress
+        this.studentFormUpdate.updatedPerson = this.studentForm.updatedPerson
       },
       immediate: true // 代表第一次就执行；不加则第一次进入修改信息页面带不出数据
-    },
-    studentFormUpdat: {
-      handler(){
-         this.updateFlag = true // 更改了页面的学生信息，标记为true
-      },
-      immediate: true // 代表第一次就执行；
     }
   }
 }
