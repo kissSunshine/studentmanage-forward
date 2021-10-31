@@ -3,19 +3,19 @@
     <!-- 查询条件区 -->
     <div slot="header">
       <!-- 查询表单 -->
-      <el-form ref="avtivityForm" :model="avtivityForm" label-width="80px">
+      <el-form ref="activityForm" :model="activityForm" label-width="80px">
         <!-- 行：1 -->
         <el-row :gutter="20">
           <!-- 列：1 -->
           <el-col :span="6">
             <el-form-item label="名称">
-              <el-input v-model="avtivityForm.name"></el-input>
+              <el-input v-model="activityForm.name"></el-input>
             </el-form-item>
           </el-col>
           <!-- 列：2 -->
           <el-col :span="6">
             <el-form-item label="状态">
-              <el-select v-model="avtivityForm.status" clearable placeholder="请选择">
+              <el-select v-model="activityForm.status" clearable placeholder="请选择">
                 <el-option v-for="item in statusOptions" :key="item.value" :label="item.label" :value="item.value"/>
               </el-select>
             </el-form-item>
@@ -34,19 +34,19 @@
           <!-- 列：1 -->
           <el-col :span="6">
             <el-form-item label="开始">
-              <el-date-picker v-model="avtivityForm.startDateTime" value-format="yyyy-MM-dd HH:mm:ss" type="datetime" placeholder="选择开始日期时间" :default-value="defaultDateTime"></el-date-picker>
+              <el-date-picker v-model="activityForm.startDateTime" value-format="yyyy-MM-dd HH:mm:ss" type="datetime" placeholder="选择开始日期时间" :default-value="defaultDateTime"></el-date-picker>
             </el-form-item>
           </el-col>
           <!-- 列：2 -->
           <el-col :span="6">
             <el-form-item label="结束">
-              <el-date-picker v-model="avtivityForm.endDateTime" value-format="yyyy-MM-dd HH:mm:ss" type="datetime" placeholder="选择结束日期时间"></el-date-picker>
+              <el-date-picker v-model="activityForm.endDateTime" value-format="yyyy-MM-dd HH:mm:ss" type="datetime" placeholder="选择结束日期时间"></el-date-picker>
             </el-form-item>
           </el-col>
           <!-- 列：3 -->
           <el-col :span="3">
             <el-form-item>
-              <el-button type="success" >新增</el-button>
+              <el-button type="success" @click="openDialogFormAdd">新增</el-button>
             </el-form-item>
           </el-col>
         </el-row>
@@ -58,27 +58,37 @@
     <div>
       <el-table :data="activityList" style="width: 100%">
         <el-table-column prop="name" label="名称"/>
-        <el-table-column prop="nickname" label="昵称"/>
-        <el-table-column prop="birthday" label="生日"/>
-        <el-table-column prop="genderName" label="性别"/>
-        <el-table-column prop="schoolName" label="校区"/>
-        <el-table-column prop="phone" label="手机"/>
-        <el-table-column prop="statusName" label="状态"/>
+        <el-table-column prop="startDateTime" label="开始时间"/>
+        <el-table-column prop="endDateTime" label="结束时间"/>
+        <el-table-column prop="address" label="活动地点"/>
+        <el-table-column prop="cost" label="费用"/>
+        <el-table-column prop="status" label="状态"/>
         <el-table-column label="操作">
           
         </el-table-column>
       </el-table>
     </div>
 
+    <!-- 点击新增，弹出对话框填写学生信息 -->
+    <el-dialog :visible.sync="showDialogFormAdd" width="80%" :show-close="false" :close-on-press-escape="false" >
+      <ActivityDialogAdd @changeDialogFormAdd="closeDialogFormAdd" :statusOptions="statusOptions">
+      </ActivityDialogAdd>
+    </el-dialog>
+
   </el-card>
 </template>
 
 <script>
+import ActivityDialogAdd from '@/components/activity/ActivityDialogAdd.vue'
+
 export default {
-  name: 'activityManage',
+  name: 'ActivityManage',
+  components: {
+    ActivityDialogAdd,
+  },
   data(){
     return {
-      avtivityForm: {
+      activityForm: {
         name: '',
         status: 0,
         startDateTime: '',
@@ -91,6 +101,7 @@ export default {
         total: 0, // 查询出的活动总数
         pageSize: 5, // 分页组件每页显示数量
       },
+      showDialogFormAdd: false, // 是否展示添加活动卡片  true-展示；false-隐藏
     }
   },
   methods: {
@@ -102,10 +113,10 @@ export default {
         method: 'get',
         url: 'http://localhost:8090/activity/query',
         params: {
-          name: this.avtivityForm.name,
-          status: this.avtivityForm.status,
-          startDateTime: this.avtivityForm.startDateTime,
-          endDateTime: this.avtivityForm.endDateTime,
+          name: this.activityForm.name,
+          status: this.activityForm.status,
+          startDateTime: this.activityForm.startDateTime,
+          endDateTime: this.activityForm.endDateTime,
           currentPage,
           pageSize,
         }
@@ -118,12 +129,24 @@ export default {
         }
 
         // 查询成功
-        this.studentList = resVo.data.data
+        this.activityList = resVo.data.data
         this.pageComponents.total = resVo.data.total
 
       }).catch((error) => {
         this.$message({showClose: true, message: "服务器错误，请重试或联系管理员", type: 'error'})
       })
+    },
+    openDialogFormAdd(){ // 展示【新增】卡片
+      this.showDialogFormAdd = false
+      this.showDialogFormAdd = true
+    },
+    closeDialogFormAdd(addFlag){ // 隐藏【新增】卡片
+      // 如果新增了活动，需要重新查询
+      if(addFlag){
+        queryActivityList(1,this.pageComponents.pageSize)
+      }
+      
+      this.showDialogFormAdd = false
     }
   },
   mounted(){
@@ -132,9 +155,13 @@ export default {
 }
 </script>
 
-<style>
+<style scoped="scoped">
 /* 卡片组件 */
 .el-card {
   background-color: #d6d6d6;
+}
+/* 对话框组件 */
+.el-card >>> .el-dialog {
+  background-color: #f0f9eb;
 }
 </style>
