@@ -5,7 +5,7 @@
       <h3 style="text-align:center">添加活动</h3>
     </div>
 
-    <el-form ref="studentFormAdd" :model="activityFormAdd" :rules="addRules" label-width="80px">
+    <el-form ref="activityFormAdd" :model="activityFormAdd" :rules="addRules" label-width="80px">
 
       <!-- 行：1 -->
       <el-row :gutter="20">
@@ -33,8 +33,8 @@
       <el-row :gutter="20">
         <!-- 列：1 -->
         <el-col :span="8">
-          <el-form-item label="状态" prop="gender">
-            <el-select v-model="activityFormAdd.gender" clearable placeholder="请选择">
+          <el-form-item label="状态" prop="status">
+            <el-select v-model="activityFormAdd.status" clearable placeholder="请选择">
               <el-option v-for="item in statusOptions" :key="item.value" :label="item.label" :value="item.value"/>
             </el-select>
           </el-form-item>
@@ -42,13 +42,13 @@
         <!-- 列：2 -->
         <el-col :span="8">
           <el-form-item label="费用" prop="cost">
-            <el-input v-model="activityFormAdd.cost" placeholder="请输入费用"></el-input>
+            <el-input v-model="activityFormAdd.cost" placeholder="请输入费用，非零开头最多带一位小数"></el-input>
           </el-form-item>
         </el-col>
         <!-- 列：3 -->
         <el-col :span="8">
           <el-form-item label="折扣" prop="discount">
-            <el-input v-model="activityFormAdd.discount" placeholder=""></el-input>
+            <el-input-number v-model="activityFormAdd.discount" :step="1" step-strictly :min="1" :max="10"></el-input-number>
           </el-form-item>
         </el-col>
       </el-row>
@@ -85,28 +85,94 @@ export default {
       }
       callback()
     };
+    var startDateTimeRule = (rule, value, callback) => {
+      console.log(this.currentDate)
+      // 获取当前日期
+      if(this.currentDate == ""){
+        this.getDefaultDateTime();
+      }
+      // 当前日期 - 开始日期 < 0 则阻断提示
+      const diffDate = this.getDiffDate(value.substring(0,10),this.currentDate);
+      if(diffDate < 0 ){
+        callback(new Error('开始日期不能早于当前日期'))
+        return false
+      }
+
+      callback()
+    };
+    var endDateTimeRule = (rule, value, callback) => {
+      debugger
+      if(this.currentDate == ""){
+        this.getDefaultDateTime();
+      }
+      // 当前日期 - 结束日期 < 0 则阻断提示
+      let diffDate = this.getDiffDate(value.substring(0,10),this.currentDate);
+      // 999没有计算过
+      if(diffDate != 999 && diffDate < 0 ){
+        callback(new Error('结束日期不能早于当前日期'))
+        return false
+      }
+      // 结束日期 - 开始日期 < 0 则阻断提示
+      if(this.activityFormAdd.endDateTime != "" && this.activityFormAdd.startDateTime != ""){
+        diffDate = this.getDiffDate(this.activityFormAdd.endDateTime.substring(0,10), this.activityFormAdd.startDateTime.substring(0,10));
+        // 999没有计算过
+        if(diffDate != 999 && diffDate < 0 ){
+          callback(new Error('结束日期不能早于开始日期'))
+          return false
+        }
+      }
+      callback()
+    };
+    var costRule = (rule, value, callback) => {
+      const regExp = /^([1-9][0-9]*)+(\.[0-9]{1})?$/g  // 非零开头的最多带一位小数的数字
+      if(!regExp.test(value)){
+        callback(new Error('请填写正确格式的费用'))
+      }
+      callback()
+    };
+    var discountRule = (rule, value, callback) => {
+      const regExp = /^([1-9][0-9]*)+(\.[0-9]{1})?$/g  // 非零开头的最多带一位小数的数字
+      if(!regExp.test(value)){
+        callback(new Error('请填写正确格式的费用'))
+      }
+      callback()
+    };
     return {
       activityFormAdd: {
         name: '',
         startDateTime: '',
         endDateTime: '',
-        address: '',
+        status: 0,
         cost: '',
-        discount: '',
-        status: 0
+        discount: 10
       },
       // 校验添加的学生信息
       addRules: {
         name: [
-          { required: true, message: '请输入姓名', trigger: 'blur' },
+          { required: true, message: '请输入活动名称', trigger: 'blur' },
           { min: 1, max: 20, message: '姓名在20个字符以内', trigger: 'blur' }
         ],
-        status: [
-          { required: true, message: '请选择状态', trigger: 'change' },
-          { validator: statusRule, trigger: 'change' }, // 自定义规则
+        startDateTime: [
+          { required: true, message: '请选择开始时间', trigger: 'blur' },
+          { validator: startDateTimeRule, trigger: 'blur'},
         ],
-        schoolid: [{ required: true, message: '请选择校区', trigger: 'change' }]
-      }
+        endDateTime: [
+          { required: true, message: '请选择结束时间', trigger: 'blur' },
+          { validator: endDateTimeRule, trigger: 'blur'},
+        ],
+        status: [
+          { required: true, message: '请选择状态', trigger: 'blur' },
+          { validator: statusRule, trigger: 'blur' }, // 自定义规则
+        ],
+        cost: [
+          { required: true, message: '请填写费用', trigger: 'blur' },
+          { validator: costRule, trigger: 'blur' }, // 自定义规则
+        ],
+        discount: [{ validator: discountRule, trigger: 'blur' } // 自定义规则
+        ]
+      },
+      // 当前日期
+      currentDate: ''
     }
   },
   methods: {
@@ -130,19 +196,19 @@ export default {
           endDateTime: this.activityFormAdd.endDateTime,
           status: this.activityFormAdd.status,
           cost: this.activityFormAdd.cost,
-          discount: this.activityFormAdd.discount,
+          discount: (this.activityFormAdd.discount / 10),
           updatedPerson: "Tea666" // 待调整
         }
       }).then((res) => {
         const data = res.data
           // 3、添加活动失败
         if(data.status !== 1) {
-          this.$message({showClose: true, message: data.msg,type: 'error'})
+          this.$message({showClose: true, message: data.msg, type: 'error'})
           return false
         }
 
         // 4、添加活动成功
-        this.$message({showClose: true, message: data.msg,type: 'success'})
+        this.$message({showClose: true, message: data.msg, type: 'success'})
         this.changeDialogFormVisible(true);
 
       }).catch((error) => {
@@ -152,6 +218,23 @@ export default {
     // 关闭添加学生对话框
     changeDialogFormVisible(addFlag){
       this.$emit("changeDialogFormAdd",addFlag)
+    },
+    // 获取当前时间，格式为  yyyy-mm-dd
+    getDefaultDateTime(){
+      this.currentDate = new Date().toLocaleDateString().replace(new RegExp("/","gm"),"-");
+    },
+    // 计算相差天数 第一个参数 减去 第二个参数  注意日期参数必须为 yyyy-mm-dd 格式
+    getDiffDate(minuend,subtrahend){
+      if(minuend == "" || subtrahend == ""){
+        return 999
+      }
+      const minuendArr = minuend.split('-')
+      const subtrahendArr = subtrahend.split('-')
+      let diffYear = minuendArr[0] - subtrahendArr[0]
+      let diffMonth = minuendArr[1] - subtrahendArr[1]
+      let diffDay = minuendArr[2] - subtrahendArr[2]
+
+      return (diffYear * 365) + (diffMonth * 30) + diffDay
     }
   }
 }

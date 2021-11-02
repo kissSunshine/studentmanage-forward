@@ -143,7 +143,7 @@ export default {
     closeDialogFormAdd(addFlag){ // 隐藏【新增】卡片
       // 如果新增了活动，需要重新查询
       if(addFlag){
-        queryActivityList(1,this.pageComponents.pageSize)
+        this.queryActivityList(1,this.pageComponents.pageSize)
       }
       
       this.showDialogFormAdd = false
