@@ -33,22 +33,39 @@
       <el-row :gutter="20">
         <!-- 列：1 -->
         <el-col :span="8">
+          <el-form-item label="费用" prop="cost">
+            <el-input v-model="activityFormAdd.cost" placeholder="请输入费用，非零开头最多带一位小数"></el-input>
+          </el-form-item>
+        </el-col>
+        <!-- 列：2 -->
+        <el-col :span="8">
+          <el-form-item label="折扣" prop="discount">
+            <el-input-number v-model="activityFormAdd.discount" :step="1" step-strictly :min="1" :max="10"></el-input-number>
+          </el-form-item>
+        </el-col>
+        <!-- 列：3 -->
+        <el-col :span="8">
           <el-form-item label="状态" prop="status">
             <el-select v-model="activityFormAdd.status" clearable placeholder="请选择">
               <el-option v-for="item in statusOptions" :key="item.value" :label="item.label" :value="item.value"/>
             </el-select>
           </el-form-item>
         </el-col>
-        <!-- 列：2 -->
-        <el-col :span="8">
-          <el-form-item label="费用" prop="cost">
-            <el-input v-model="activityFormAdd.cost" placeholder="请输入费用，非零开头最多带一位小数"></el-input>
-          </el-form-item>
-        </el-col>
-        <!-- 列：3 -->
-        <el-col :span="8">
-          <el-form-item label="折扣" prop="discount">
-            <el-input-number v-model="activityFormAdd.discount" :step="1" step-strictly :min="1" :max="10"></el-input-number>
+      </el-row>
+      
+      <el-row :gutter="20">
+        <el-col :span="22">
+          <el-form-item label="" >
+            <el-table ref="schoolTable" :data="schoolList" tooltip-effect="dark" style="width: 100%" >
+              <!-- 多选框 -->
+              <el-table-column type="selection" width="55"></el-table-column>
+              <el-table-column prop="name" label="校区" width="120"></el-table-column>
+              <el-table-column label="活动详细地址" show-overflow-tooltip>
+                <template slot-scope="scope">
+                  <el-input v-model="scope.row.activityAddress" placeholder="可以补充详细地址"></el-input>
+                </template>
+              </el-table-column>
+            </el-table>
           </el-form-item>
         </el-col>
       </el-row>
@@ -86,7 +103,6 @@ export default {
       callback()
     };
     var startDateTimeRule = (rule, value, callback) => {
-      console.log(this.currentDate)
       // 获取当前日期
       if(this.currentDate == ""){
         this.getDefaultDateTime();
@@ -172,12 +188,16 @@ export default {
         ]
       },
       // 当前日期
-      currentDate: ''
+      currentDate: '',
+      // 所有校区列表
+      schoolList: []
     }
   },
   methods: {
     // 添加活动
     addActivity(){
+
+      console.log( this.$refs.schoolTable.selection)
       // 1、校验
       this.$refs.activityFormAdd.validate((valid) => {
         // 校验失败，则阻断提示
@@ -197,6 +217,7 @@ export default {
           status: this.activityFormAdd.status,
           cost: this.activityFormAdd.cost,
           discount: (this.activityFormAdd.discount / 10),
+          address: this.$refs.schoolTable.selection,
           updatedPerson: "Tea666" // 待调整
         }
       }).then((res) => {
@@ -235,7 +256,29 @@ export default {
       let diffDay = minuendArr[2] - subtrahendArr[2]
 
       return (diffYear * 365) + (diffMonth * 30) + diffDay
+    },
+    // 查询所有校区
+    getSchool(){
+      this.axios({
+        method: 'get',
+        url: 'http://localhost:8090/school/queryAll'
+      }).then((res) => {
+        const data = res.data
+          // 1、查询失败
+        if(data.status !== 1) {
+          this.$message({showClose: true, message: data.msg, type: 'error'})
+          return false
+        }
+
+        // 2、查询成功
+        this.schoolList = data.data
+      }).catch((error) => {
+        this.$message({showClose: true, message: "服务器错误，请重试或联系管理员", type: 'error'})
+      })
     }
+  },
+  mounted(){
+    this.getSchool()
   }
 }
 </script>
