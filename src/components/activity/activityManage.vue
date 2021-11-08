@@ -64,7 +64,7 @@
         <el-table-column prop="cost" label="费用"/>
         <el-table-column prop="status" label="状态"/>
         <el-table-column label="操作">
-          
+
         </el-table-column>
       </el-table>
     </div>
@@ -145,7 +145,7 @@ export default {
       if(addFlag){
         this.queryActivityList(1,this.pageComponents.pageSize)
       }
-      
+
       this.showDialogFormAdd = false
     }
   },

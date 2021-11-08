@@ -52,7 +52,7 @@
           </el-form-item>
         </el-col>
       </el-row>
-      
+
       <el-row :gutter="20">
         <el-col :span="22">
           <el-form-item label="" >
@@ -60,7 +60,13 @@
               <!-- 多选框 -->
               <el-table-column type="selection" width="55"></el-table-column>
               <el-table-column prop="name" label="校区" width="120"></el-table-column>
-              <el-table-column label="活动详细地址" show-overflow-tooltip>
+              <el-table-column label="活动教师" width="100">
+                <template slot-scope="scope">
+                  <!-- 添加每个校区付责教师 -->
+                  <el-button type="success" icon="el-icon-s-custom" @click="openActivityTeacherDrawerAdd"></el-button>
+                </template>
+              </el-table-column>
+              <el-table-column label="活动详细地址">
                 <template slot-scope="scope">
                   <el-input v-model="scope.row.activityAddress" placeholder="可以补充详细地址"></el-input>
                 </template>
@@ -74,7 +80,7 @@
       <el-row :gutter="20">
         <el-col :span="8">
           <el-form-item label="">
-            <el-button type="primary" @click="addActivity">添 加</el-button>
+            <el-button type="primary" @click="openActivityTeacherDrawerAdd">添 加</el-button>
           </el-form-item>
         </el-col>
         <el-col :span="8">
@@ -87,13 +93,23 @@
 
     </el-form>
 
+    <!-- 添加每个校区付责教师 -->
+    <el-drawer :visible.sync="showFlagAddActivityTeacher" direction="rtl" size="50%" :modal="false">
+      <ActivityTeacherDrawerAdd></ActivityTeacherDrawerAdd>
+    </el-drawer>
+
   </el-card>
 </template>
 
 <script>
+import ActivityTeacherDrawerAdd from './ActivityTeacherDrawerAdd.vue'
+
 export default {
   name: 'ActivityDialogAdd',
   props: ['statusOptions'],
+  components: {
+    ActivityTeacherDrawerAdd
+  },
   data(){
     // 自定义校验规则
     var statusRule = (rule, value, callback) => {
@@ -190,7 +206,9 @@ export default {
       // 当前日期
       currentDate: '',
       // 所有校区列表
-      schoolList: []
+      schoolList: [],
+      // 添加活动付责教师抽屉显示标记  true-显示；false-隐藏
+      showFlagAddActivityTeacher: false
     }
   },
   methods: {
@@ -275,6 +293,11 @@ export default {
       }).catch((error) => {
         this.$message({showClose: true, message: "服务器错误，请重试或联系管理员", type: 'error'})
       })
+    },
+    // 显示添加活动老师的抽屉
+    openActivityTeacherDrawerAdd(){
+      this.showFlagAddActivityTeacher = false
+      this.showFlagAddActivityTeacher = true
     }
   },
   mounted(){
