@@ -86,13 +86,13 @@
 
     <!-- 点击新增，弹出对话框填写教师信息 -->
     <el-dialog :visible.sync="showFlagDialogAdd" width="80%" :show-close="false" :close-on-press-escape="false" >
-      <DialogAdd @closeDialogAdd="closeDialogAdd" :genderOptions="genderOptions" :statusOptions="statusOptions" :schoolOptions="schoolOptions">
+      <DialogAdd @closeDialogAdd="closeDialogAdd" :genderOptions="genderOptions" :statusOptions="statusOptions" :schoolOptions="schoolOptions" :departmentOptions="departmentOptions" :positionOptions="positionOptions" :subjectOptions="subjectOptions">
       </DialogAdd>
     </el-dialog>
 
     <!-- 点击修改，弹出对话框修改教师信息 -->
     <el-dialog :visible.sync="showFlagDialogUpdate" width="80%" :destroy-on-close="true" :show-close="false" :close-on-press-escape="false" :close-on-click-modal="false">
-      <DialogUpdate @closeDialogUpdate="closeDialogUpdate" :oneUpdate="oneUpdate" :genderOptions="genderOptions" :statusOptions="statusOptions" :schoolOptions="schoolOptions">
+      <DialogUpdate @closeDialogUpdate="closeDialogUpdate" :oneUpdate="oneUpdate" :genderOptions="genderOptions" :statusOptions="statusOptions" :schoolOptions="schoolOptions" :departmentOptions="departmentOptions" :positionOptions="positionOptions" :subjectOptions="subjectOptions">
       </DialogUpdate>
     </el-dialog>
 
@@ -130,6 +130,9 @@ export default {
       //-------------------------------------------------------------------------------------------
       schoolList: [], //初始化查询校区
       schoolOptions: [], // 校区下拉选
+      departmentOptions: '', // 部门下拉选值
+      positionOptions: '', // 职位下拉选值
+      subjectOptions: '', // 学科下拉选值
     }
   },
   methods: {
@@ -268,10 +271,79 @@ export default {
         this.$message({showClose: true, message: data.msg,type: 'error'})
         return false
       })
+    },
+    getDepartmentOptions(){
+      if(this.departmentOptions != ''){
+        return true
+      }
+
+      this.axios({
+        method: 'get',
+        url: 'http://localhost:8090/enum/department'
+      }).then((res) => {
+        const data = res.data
+         // 获取部门失败
+        if(data.status !== 1) {
+          this.$message({showClose: true, message: data.msg,type: 'error'})
+          return false
+        }
+
+        // 获取部门成功
+        this.departmentOptions = data.data;
+      }).catch((error) => {
+       this.$message({showClose: true, message: "服务器错误，请重试或联系管理员", type: 'error'})
+      })
+    },
+    // 职位下拉选值
+    getPositionOptions(){
+      if(this.positionOptions != ''){
+        return true
+      }
+      this.axios({
+        method: 'get',
+        url: 'http://localhost:8090/enum/position'
+      }).then((res) => {
+        const data = res.data
+         // 获取职位失败
+        if(data.status !== 1) {
+          this.$message({showClose: true, message: data.msg,type: 'error'})
+          return false
+        }
+
+        // 获取职位成功
+        this.positionOptions = data.data;
+      }).catch((error) => {
+       this.$message({showClose: true, message: "服务器错误，请重试或联系管理员", type: 'error'})
+      })
+    },
+    // 学科下拉选值
+    getSubjectOptions(){
+      if(this.subjectOptions != ''){
+        return true
+      }
+      this.axios({
+        method: 'get',
+        url: 'http://localhost:8090/enum/subject'
+      }).then((res) => {
+        const data = res.data
+         // 获取学科失败
+        if(data.status !== 1) {
+          this.$message({showClose: true, message: data.msg,type: 'error'})
+          return false
+        }
+
+        // 获取学科成功
+        this.subjectOptions = data.data;
+      }).catch((error) => {
+       this.$message({showClose: true, message: "服务器错误，请重试或联系管理员", type: 'error'})
+      })
     }
   },
   mounted() {
     this.querySchoolList()
+    this.getDepartmentOptions()
+    this.getPositionOptions()
+    this.getSubjectOptions()
   }
 }
 </script>

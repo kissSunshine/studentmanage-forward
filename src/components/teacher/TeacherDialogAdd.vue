@@ -150,7 +150,7 @@
 <script>
 export default {
   name: 'DialogAdd',
-  props: ['genderOptions','statusOptions','schoolOptions'],
+  props: ['genderOptions','statusOptions','schoolOptions','departmentOptions','positionOptions','subjectOptions'],
   data(){
     // 自定义校验规则
     var genderRule = (rule, value, callback) => {
@@ -222,9 +222,7 @@ export default {
         homeaddress: [{ min: 0, max: 500, message: '家庭住址在500个字符以内', trigger: 'change' }]
       },
       //------------------------------------------------------------------------------------------------------
-      departmentOptions: '', // 部门下拉选值
-      positionOptions: '', // 职位下拉选值
-      subjectOptions: '', // 学科下拉选值
+
     }
   },
   methods: {
@@ -278,79 +276,7 @@ export default {
     // 关闭添加教师对话框
     closeDialogAdd(addFlag){
       this.$emit("closeDialogAdd",addFlag)
-    },
-    getDepartmentOptions(){
-      if(this.departmentOptions != ''){
-        return true
-      }
-
-      this.axios({
-        method: 'get',
-        url: 'http://localhost:8090/enum/department'
-      }).then((res) => {
-        const data = res.data
-         // 获取部门失败
-        if(data.status !== 1) {
-          this.$message({showClose: true, message: data.msg,type: 'error'})
-          return false
-        }
-
-        // 获取部门成功
-        this.departmentOptions = data.data;
-      }).catch((error) => {
-       this.$message({showClose: true, message: "服务器错误，请重试或联系管理员", type: 'error'})
-      })
-    },
-    // 职位下拉选值
-    getPositionOptions(){
-      debugger
-      if(this.positionOptions != ''){
-        return true
-      }
-      this.axios({
-        method: 'get',
-        url: 'http://localhost:8090/enum/position'
-      }).then((res) => {
-        const data = res.data
-         // 获取职位失败
-        if(data.status !== 1) {
-          this.$message({showClose: true, message: data.msg,type: 'error'})
-          return false
-        }
-
-        // 获取职位成功
-        this.positionOptions = data.data;
-      }).catch((error) => {
-       this.$message({showClose: true, message: "服务器错误，请重试或联系管理员", type: 'error'})
-      })
-    },
-    // 学科下拉选值
-    getSubjectOptions(){
-      if(this.subjectOptions != ''){
-        return true
-      }
-      this.axios({
-        method: 'get',
-        url: 'http://localhost:8090/enum/subject'
-      }).then((res) => {
-        const data = res.data
-         // 获取学科失败
-        if(data.status !== 1) {
-          this.$message({showClose: true, message: data.msg,type: 'error'})
-          return false
-        }
-
-        // 获取学科成功
-        this.subjectOptions = data.data;
-      }).catch((error) => {
-       this.$message({showClose: true, message: "服务器错误，请重试或联系管理员", type: 'error'})
-      })
     }
-  },
-  mounted() {
-    this.getDepartmentOptions()
-    this.getPositionOptions()
-    this.getSubjectOptions()
   }
 }
 </script>

@@ -71,9 +71,37 @@
             </el-select>
           </el-form-item>
         </el-col>
+        <!-- 列：3 -->
+        <el-col :span="8">
+          <el-form-item label="部门" prop="department">
+            <el-select v-model="formUpdate.department" clearable placeholder="请选择">
+              <el-option v-for="item in departmentOptions" :key="item.value" :label="item.label" :value="item.value"/>
+            </el-select>
+          </el-form-item>
+        </el-col>
       </el-row>
 
       <!-- 行：4 -->
+      <el-row :gutter="20">
+        <!-- 列：1 -->
+        <el-col :span="8">
+          <el-form-item label="职位" prop="position">
+            <el-select v-model="formUpdate.position" clearable placeholder="请选择">
+              <el-option v-for="item in positionOptions" :key="item.value" :label="item.label" :value="item.value"/>
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <!-- 列：2 -->
+        <el-col :span="8">
+          <el-form-item label="学科" prop="subject">
+            <el-select v-model="formUpdate.subject" clearable placeholder="请选择">
+              <el-option v-for="item in subjectOptions" :key="item.value" :label="item.label" :value="item.value"/>
+            </el-select>
+          </el-form-item>
+        </el-col>
+      </el-row>
+
+      <!-- 行：5 -->
       <el-row :gutter="20">
         <!-- 列：1 -->
         <el-col :span="8">
@@ -106,7 +134,7 @@
 <script>
 export default {
   name: 'DialogUpdate',
-  props: ['genderOptions','statusOptions','schoolOptions','oneUpdate'],
+  props: ['genderOptions','statusOptions','schoolOptions','oneUpdate','departmentOptions','positionOptions','subjectOptions'],
   data(){
     // 自定义校验规则
     var genderRule = (rule, value, callback) => {
@@ -139,6 +167,9 @@ export default {
         phone: '',
         status: '',
         schoolid: '',
+        department: '',
+        position: '',
+        subject: '',
         homeaddress: '',
         updatedPerson: ''
       },
@@ -175,7 +206,8 @@ export default {
         ],
         passwordsecond: [{ required: true, message: '请输入确认密码', trigger: 'blur' }],
         homeaddress: [{ min: 0, max: 500, message: '家庭住址在500个字符以内', trigger: 'change' }]
-      }
+      },
+      //---------------------------------------------------------------------------------------------------
     }
   },
   methods: {
@@ -210,6 +242,9 @@ export default {
           phone: this.formUpdate.phone,
           status: this.formUpdate.status,
           schoolid: this.formUpdate.schoolid,
+          department: this.formUpdate.department,
+          position: this.formUpdate.position,
+          subject: this.formUpdate.subject,
           homeaddress: this.formUpdate.homeaddress,
           updatedPerson: this.formUpdate.updatedPerson
         }
@@ -255,6 +290,9 @@ export default {
         this.formUpdate.phone = this.oneUpdate.phone
         this.formUpdate.status = this.oneUpdate.status
         this.formUpdate.schoolid = this.oneUpdate.schoolid
+        this.formUpdate.department = this.oneUpdate.department
+        this.formUpdate.position = this.oneUpdate.position
+        this.formUpdate.subject = this.oneUpdate.subject
         this.formUpdate.homeaddress = this.oneUpdate.homeaddress
         this.formUpdate.updatedPerson = this.oneUpdate.updatedPerson
       },
