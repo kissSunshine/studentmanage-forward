@@ -71,9 +71,37 @@
             </el-select>
           </el-form-item>
         </el-col>
+        <!-- 列：3 -->
+        <el-col :span="8">
+          <el-form-item label="部门" prop="department">
+            <el-select v-model="formAdd.department" clearable placeholder="请选择">
+              <el-option v-for="item in departmentOptions" :key="item.value" :label="item.label" :value="item.value"/>
+            </el-select>
+          </el-form-item>
+        </el-col>
       </el-row>
 
       <!-- 行：4 -->
+      <el-row :gutter="20">
+        <!-- 列：1 -->
+        <el-col :span="8">
+          <el-form-item label="职位" prop="position">
+            <el-select v-model="formAdd.position" clearable placeholder="请选择">
+              <el-option v-for="item in positionOptions" :key="item.value" :label="item.label" :value="item.value"/>
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <!-- 列：2 -->
+        <el-col :span="8">
+          <el-form-item label="学科" prop="subject">
+            <el-select v-model="formAdd.subject" clearable placeholder="请选择">
+              <el-option v-for="item in subjectOptions" :key="item.value" :label="item.label" :value="item.value"/>
+            </el-select>
+          </el-form-item>
+        </el-col>
+      </el-row>
+
+      <!-- 行：5 -->
       <el-row :gutter="20">
         <!-- 列：1 -->
         <el-col :span="8">
@@ -89,7 +117,7 @@
         </el-col>
       </el-row>
 
-      <!-- 行：5 -->
+      <!-- 行：6 -->
       <el-row :gutter="20">
         <!-- 列：1 -->
         <el-col :span="8">
@@ -154,6 +182,9 @@ export default {
         phone: '',
         status: 1,
         schoolid: '',
+        department: '',
+        position: '',
+        subject: '',
         password: '',
         homeaddress: ''
       },
@@ -189,7 +220,11 @@ export default {
         ],
         passwordsecond: [{ required: true, message: '请输入确认密码', trigger: 'blur' }],
         homeaddress: [{ min: 0, max: 500, message: '家庭住址在500个字符以内', trigger: 'change' }]
-      }
+      },
+      //------------------------------------------------------------------------------------------------------
+      departmentOptions: '', // 部门下拉选值
+      positionOptions: '', // 职位下拉选值
+      subjectOptions: '', // 学科下拉选值
     }
   },
   methods: {
@@ -217,6 +252,9 @@ export default {
           phone: this.formAdd.phone,
           status: this.formAdd.status,
           schoolid: this.formAdd.schoolid,
+          department: this.formAdd.department,
+          position: this.formAdd.position,
+          subject: this.formAdd.subject,
           password: this.formAdd.password,
           homeaddress: this.formAdd.homeaddress,
           updatedPerson: "Tea666" // 待调整
@@ -240,7 +278,79 @@ export default {
     // 关闭添加教师对话框
     closeDialogAdd(addFlag){
       this.$emit("closeDialogAdd",addFlag)
+    },
+    getDepartmentOptions(){
+      if(this.departmentOptions != ''){
+        return true
+      }
+
+      this.axios({
+        method: 'get',
+        url: 'http://localhost:8090/enum/department'
+      }).then((res) => {
+        const data = res.data
+         // 获取部门失败
+        if(data.status !== 1) {
+          this.$message({showClose: true, message: data.msg,type: 'error'})
+          return false
+        }
+
+        // 获取部门成功
+        this.departmentOptions = data.data;
+      }).catch((error) => {
+       this.$message({showClose: true, message: "服务器错误，请重试或联系管理员", type: 'error'})
+      })
+    },
+    // 职位下拉选值
+    getPositionOptions(){
+      debugger
+      if(this.positionOptions != ''){
+        return true
+      }
+      this.axios({
+        method: 'get',
+        url: 'http://localhost:8090/enum/position'
+      }).then((res) => {
+        const data = res.data
+         // 获取职位失败
+        if(data.status !== 1) {
+          this.$message({showClose: true, message: data.msg,type: 'error'})
+          return false
+        }
+
+        // 获取职位成功
+        this.positionOptions = data.data;
+      }).catch((error) => {
+       this.$message({showClose: true, message: "服务器错误，请重试或联系管理员", type: 'error'})
+      })
+    },
+    // 学科下拉选值
+    getSubjectOptions(){
+      if(this.subjectOptions != ''){
+        return true
+      }
+      this.axios({
+        method: 'get',
+        url: 'http://localhost:8090/enum/subject'
+      }).then((res) => {
+        const data = res.data
+         // 获取学科失败
+        if(data.status !== 1) {
+          this.$message({showClose: true, message: data.msg,type: 'error'})
+          return false
+        }
+
+        // 获取学科成功
+        this.subjectOptions = data.data;
+      }).catch((error) => {
+       this.$message({showClose: true, message: "服务器错误，请重试或联系管理员", type: 'error'})
+      })
     }
+  },
+  mounted() {
+    this.getDepartmentOptions()
+    this.getPositionOptions()
+    this.getSubjectOptions()
   }
 }
 </script>
