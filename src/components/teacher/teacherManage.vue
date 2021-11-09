@@ -232,7 +232,7 @@ export default {
     deleteOne(id){
       this.axios({
         method: 'post',
-        url: 'http://localhost:8090/student/delete',
+        url: 'http://localhost:8090/teacher/delete',
         data: {
           id
         }
