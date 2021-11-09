@@ -63,7 +63,7 @@
               <el-table-column label="活动教师" width="100">
                 <template slot-scope="scope">
                   <!-- 添加每个校区付责教师 -->
-                  <el-button type="success" icon="el-icon-s-custom" @click="openActivityTeacherDrawerAdd(scope.row.id)"></el-button>
+                  <el-button type="success" icon="el-icon-s-custom" @click="openDrawerAdd(scope.row.id)"></el-button>
                 </template>
               </el-table-column>
               <el-table-column label="活动详细地址">
@@ -95,7 +95,7 @@
 
     <!-- 添加每个校区付责教师 -->
     <el-drawer :visible.sync="showFlagAddActivityTeacher" direction="rtl" size="60%" :modal="false" :show-close="false">
-      <ActivityTeacherDrawerAdd :schoolList="schoolList" :schoolidSelected="schoolidSelected"></ActivityTeacherDrawerAdd>
+      <ActivityTeacherDrawerAdd @closeDrawerAdd="closeDrawerAdd" @addActivityTeacher="addActivityTeacher" :schoolList="schoolList" :schoolidSelected="schoolidSelected"></ActivityTeacherDrawerAdd>
     </el-drawer>
 
   </el-card>
@@ -177,6 +177,8 @@ export default {
         cost: '',
         discount: 10
       },
+      // 活动校区及对应的老师
+      activityRealTeacher: [],
       // 校验添加的学生信息
       addRules: {
         name: [
@@ -215,8 +217,6 @@ export default {
   methods: {
     // 添加活动
     addActivity(){
-
-      console.log( this.$refs.schoolTable.selection)
       // 1、校验
       this.$refs.activityFormAdd.validate((valid) => {
         // 校验失败，则阻断提示
@@ -255,7 +255,7 @@ export default {
         this.$message({showClose: true, message: "服务器错误，请重试或联系管理员", type: 'error'})
       })
     },
-    // 关闭添加学生对话框
+    // 关闭添加活动对话框
     changeDialogFormVisible(addFlag){
       this.$emit("changeDialogFormAdd",addFlag)
     },
@@ -296,10 +296,24 @@ export default {
       })
     },
     // 显示添加活动老师的抽屉
-    openActivityTeacherDrawerAdd(id){
+    openDrawerAdd(id){
       this.schoolidSelected = id
       this.showFlagAddActivityTeacher = false
       this.showFlagAddActivityTeacher = true
+    },
+    // 隐藏添加校区活动教师的抽屉
+    closeDrawerAdd(){
+      this.showFlagAddActivityTeacher = false
+    },
+    // 将添加校区活动教师的抽屉选择的数据存放在data中
+    addActivityTeacher(schoolid,teacherList){
+      debugger
+      const teacheridList = []
+      for(let i = 0; i < teacherList.length; i++ ){
+        teacheridList.push(teacherList[i].id)
+      }
+      const activityRealTeacherOne = {"schoolid": schoolid,"teacheridList": teacheridList}
+      this.activityRealTeacher.push(activityRealTeacherOne)
     }
   },
   mounted(){

@@ -2,62 +2,82 @@
   <el-card class="box-card">
     <!-- 查询条件区 -->
     <div slot="header">
-      <!-- 查询表单 -->
-      <el-form ref="formQuery" :model="formQuery" label-width="80px">
-        <!-- 行：1 -->
-        <el-row :gutter="20">
-          <!-- 列：1 -->
-          <el-col :span="6">
-            <el-form-item label="姓名">
-              <el-input v-model="formQuery.name"></el-input>
-            </el-form-item>
-          </el-col>
-          <!-- 列：2 -->
-          <el-col :span="6">
-            <el-form-item label="昵称">
-              <el-input v-model="formQuery.nickname"></el-input>
-            </el-form-item>
-          </el-col>
-          <!-- 列：2 -->
-          <el-col :span="6">
-            <el-form-item label="校区" prop="schoolid">
-              <el-select v-model="formQuery.schoolid" clearable placeholder="请选择">
-                <el-option v-for="item in schoolOptions" :key="item.value" :label="item.label" :value="item.value"/>
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <!-- 列：3 -->
-          <el-col :span="3">
-            <el-form-item>
-              <!-- 查询按钮默认都查询第1页 -->
-              <el-button type="primary" @click="queryList(1,pageComponents.pageSize)">查询</el-button>
-            </el-form-item>
-          </el-col>
-        </el-row>
-
-      </el-form>
+       <h3 style="text-align:center">添加活动教师</h3>
     </div>
 
-    <!-- 结果展示区 -->
-    <div>
-      <el-table :data="queryResultList" style="width: 100%" :row-class-name="tableRowClassName">
-        <el-table-column prop="name" label="姓名" />
-        <el-table-column prop="nickname" label="昵称" />
-        <el-table-column prop="genderName" label="性别"/>
-        <el-table-column prop="schoolName" label="校区"/>
-        <el-table-column prop="subjectName" label="学科"/>
-        <el-table-column prop="departmentName" label="部门"/>
-        <el-table-column prop="positionName" label="职位"/>
-        <el-table-column prop="phone" label="手机"/>
-        <el-table-column prop="statusName" label="状态"/>
-      </el-table>
-      <!-- 分页 -->
-      <!-- @current-change:当前页码改变时触发 -->
-      <el-pagination background layout="prev, pager, next" :hide-on-single-page="true"
-        :total="pageComponents.total" :page-size="pageComponents.pageSize" @current-change="queryCurrentPage">
-      </el-pagination>
-    </div>
+    <!-- 查询表单 -->
+    <el-form ref="formQuery" :model="formQuery" label-width="80px">
+      <!-- 行：1 -->
+      <el-row :gutter="20">
+        <!-- 列：1 -->
+        <el-col :span="6">
+          <el-form-item label="姓名">
+            <el-input v-model="formQuery.name"></el-input>
+          </el-form-item>
+        </el-col>
+        <!-- 列：2 -->
+        <el-col :span="6">
+          <el-form-item label="昵称">
+            <el-input v-model="formQuery.nickname"></el-input>
+          </el-form-item>
+        </el-col>
+        <!-- 列：2 -->
+        <el-col :span="6">
+          <el-form-item label="校区" prop="schoolid">
+            <el-select v-model="formQuery.schoolid" clearable placeholder="请选择">
+              <el-option v-for="item in schoolOptions" :key="item.value" :label="item.label" :value="item.value"/>
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <!-- 列：3 -->
+        <el-col :span="3">
+          <el-form-item>
+            <!-- 查询按钮默认都查询第1页 -->
+            <el-button type="primary" @click="queryList(1,pageComponents.pageSize)">查询</el-button>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <!-- 行：2 -->
+      <el-row :gutter="20">
+        <el-col :span="22">
+          <el-form-item label="" >
+            <!-- 结果展示区 -->
+            <div>
+              <el-table ref="queryResultTable" :data="queryResultList" style="width: 100%" :row-class-name="tableRowClassName">
+                <el-table-column type="selection" width="55"></el-table-column>
+                <el-table-column prop="name" label="姓名" />
+                <el-table-column prop="nickname" label="昵称" />
+                <el-table-column prop="genderName" label="性别"/>
+                <el-table-column prop="schoolName" label="校区"/>
+                <el-table-column prop="phone" label="手机"/>
+                <el-table-column prop="statusName" label="状态"/>
+              </el-table>
+              <!-- 分页 -->
+              <!-- @current-change:当前页码改变时触发 -->
+              <el-pagination background layout="prev, pager, next" :hide-on-single-page="true"
+                :total="pageComponents.total" :page-size="pageComponents.pageSize" @current-change="queryCurrentPage">
+              </el-pagination>
+            </div>
+          </el-form-item>
+        </el-col>
+      </el-row>
 
+      <!-- 添加按钮 -->
+      <el-row :gutter="20">
+        <el-col :span="6">
+          <el-form-item label="">
+            <el-button type="primary" @click="addActivityTeacher">添 加</el-button>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="">
+            <!-- 直接关闭新增卡片，新增标志就是false -->
+            <el-button @click="closeDrawerAdd">取 消</el-button>
+          </el-form-item>
+        </el-col>
+      </el-row>
+
+    </el-form>
   </el-card>
 </template>
 
@@ -79,7 +99,7 @@ export default {
       queryResultList: [], // 查询出的教师信息
       pageComponents: {
         total: 0, // 查询出的教师总人数
-        pageSize: 5, // 分页组件每页显示数量
+        pageSize: 10, // 分页组件每页显示数量
       },
       //-------------------------------------------------------------------------------------------
       schoolOptions: []
@@ -125,6 +145,13 @@ export default {
     queryCurrentPage(currentPage){
       this.queryStudentList(currentPage,this.pageComponents.pageSize)
     },
+    closeDrawerAdd(){
+      this.$emit("closeDrawerAdd")
+    },
+    addActivityTeacher(){
+      this.closeDrawerAdd()
+      this.$emit("addActivityTeacher",this.schoolidSelected,this.$refs.queryResultTable.selection)
+    },
     //------------------------------------------------------------------------------------------------------
     getSchoolOptions(){
       if(this.schoolOptions.length === 0){
@@ -168,4 +195,5 @@ export default {
 .el-pagination {
   margin-top: 20px;
 }
+
 </style>
