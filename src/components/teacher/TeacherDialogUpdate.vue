@@ -42,7 +42,7 @@
         <!-- 列：2 -->
         <el-col :span="8">
           <el-form-item label="出生日期" prop="birthday">
-            <el-date-picker v-model="formUpdate.birthday" type="date" placeholder="选择日期"></el-date-picker>
+            <el-date-picker v-model="formUpdate.birthday" type="date" value-format="yyyy-MM-dd" placeholder="选择日期"></el-date-picker>
           </el-form-item>
         </el-col>
         <!-- 列：3 -->
