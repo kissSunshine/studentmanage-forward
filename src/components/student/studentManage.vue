@@ -191,7 +191,7 @@ export default {
     },
     querySchoolList(){
        this.axios({
-        method: 'post',
+        method: 'get',
         url: 'http://localhost:8090/school/queryAll'
       }).then((res) => {
         const data = res.data

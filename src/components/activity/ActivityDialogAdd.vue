@@ -63,7 +63,7 @@
               <el-table-column label="活动教师" width="100">
                 <template slot-scope="scope">
                   <!-- 添加每个校区付责教师 -->
-                  <el-button type="success" icon="el-icon-s-custom" @click="openActivityTeacherDrawerAdd"></el-button>
+                  <el-button type="success" icon="el-icon-s-custom" @click="openActivityTeacherDrawerAdd(scope.row.id)"></el-button>
                 </template>
               </el-table-column>
               <el-table-column label="活动详细地址">
@@ -80,7 +80,7 @@
       <el-row :gutter="20">
         <el-col :span="8">
           <el-form-item label="">
-            <el-button type="primary" @click="openActivityTeacherDrawerAdd">添 加</el-button>
+            <el-button type="primary" @click="addActivity">添 加</el-button>
           </el-form-item>
         </el-col>
         <el-col :span="8">
@@ -94,8 +94,8 @@
     </el-form>
 
     <!-- 添加每个校区付责教师 -->
-    <el-drawer :visible.sync="showFlagAddActivityTeacher" direction="rtl" size="50%" :modal="false">
-      <ActivityTeacherDrawerAdd></ActivityTeacherDrawerAdd>
+    <el-drawer :visible.sync="showFlagAddActivityTeacher" direction="rtl" size="60%" :modal="false" :show-close="false">
+      <ActivityTeacherDrawerAdd :schoolList="schoolList" :schoolidSelected="schoolidSelected"></ActivityTeacherDrawerAdd>
     </el-drawer>
 
   </el-card>
@@ -133,7 +133,6 @@ export default {
       callback()
     };
     var endDateTimeRule = (rule, value, callback) => {
-      debugger
       if(this.currentDate == ""){
         this.getDefaultDateTime();
       }
@@ -208,7 +207,9 @@ export default {
       // 所有校区列表
       schoolList: [],
       // 添加活动付责教师抽屉显示标记  true-显示；false-隐藏
-      showFlagAddActivityTeacher: false
+      showFlagAddActivityTeacher: false,
+      // 点击添加教师时，所选择的校区
+      schoolidSelected: ''
     }
   },
   methods: {
@@ -295,7 +296,8 @@ export default {
       })
     },
     // 显示添加活动老师的抽屉
-    openActivityTeacherDrawerAdd(){
+    openActivityTeacherDrawerAdd(id){
+      this.schoolidSelected = id
       this.showFlagAddActivityTeacher = false
       this.showFlagAddActivityTeacher = true
     }
@@ -309,5 +311,8 @@ export default {
 <style scoped="scoped">
 .el-card {
   margin-bottom: 30px;
+}
+.el-card >>> .el-drawer {
+  background-color: #f0f9eb;
 }
 </style>
