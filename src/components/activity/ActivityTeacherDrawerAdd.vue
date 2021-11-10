@@ -6,7 +6,7 @@
     </div>
 
     <!-- 查询表单 -->
-    <el-form ref="formQuery" :model="formQuery" label-width="80px">
+    <el-form ref="formQuery" :model="formQuery" label-width="70px">
       <!-- 行：1 -->
       <el-row :gutter="20">
         <!-- 列：1 -->
@@ -23,7 +23,7 @@
         </el-col>
         <!-- 列：2 -->
         <el-col :span="6">
-          <el-form-item label="校区" prop="schoolid">
+          <el-form-item label="活动校区" prop="schoolid">
             <el-select v-model="formQuery.schoolid" clearable placeholder="请选择">
               <el-option v-for="item in schoolOptions" :key="item.value" :label="item.label" :value="item.value"/>
             </el-select>
@@ -39,18 +39,25 @@
       </el-row>
       <!-- 行：2 -->
       <el-row :gutter="20">
-        <el-col :span="22">
+        <el-col :span="24">
           <el-form-item label="" >
             <!-- 结果展示区 -->
             <div>
               <el-table ref="queryResultTable" :data="queryResultList" style="width: 100%" :row-class-name="tableRowClassName">
                 <el-table-column type="selection" width="55"></el-table-column>
-                <el-table-column prop="name" label="姓名" />
-                <el-table-column prop="nickname" label="昵称" />
-                <el-table-column prop="genderName" label="性别"/>
-                <el-table-column prop="schoolName" label="校区"/>
-                <el-table-column prop="phone" label="手机"/>
-                <el-table-column prop="statusName" label="状态"/>
+                <el-table-column prop="nickname" label="昵称" width="60"/>
+                <el-table-column prop="schoolName" label="所在校区" width="100"/>
+                <el-table-column prop="phone" label="手机" width="120"/>
+                <el-table-column label="开始日期" width="230">
+                  <template slot-scope="scope">
+                    <el-date-picker v-model="scope.row.startDate" type="date" value-format="yyyy-MM-dd"  placeholder="选择日期"></el-date-picker>
+                  </template>
+                </el-table-column>
+                <el-table-column label="结束日期" width="230">
+                  <template slot-scope="scope" >
+                    <el-date-picker v-model="scope.row.endDate" type="date" value-format="yyyy-MM-dd"  placeholder="选择日期"></el-date-picker>
+                  </template>
+                </el-table-column>
               </el-table>
               <!-- 分页 -->
               <!-- @current-change:当前页码改变时触发 -->

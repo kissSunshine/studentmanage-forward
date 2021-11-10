@@ -177,6 +177,8 @@ export default {
         cost: '',
         discount: 10
       },
+      // 活动校区地址
+      activityRealAddress: [],
       // 活动校区及对应的老师
       activityRealTeacher: [],
       // 校验添加的学生信息
@@ -225,7 +227,13 @@ export default {
           return false
         }
       })
-      // 2、校验成功，发送ajax请求
+
+      // 2、校验 并 封装活动地址数据，调整活动教师数据
+      if(!this.getActivityRealAddress(this.$refs.schoolTable.selection) || !this.getActivityRealTeacher(this.$refs.schoolTable.selection)){
+        return false
+      }
+
+      // 3、校验成功，发送ajax请求
       this.axios({
         method: 'post',
         url: 'http://localhost:8090/activity/add',
@@ -233,10 +241,11 @@ export default {
           name: this.activityFormAdd.name,
           startDateTime: this.activityFormAdd.startDateTime,
           endDateTime: this.activityFormAdd.endDateTime,
-          status: this.activityFormAdd.status,
           cost: this.activityFormAdd.cost,
           discount: (this.activityFormAdd.discount / 10),
-          address: this.$refs.schoolTable.selection,
+          status: this.activityFormAdd.status,
+          activityRealAddress: this.activityRealAddress,
+          activityRealTeacher: this.activityRealTeacher,
           updatedPerson: "Tea666" // 待调整
         }
       }).then((res) => {
@@ -306,14 +315,58 @@ export default {
       this.showFlagAddActivityTeacher = false
     },
     // 将添加校区活动教师的抽屉选择的数据存放在data中
-    addActivityTeacher(schoolid,teacherList){
-      debugger
-      const teacheridList = []
-      for(let i = 0; i < teacherList.length; i++ ){
-        teacheridList.push(teacherList[i].id)
+    addActivityTeacher(schoolid,teachers){
+      const teacherList = []
+      for(let i = 0; i < teachers.length; i++ ){
+        // 教师id；开始时间；结束时间；添加活动时，默认还未参见
+        const teacherOne = {"teacherid": teachers[i].id, "startDate": teachers[i].startDate, "endDate": teachers[i].endDate, "attend": 0}
+        teacherList.push(teacherOne)
       }
-      const activityRealTeacherOne = {"schoolid": schoolid,"teacheridList": teacheridList}
+      const activityRealTeacherOne = {"schoolid": schoolid,"teacherList": teacherList}
       this.activityRealTeacher.push(activityRealTeacherOne)
+    },
+    // 封装活动地址数据
+    getActivityRealAddress(schools){
+      // 校验是否选择了活动校区
+      if(schools.length == 0){
+        this.$message({showClose: true, message: '请选择举办活动的校区!', type: 'error'})
+        return false
+      }
+
+      // 清空数组，避免多次添加时的重复添加
+      this.activityRealAddress.splice(0,this.activityRealAddress.length)
+      for(let i = 0; i < schools.length; i++ ){
+        const activityRealAddressOne = {"schoolid": schools[i].id, "activityAddress": schools[i].activityAddress}
+        this.activityRealAddress.push(activityRealAddressOne)
+      }
+      return true
+    },
+    // 调整活动教师数据：只保留被勾选校区的活动教师
+    getActivityRealTeacher(schools){
+      const activityRealTeacherList = []
+      for(let i = 0; i < schools.length; i++ ){
+        for(let j = 0; j < this.activityRealTeacher.length; j++ ){
+          if(schools[i].id == this.activityRealTeacher[j].schoolid){
+            activityRealTeacherList.push(this.activityRealTeacher[j])
+          }
+        }
+      }
+
+      // 校验是否添加了活动教师
+      if(activityRealTeacherList.length == 0){
+        this.$message({showClose: true, message: '请选择举办活动校区的活动教师!', type: 'error'})
+        return false
+      }
+
+      // 校验每个校区是否都有活动教师
+      if(schools.length != activityRealTeacherList.length){
+        this.$message({showClose: true, message: '有举办活动的校区未选择活动教师!', type: 'error'})
+        return false
+      }
+
+      this.activityRealTeacher = activityRealTeacherList
+
+      return true
     }
   },
   mounted(){
