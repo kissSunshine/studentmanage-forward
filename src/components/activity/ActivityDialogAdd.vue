@@ -319,7 +319,7 @@ export default {
       const teacherList = []
       for(let i = 0; i < teachers.length; i++ ){
         // 教师id；开始时间；结束时间；添加活动时，默认还未参见
-        const teacherOne = {"teacherid": teachers[i].id, "startDate": teachers[i].startDate, "endDate": teachers[i].endDate, "attend": 0}
+        const teacherOne = {"teacherid": teachers[i].id, "startDate": teachers[i].startDate, "endDate": teachers[i].endDate, "attend": "0"}
         teacherList.push(teacherOne)
       }
       const activityRealTeacherOne = {"schoolid": schoolid,"teacherList": teacherList}
