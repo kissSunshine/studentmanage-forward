@@ -56,7 +56,7 @@
 
     <!-- 结果展示区 -->
     <div>
-      <el-table :data="activityList" style="width: 100%">
+      <!-- <el-table :data="activityList" style="width: 100%">
         <el-table-column prop="name" label="名称"/>
         <el-table-column prop="startDateTime" label="开始时间"/>
         <el-table-column prop="endDateTime" label="结束时间"/>
@@ -66,7 +66,23 @@
         <el-table-column label="操作">
 
         </el-table-column>
-      </el-table>
+      </el-table> -->
+      <!-- 以卡片形式展示 -->
+      <!-- 行：1 -->
+      <el-row :gutter="20" v-for="(activity,index) in activityList" :key="activity.id">
+        <!-- 列：1 -->
+        <el-col :span="8">
+          
+        </el-col>
+        <!-- 列：2 -->
+        <el-col :span="8">
+          
+        </el-col>
+        <!-- 列：3 -->
+        <el-col :span="8">
+          
+        </el-col>
+      </el-row>
     </div>
 
     <!-- 点击新增，弹出对话框填写学生信息 -->
@@ -99,7 +115,7 @@ export default {
       activityList: [], // 查询出的活动列表
       pageComponents: {
         total: 0, // 查询出的活动总数
-        pageSize: 5, // 分页组件每页显示数量
+        pageSize: 6, // 分页组件每页显示数量
       },
       showDialogFormAdd: false, // 是否展示添加活动卡片  true-展示；false-隐藏
     }
