@@ -44,6 +44,9 @@
 </template>
 
 <script>
+// 引入统一校验规则
+import {fromRules} from '@/assets/js/formRules.js'
+
 export default {
   name: 'Login',
   data() {
@@ -55,11 +58,8 @@ export default {
   		},
   		checked: '', // 记住密码
       loginRules: {
-  			nickname: [
-          { required: true, message: '请输入用户名', trigger: 'blur' },
-          { min: 1, max: 20, message: '昵称在20个字符以内', trigger: 'blur' }
-        ],
-  			password: [{ required: true, message: '请输入密码', trigger: 'blur' }]
+  			nickname: fromRules.nickname,
+  			password: fromRules.password
   		}
   	}
   },

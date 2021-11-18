@@ -102,6 +102,9 @@
 </template>
 
 <script>
+// 引入统一校验规则
+import {fromRules} from '@/assets/js/formRules.js'
+
 import ActivityTeacherDrawerAdd from './ActivityTeacherDrawerAdd.vue'
 
 export default {
@@ -111,13 +114,6 @@ export default {
     ActivityTeacherDrawerAdd
   },
   data(){
-    // 自定义校验规则
-    var statusRule = (rule, value, callback) => {
-      if(value != "0" && value != "1" && value != "2"){
-        callback(new Error('请正确的选择状态'))
-      }
-      callback()
-    };
     var startDateTimeRule = (rule, value, callback) => {
       // 获取当前日期
       if(this.currentDate == ""){
@@ -154,20 +150,6 @@ export default {
       }
       callback()
     };
-    var costRule = (rule, value, callback) => {
-      const regExp = /^([1-9][0-9]*)+(\.[0-9]{1})?$/g  // 非零开头的最多带一位小数的数字
-      if(!regExp.test(value)){
-        callback(new Error('请填写正确格式的费用'))
-      }
-      callback()
-    };
-    var discountRule = (rule, value, callback) => {
-      const regExp = /^([1-9][0-9]*)+(\.[0-9]{1})?$/g  // 非零开头的最多带一位小数的数字
-      if(!regExp.test(value)){
-        callback(new Error('请填写正确格式的费用'))
-      }
-      callback()
-    };
     return {
       activityFormAdd: {
         name: '',
@@ -183,10 +165,7 @@ export default {
       activityRealTeacher: [],
       // 校验添加的学生信息
       addRules: {
-        name: [
-          { required: true, message: '请输入活动名称', trigger: 'blur' },
-          { min: 1, max: 20, message: '姓名在20个字符以内', trigger: 'blur' }
-        ],
+        name: fromRules.name,
         startDateTime: [
           { required: true, message: '请选择开始时间', trigger: 'blur' },
           { validator: startDateTimeRule, trigger: 'blur'},
@@ -195,16 +174,9 @@ export default {
           { required: true, message: '请选择结束时间', trigger: 'blur' },
           { validator: endDateTimeRule, trigger: 'blur'},
         ],
-        status: [
-          { required: true, message: '请选择状态', trigger: 'blur' },
-          { validator: statusRule, trigger: 'blur' }, // 自定义规则
-        ],
-        cost: [
-          { required: true, message: '请填写费用', trigger: 'blur' },
-          { validator: costRule, trigger: 'blur' }, // 自定义规则
-        ],
-        discount: [{ validator: discountRule, trigger: 'blur' } // 自定义规则
-        ]
+        status: fromRules.status,
+        cost: fromRules.cost,
+        discount: fromRules.discount
       },
       // 当前日期
       currentDate: '',

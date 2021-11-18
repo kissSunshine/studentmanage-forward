@@ -120,30 +120,13 @@
 </template>
 
 <script>
+// 引入统一校验规则
+import {fromRules} from '@/assets/js/formRules.js'
+
 export default {
   name: 'StudentDialogAdd',
   props: ['dialogFormVisible','genderOptions','statusOptions','schoolOptions'],
   data(){
-    // 自定义校验规则
-    var genderRule = (rule, value, callback) => {
-      if(value != "0" && value != "1"){
-        callback(new Error('请正确的选择性别'))
-      }
-      callback()
-    };
-    var phoneRule = (rule, value, callback) => {
-      var reg = /^\d{11}$/g
-      if(!reg.test(value)){
-        callback(new Error('请输入11位数字'))
-      }
-      callback()
-    };
-    var statusRule = (rule, value, callback) => {
-      if(value != "0" && value != "1"){
-        callback(new Error('请正确的选择状态'))
-      }
-      callback()
-    };
     return {
       studentFormAdd: {
         name: '',
@@ -161,34 +144,17 @@ export default {
 
       // 校验添加的学生信息
       addRules: {
-        name: [
-          { required: true, message: '请输入姓名', trigger: 'blur' },
-          { min: 1, max: 20, message: '姓名在20个字符以内', trigger: 'blur' }
-        ],
-      	nickname: [
-          { required: true, message: '请输入昵称', trigger: 'blur' },
-          { min: 1, max: 20, message: '昵称在20个字符以内', trigger: 'blur' }
-        ],
-        idcard: [{ min: 18, max: 18, message: '身份证号码必须18位', trigger: 'blur' }],
-        gender: [
-          { required: true, message: '请选择性别', trigger: 'change' },
-          { validator: genderRule, trigger: 'change' }, // 自定义规则
-        ],
-        birthday: [{ required: true, message: '请选择出生日期', trigger: 'blur' }],
-        phone: [
-          { required: true, message: '请填写手机号', trigger: 'blur' },
-          { validator: phoneRule, trigger: 'blur' }],
-        status: [
-          { required: true, message: '请选择状态', trigger: 'change' },
-          { validator: statusRule, trigger: 'change' }, // 自定义规则
-        ],
-        schoolid: [{ required: true, message: '请选择校区', trigger: 'change' }],
-      	password: [
-          { required: true, message: '请输入密码', trigger: 'blur' },
-          { min: 6, max: 20, message: '密码在6到20个字符范围内', trigger: 'blur' },
-        ],
-        passwordsecond: [{ required: true, message: '请输入确认密码', trigger: 'blur' }],
-        homeaddress: [{ min: 0, max: 500, message: '家庭住址在500个字符以内', trigger: 'change' }]
+        name: fromRules.name,
+      	nickname: fromRules.nickname,
+        idcard: fromRules.idcard,
+        gender: fromRules.gender,
+        birthday: fromRules.birthday,
+        phone: fromRules.phone,
+        status: fromRules.status,
+        schoolid: fromRules.schoolid,
+      	password: fromRules.password,
+        passwordsecond: fromRules.passwordsecond,
+        homeaddress: fromRules.homeaddress
       }
     }
   },
