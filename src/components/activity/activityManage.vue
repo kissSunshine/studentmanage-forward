@@ -69,18 +69,35 @@
       </el-table> -->
       <!-- 以卡片形式展示 -->
       <!-- 行：1 -->
-      <el-row :gutter="20" v-for="(activity,index) in activityList" :key="activity.id">
+      <el-row :gutter="30">
         <!-- 列：1 -->
-        <el-col :span="8">
-          
+        <el-col :span="elColSpan" v-for="(activity,index) in activityListFirstRow" :key="activity.id">
+          <el-card :body-style="{ padding: '0px' }">
+            <img src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png" class="image">
+            <div style="padding: 14px;">
+              <span>{{activity.name}}</span>
+              <div class="bottom clearfix">
+                <time class="time">开始时间：{{ activity.startDateTime }}</time><br/>
+                <time class="time">结束时间：{{ activity.endDateTime }}</time>
+              </div>
+            </div>
+          </el-card>
         </el-col>
-        <!-- 列：2 -->
-        <el-col :span="8">
-          
-        </el-col>
-        <!-- 列：3 -->
-        <el-col :span="8">
-          
+      </el-row>
+      <!-- 行：1 -->
+      <el-row :gutter="30" style="margin-top: 20px;">
+        <!-- 列：1 -->
+        <el-col :span="elColSpan" v-for="(activity,index) in activityListSecondRow" :key="activity.id">
+          <el-card :body-style="{ padding: '0px' }">
+            <img src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png" class="image">
+            <div style="padding: 14px;">
+              <span>{{activity.name}}</span>
+              <div class="bottom clearfix">
+                <time class="time">开始时间：{{ activity.startDateTime }}</time><br/>
+                <time class="time">结束时间：{{ activity.endDateTime }}</time>
+              </div>
+            </div>
+          </el-card>
         </el-col>
       </el-row>
     </div>
@@ -115,9 +132,29 @@ export default {
       activityList: [], // 查询出的活动列表
       pageComponents: {
         total: 0, // 查询出的活动总数
-        pageSize: 6, // 分页组件每页显示数量
+        pageSize: 8, // 分页组件每页显示数量  每行展示卡片数量及行中宽度都由此算出。修改时，必须为偶数
       },
       showDialogFormAdd: false, // 是否展示添加活动卡片  true-展示；false-隐藏
+    }
+  },
+  computed: {
+    // 根据每行展示的卡片个数，调整每列宽度
+    elColSpan(){
+      return 24 / (this.pageComponents.pageSize / 2)
+    },
+    // 每页展示6个活动卡片，此为第一行的三个
+    activityListFirstRow(){
+      if(this.activityList.length == 0){
+        return this.activityList
+      }
+      return this.activityList.slice(0,(this.pageComponents.pageSize / 2))
+    },
+    // 每页展示6个活动卡片，此为第er行的三个
+    activityListSecondRow(){
+      if(this.activityList.length == 0){
+        return this.activityList
+      }
+      return this.activityList.slice((this.pageComponents.pageSize / 2),this.pageComponents.pageSize)
     }
   },
   methods: {
@@ -179,5 +216,10 @@ export default {
 /* 对话框组件 */
 .el-card >>> .el-dialog {
   background-color: #f0f9eb;
+}
+/* 活动卡片的图片 */
+.image {
+  width: 100%;
+  display: block;
 }
 </style>
