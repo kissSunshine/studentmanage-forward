@@ -95,7 +95,7 @@
 
     <!-- 添加每个校区付责教师 -->
     <el-drawer :visible.sync="showFlagAddActivityTeacher" direction="rtl" size="60%" :modal="false" :show-close="false">
-      <ActivityTeacherDrawerAdd @closeDrawerAdd="closeDrawerAdd" @addActivityTeacher="addActivityTeacher" :schoolList="schoolList" :schoolidSelected="schoolidSelected"></ActivityTeacherDrawerAdd>
+      <ActivityTeacherDrawerAdd @closeDrawerAdd="closeDrawerAdd" @addActivityTeacher="addActivityTeacher" :schoolList="schoolList" :schoolidSelected="schoolidSelected" :activityRealTeacherSelectedtList="activityRealTeacherSelectedtList"></ActivityTeacherDrawerAdd>
     </el-drawer>
 
   </el-card>
@@ -185,7 +185,9 @@ export default {
       // 添加活动付责教师抽屉显示标记  true-显示；false-隐藏
       showFlagAddActivityTeacher: false,
       // 点击添加教师时，所选择的校区
-      schoolidSelected: ''
+      schoolidSelected: '',
+      // 已选择的教师
+      activityRealTeacherSelectedtList: []
     }
   },
   methods: {
@@ -281,6 +283,10 @@ export default {
       this.schoolidSelected = id
       this.showFlagAddActivityTeacher = false
       this.showFlagAddActivityTeacher = true
+
+      if(this.activityRealTeacher.length > 0){
+        this.activityRealTeacherSelectedtList = this.activityRealTeacher.find(item => item.schoolid == id).teacherList
+      }
     },
     // 隐藏添加校区活动教师的抽屉
     closeDrawerAdd(){
@@ -288,13 +294,18 @@ export default {
     },
     // 将添加校区活动教师的抽屉选择的数据存放在data中
     addActivityTeacher(schoolid,teachers){
+      debugger
+      // 1、清空之前添加的数据，防止重复数据出现
+      this.activityRealTeacher.slice(0,this.activityRealTeacher.length)
+      // 2、封装教师信息list
       const teacherList = []
       for(let i = 0; i < teachers.length; i++ ){
         // 教师id；开始时间；结束时间；添加活动时，默认还未参见
-        const teacherOne = {"teacherid": teachers[i].id, "startDate": teachers[i].startDate, "endDate": teachers[i].endDate, "attend": "0"}
+        const teacherOne = {"teacherid": teachers[i].id, "nickname": teachers[i].id, "startDate": teachers[i].startDate, "endDate": teachers[i].endDate, "attend": "0"}
         teacherList.push(teacherOne)
       }
       const activityRealTeacherOne = {"schoolid": schoolid,"teacherList": teacherList}
+      // 3、放入activityRealTeacher
       this.activityRealTeacher.push(activityRealTeacherOne)
     },
     // 封装活动地址数据

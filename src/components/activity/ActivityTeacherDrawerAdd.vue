@@ -41,23 +41,13 @@
       <el-row :gutter="20">
         <el-col :span="24">
           <el-form-item label="" >
-            <!-- 结果展示区 -->
+            <!-- 查询结果展示区 -->
             <div>
-              <el-table ref="queryResultTable" :data="queryResultList" style="width: 100%" :row-class-name="tableRowClassName">
+              <el-table ref="queryResultTable" :data="queryResultList" style="width: 100%" :row-class-name="tableRowClassName" @selection-change="resultTableSelectedOne">
                 <el-table-column type="selection" width="55"></el-table-column>
-                <el-table-column prop="nickname" label="昵称" width="60"/>
-                <el-table-column prop="schoolName" label="所在校区" width="100"/>
-                <el-table-column prop="phone" label="手机" width="120"/>
-                <el-table-column label="开始日期" width="230">
-                  <template slot-scope="scope">
-                    <el-date-picker v-model="scope.row.startDate" type="date" value-format="yyyy-MM-dd"  placeholder="选择日期"></el-date-picker>
-                  </template>
-                </el-table-column>
-                <el-table-column label="结束日期" width="230">
-                  <template slot-scope="scope" >
-                    <el-date-picker v-model="scope.row.endDate" type="date" value-format="yyyy-MM-dd"  placeholder="选择日期"></el-date-picker>
-                  </template>
-                </el-table-column>
+                <el-table-column prop="nickname" label="昵称" />
+                <el-table-column prop="schoolName" label="所在校区" />
+                <el-table-column prop="phone" label="手机" />
               </el-table>
               <!-- 分页 -->
               <!-- @current-change:当前页码改变时触发 -->
@@ -68,12 +58,44 @@
           </el-form-item>
         </el-col>
       </el-row>
+    </el-form>
+
+    <el-form label-width="70px">
+      <!-- 行：1 -->
+      <el-row :gutter="20">
+        <el-col :span="24">
+          <el-form-item label="" >
+            <!-- 勾选教师展示区 -->
+            <div>
+              <el-table ref="selectedTable" :data="selectedtList" style="width: 100%" :row-class-name="tableRowClassName">
+                <el-table-column prop="nickname" label="昵称" width="120" />
+                <el-table-column label="开始日期" >
+                  <template slot-scope="scope">
+                    <el-date-picker v-model="scope.row.startDate" type="date" value-format="yyyy-MM-dd"  placeholder="选择日期"></el-date-picker>
+                  </template>
+                </el-table-column>
+                <el-table-column label="结束日期" >
+                  <template slot-scope="scope" >
+                    <el-date-picker v-model="scope.row.endDate" type="date" value-format="yyyy-MM-dd"  placeholder="选择日期"></el-date-picker>
+                  </template>
+                </el-table-column>
+                <el-table-column label="操作" width="100">
+                  <template slot-scope="scope">
+                    <!-- 删除 -->
+                    <el-button type="danger" icon="el-icon-delete" @click="deselection(scope.row.id)"></el-button>
+                  </template>
+                </el-table-column>
+              </el-table>
+            </div>
+          </el-form-item>
+        </el-col>
+      </el-row>
 
       <!-- 添加按钮 -->
       <el-row :gutter="20">
         <el-col :span="6">
           <el-form-item label="">
-            <el-button type="primary" @click="addActivityTeacher">添 加</el-button>
+            <el-button type="primary" @click="addActivityTeacher">确 定</el-button>
           </el-form-item>
         </el-col>
         <el-col :span="6">
@@ -91,7 +113,8 @@
 <script>
 export default {
   name: 'ActivityTeacherDrawerAdd',
-  props: ['schoolList','schoolidSelected'],
+  // schoolList：查询条件下拉校区；schoolidSelected：准备添加教师的校区；activityRealTeacherSelectedtList：已经添加的教师
+  props: ['schoolList','schoolidSelected','activityRealTeacherSelectedtList'],
   data(){
     return {
       formQuery: {
@@ -108,6 +131,7 @@ export default {
         total: 0, // 查询出的教师总人数
         pageSize: 10, // 分页组件每页显示数量
       },
+      selectedtList: [],
       //-------------------------------------------------------------------------------------------
       schoolOptions: []
     }
@@ -155,9 +179,21 @@ export default {
     closeDrawerAdd(){
       this.$emit("closeDrawerAdd")
     },
+    // 确定勾选的教师信息
     addActivityTeacher(){
       this.closeDrawerAdd()
-      this.$emit("addActivityTeacher",this.schoolidSelected,this.$refs.queryResultTable.selection)
+      this.$emit("addActivityTeacher",this.schoolidSelected,this.selectedtList)
+    },
+    // 勾选一个教师信息后，展示在下方表格
+    resultTableSelectedOne(selection){
+      this.selectedtList = selection
+    },
+    // 取消勾选的一个教师
+    deselection(id){
+      // 1、获取要取消的教师的下标
+      const deselectionIndex = this.selectedtList.findIndex(item => item.id == id)
+      // 2、从selectedtList中删除
+      this.selectedtList.splice(deselectionIndex,1)
     },
     //------------------------------------------------------------------------------------------------------
     getSchoolOptions(){
@@ -178,6 +214,13 @@ export default {
     schoolidSelected: {
       handler(){
         this.formQuery.schoolid = this.schoolidSelected
+      },
+      immediate: true // 代表第一次就执行；不加则第一次进入修改信息页面带不出数据
+    },
+    activityRealTeacherSelectedtList: {
+      handler(){
+        this.selectedtList = []
+        this.selectedtList = this.activityRealTeacherSelectedtList.slice(0,this.activityRealTeacherSelectedtList.length)
       },
       immediate: true // 代表第一次就执行；不加则第一次进入修改信息页面带不出数据
     }
