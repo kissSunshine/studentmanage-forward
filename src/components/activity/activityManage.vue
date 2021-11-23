@@ -100,7 +100,7 @@
       </el-row>
     </div>
 
-    <!-- 点击新增，弹出对话框填写学生信息 -->
+    <!-- 点击新增，弹出对话框填写活动信息 -->
     <el-dialog :visible.sync="showDialogFormAdd" width="80%" :show-close="false" :close-on-press-escape="false" >
       <ActivityDialogAdd @changeDialogFormAdd="closeDialogFormAdd" :statusOptions="statusOptions">
       </ActivityDialogAdd>

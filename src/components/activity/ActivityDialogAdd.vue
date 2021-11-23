@@ -285,7 +285,10 @@ export default {
       this.showFlagAddActivityTeacher = true
 
       if(this.activityRealTeacher.length > 0){
-        this.activityRealTeacherSelectedtList = this.activityRealTeacher.find(item => item.schoolid == id).teacherList
+        const activityRealTeacherOne = this.activityRealTeacher.find(item => item.schoolid == id)
+        if(activityRealTeacherOne){
+          this.activityRealTeacherSelectedtList = activityRealTeacherOne.teacherList
+        }
       }
     },
     // 隐藏添加校区活动教师的抽屉
@@ -294,14 +297,13 @@ export default {
     },
     // 将添加校区活动教师的抽屉选择的数据存放在data中
     addActivityTeacher(schoolid,teachers){
-      debugger
       // 1、清空之前添加的数据，防止重复数据出现
       this.activityRealTeacher.slice(0,this.activityRealTeacher.length)
       // 2、封装教师信息list
       const teacherList = []
       for(let i = 0; i < teachers.length; i++ ){
         // 教师id；开始时间；结束时间；添加活动时，默认还未参见
-        const teacherOne = {"teacherid": teachers[i].id, "nickname": teachers[i].id, "startDate": teachers[i].startDate, "endDate": teachers[i].endDate, "attend": "0"}
+        const teacherOne = {"teacherid": teachers[i].id, "nickname": teachers[i].nickname, "startDate": teachers[i].startDate, "endDate": teachers[i].endDate, "attend": "0"}
         teacherList.push(teacherOne)
       }
       const activityRealTeacherOne = {"schoolid": schoolid,"teacherList": teacherList}

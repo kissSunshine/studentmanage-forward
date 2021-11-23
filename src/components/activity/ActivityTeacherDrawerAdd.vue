@@ -43,7 +43,7 @@
           <el-form-item label="" >
             <!-- 查询结果展示区 -->
             <div>
-              <el-table ref="queryResultTable" :data="queryResultList" style="width: 100%" :row-class-name="tableRowClassName" @selection-change="resultTableSelectedOne">
+              <el-table ref="queryResultTable" :data="queryResultList" style="width: 100%" :row-class-name="tableRowClassName" @select="resultTableSelectedOne">
                 <el-table-column type="selection" width="55"></el-table-column>
                 <el-table-column prop="nickname" label="昵称" />
                 <el-table-column prop="schoolName" label="所在校区" />
@@ -178,11 +178,16 @@ export default {
     },
     closeDrawerAdd(){
       this.$emit("closeDrawerAdd")
+      this.queryResultList = []
     },
     // 确定勾选的教师信息
     addActivityTeacher(){
       this.closeDrawerAdd()
+      // 先向外触发函数，带出参数selectedtList
       this.$emit("addActivityTeacher",this.schoolidSelected,this.selectedtList)
+      // 再将selectedtList置空
+      this.selectedtList = []
+      this.queryResultList = []
     },
     // 勾选一个教师信息后，展示在下方表格
     resultTableSelectedOne(selection){
@@ -219,7 +224,6 @@ export default {
     },
     activityRealTeacherSelectedtList: {
       handler(){
-        this.selectedtList = []
         this.selectedtList = this.activityRealTeacherSelectedtList.slice(0,this.activityRealTeacherSelectedtList.length)
       },
       immediate: true // 代表第一次就执行；不加则第一次进入修改信息页面带不出数据
