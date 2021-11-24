@@ -255,6 +255,15 @@ export default {
   mounted() {
     this.getSchoolOptions()
   },
+  updated() {
+    this.queryResultList.forEach(row =>{
+      this.selectedtList.forEach(selectOne => {
+        if(selectOne.id == row.id){
+          this.$refs.queryResultTable.toggleRowSelection(row,true)
+        }
+      })
+    })
+  },
   watch: {
     schoolidSelected: {
       handler(){
