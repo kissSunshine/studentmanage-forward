@@ -248,7 +248,7 @@ export default {
         selectedFlag = false
         // 循环对比该行数据是否在已勾选的信息中，已被勾选，则勾选标识置为true
         this.selectedtList.forEach(selectOne => {
-          if(selectOne.id == row.id){
+          if(selectOne.nickname == row.nickname){
             selectedFlag = true
           }
         })
