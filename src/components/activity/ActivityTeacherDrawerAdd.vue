@@ -190,8 +190,30 @@ export default {
       this.queryResultList = []
     },
     // 勾选一个教师信息后，展示在下方表格
-    resultTableSelectedOne(selection){
-      this.selectedtList = selection
+    resultTableSelectedOne(selection,row){
+      // 1、判断该次勾选操作是选中操作还是取消勾选
+      let selectFlag = false
+      for (let one of selection) {
+        if(one.id == row.id){
+          selectFlag = true
+        }
+      }
+
+      // 2、添加或删除
+      if(selectFlag){
+        // 勾选操作则把勾选数据放入
+        const index = this.selectedtList.findIndex(item => item.id == row.id)
+        if(index == -1){
+          this.selectedtList.push(row)
+        }
+      }else{
+        // 取消操作则把取消数据弹出
+        const index = this.selectedtList.findIndex(item => item.id == row.id)
+        if(index != -1){
+          this.selectedtList.splice(index,1)
+        }
+      }
+
     },
     // 取消勾选的一个教师
     deselection(id){
