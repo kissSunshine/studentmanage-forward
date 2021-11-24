@@ -231,7 +231,10 @@ export default {
           }
         }
       }
-      
+
+    },
+    getSelectedtList(){
+      this.selectedtList = [...this.activityRealTeacherSelectedtList]
     },
     // 取消勾选的一个教师
     deselection(id){
