@@ -43,7 +43,7 @@
           <el-form-item label="" >
             <!-- 查询结果展示区 -->
             <div>
-              <el-table ref="queryResultTable" :data="queryResultList" style="width: 100%" :row-class-name="tableRowClassName" @select="resultTableSelectedOne">
+              <el-table ref="queryResultTable" :data="queryResultList" style="width: 100%" :row-class-name="tableRowClassName" @select="resultTableSelectedOne" @select-all="resultTableSelectedAll">
                 <el-table-column type="selection" width="55"></el-table-column>
                 <el-table-column prop="nickname" label="昵称" />
                 <el-table-column prop="schoolName" label="所在校区" />
@@ -198,7 +198,6 @@ export default {
           selectFlag = true
         }
       }
-
       // 2、添加或删除
       if(selectFlag){
         // 勾选操作则把勾选数据放入
@@ -213,7 +212,26 @@ export default {
           this.selectedtList.splice(index,1)
         }
       }
-
+    },
+    resultTableSelectedAll(selection){
+      if(selection.length > 0){
+        // 如果是全选，则selection是有值的，将值添加到选中数据
+        for(let row of selection){
+          const index = this.selectedtList.findIndex(item => item.id == row.id)
+          if(index == -1){
+            this.selectedtList.push(row)
+          }
+        }
+      }else{
+        // 如果是全不选，则是把当前页面查询的数据即this.queryResultList从已选中的列表中删除
+        for(let row of this.queryResultList){
+          const index = this.selectedtList.findIndex(item => item.id == row.id)
+          if(index != -1){
+            this.selectedtList.splice(index,1)
+          }
+        }
+      }
+      
     },
     // 取消勾选的一个教师
     deselection(id){
