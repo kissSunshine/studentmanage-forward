@@ -240,6 +240,22 @@ export default {
       // 2、从selectedtList中删除
       this.selectedtList.splice(deselectionIndex,1)
     },
+    // 点击查询后，展示教师信息列表中如果有已经勾选的教师，需要将勾选框状态置为勾选
+    setQueryResultTableSelected(){
+      let selectedFlag = false
+      this.queryResultList.forEach(row =>{
+        // 每次循环开始，勾选标识置为false
+        selectedFlag = false
+        // 循环对比该行数据是否在已勾选的信息中，已被勾选，则勾选标识置为true
+        this.selectedtList.forEach(selectOne => {
+          if(selectOne.id == row.id){
+            selectedFlag = true
+          }
+        })
+        // 一行数据勾选标识设置好后，开始处理
+        this.$refs.queryResultTable.toggleRowSelection(row,selectedFlag)
+      })
+    },
     //------------------------------------------------------------------------------------------------------
     getSchoolOptions(){
       if(this.schoolOptions.length === 0){
@@ -256,13 +272,7 @@ export default {
     this.getSchoolOptions()
   },
   updated() {
-    this.queryResultList.forEach(row =>{
-      this.selectedtList.forEach(selectOne => {
-        if(selectOne.id == row.id){
-          this.$refs.queryResultTable.toggleRowSelection(row,true)
-        }
-      })
-    })
+    this.setQueryResultTableSelected()
   },
   watch: {
     schoolidSelected: {
