@@ -201,13 +201,13 @@ export default {
       // 2、添加或删除
       if(selectFlag){
         // 勾选操作则把勾选数据放入
-        const index = this.selectedtList.findIndex(item => item.id == row.id)
+        const index = this.selectedtList.findIndex(item => item.nickname == row.nickname)
         if(index == -1){
           this.selectedtList.push(row)
         }
       }else{
         // 取消操作则把取消数据弹出
-        const index = this.selectedtList.findIndex(item => item.id == row.id)
+        const index = this.selectedtList.findIndex(item => item.nickname == row.nickname)
         if(index != -1){
           this.selectedtList.splice(index,1)
         }
@@ -217,7 +217,7 @@ export default {
       if(selection.length > 0){
         // 如果是全选，则selection是有值的，将值添加到选中数据
         for(let row of selection){
-          const index = this.selectedtList.findIndex(item => item.id == row.id)
+          const index = this.selectedtList.findIndex(item => item.nickname == row.nickname)
           if(index == -1){
             this.selectedtList.push(row)
           }
@@ -225,7 +225,7 @@ export default {
       }else{
         // 如果是全不选，则是把当前页面查询的数据即this.queryResultList从已选中的列表中删除
         for(let row of this.queryResultList){
-          const index = this.selectedtList.findIndex(item => item.id == row.id)
+          const index = this.selectedtList.findIndex(item => item.nickname == row.nickname)
           if(index != -1){
             this.selectedtList.splice(index,1)
           }
@@ -236,7 +236,7 @@ export default {
     // 取消勾选的一个教师
     deselection(id){
       // 1、获取要取消的教师的下标
-      const deselectionIndex = this.selectedtList.findIndex(item => item.id == id)
+      const deselectionIndex = this.selectedtList.findIndex(item => item.nickname == row.nickname)
       // 2、从selectedtList中删除
       this.selectedtList.splice(deselectionIndex,1)
     },

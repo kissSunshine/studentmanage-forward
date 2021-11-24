@@ -62,8 +62,10 @@
               <el-table-column prop="name" label="校区" width="120"></el-table-column>
               <el-table-column label="活动教师" width="100">
                 <template slot-scope="scope">
-                  <!-- 添加每个校区付责教师 -->
-                  <el-button type="success" icon="el-icon-s-custom" @click="openDrawerAdd(scope.row.id)"></el-button>
+                  <el-badge :value="selectedTeachersNum(scope.row)" class="item" type="primary">
+                    <!-- 添加每个校区付责教师 -->
+                    <el-button type="success" icon="el-icon-s-custom" @click="openDrawerAdd(scope.row.id)"></el-button>
+                  </el-badge>
                 </template>
               </el-table-column>
               <el-table-column label="活动详细地址">
@@ -188,6 +190,19 @@ export default {
       schoolidSelected: '',
       // 已选择的教师
       activityRealTeacherSelectedtList: []
+    }
+  },
+  computed: {
+    selectedTeachersNum(){
+      return (row) => {
+        let num = 0
+        this.activityRealTeacher.forEach( one => {
+          if(one.schoolid == row.id){
+            num = one.teacherList.length
+          }
+        })
+        return num
+      }
     }
   },
   methods: {
@@ -371,5 +386,9 @@ export default {
 }
 .el-card >>> .el-drawer {
   background-color: #f0f9eb;
+}
+.item {
+  margin-top: 10px;
+  margin-right: 40px;
 }
 </style>
