@@ -233,9 +233,6 @@ export default {
       }
 
     },
-    getSelectedtList(){
-      this.selectedtList = [...this.activityRealTeacherSelectedtList]
-    },
     // 取消勾选的一个教师
     deselection(id){
       // 1、获取要取消的教师的下标
@@ -267,7 +264,7 @@ export default {
     },
     activityRealTeacherSelectedtList: {
       handler(){
-        this.selectedtList = this.activityRealTeacherSelectedtList.slice(0,this.activityRealTeacherSelectedtList.length)
+        this.selectedtList = [...this.activityRealTeacherSelectedtList]
       },
       immediate: true // 代表第一次就执行；不加则第一次进入修改信息页面带不出数据
     }
