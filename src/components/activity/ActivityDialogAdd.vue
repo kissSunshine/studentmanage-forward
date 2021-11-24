@@ -64,7 +64,7 @@
                 <template slot-scope="scope">
                   <el-badge :value="selectedTeachersNum(scope.row)" class="item" type="primary">
                     <!-- 添加每个校区付责教师 -->
-                    <el-button type="success" icon="el-icon-s-custom" @click="openDrawerAdd(scope.row.id)"></el-button>
+                    <el-button type="success" icon="el-icon-s-custom" size="mini" @click="openDrawerAdd(scope.row.id)"></el-button>
                   </el-badge>
                 </template>
               </el-table-column>
@@ -389,6 +389,6 @@ export default {
 }
 .item {
   margin-top: 10px;
-  margin-right: 40px;
+  margin-right: 30px;
 }
 </style>
