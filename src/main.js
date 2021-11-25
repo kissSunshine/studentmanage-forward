@@ -13,6 +13,10 @@ import './assets/css/global.css'
 import { formRules } from '@/assets/js/formRules.js'
 Vue.prototype.formRules = formRules
 
+// 组件形式使用axiosUtils
+import { postRequest } from '@/assets/js/axiosUtil.js'
+Vue.prototype.postRequest = postRequest
+
 Vue.use(VueRouter)
 Vue.config.productionTip = false
 Vue.use(ElementUI)

@@ -72,28 +72,13 @@ export default {
           return false
         }
         // 2、校验成功，发送ajax请求
-        this.axios({
-          method: 'post',
-          url: 'http://localhost:8090/user/login',
-          data: this.loginForm
-        }).then((res) => {
-          const data = res.data
-          //登录失败
-          if(data.status !== 1) {
-            this.$message({showClose: true, message: data.msg,type: 'error'})
-            return false
-          }
-
+        this.postRequest('/user/login',this.loginForm).then(responsevo => {
+          // 如果经过响应拦截器返回了false，则不往下进行业务处理
+          if(!responsevo){return}
           // 登录成功
-          sessionStorage.setItem('USER', data.data) // 保存学生对象
-          this.$router.push("/main") // 跳转页面
-
-        }).catch((error) => {
-          const data = error.data
-          this.$message({showClose: true, message: data.msg,type: 'error'})
-          return false
+          sessionStorage.setItem('USER', responsevo.data) // 保存学生对象
+          this.$router.replace("/main") // 跳转页面
         })
-
       })
     }
   }
