@@ -26,4 +26,12 @@ export const postRequest = (url,params) =>{
         url: baseUrl + url,
         data: params
     })
-} 
+}
+
+export const getRequest = (url, params) => {
+    return axios({
+        method: 'get',
+        url: baseUrl + url,
+        params: params
+    })
+}

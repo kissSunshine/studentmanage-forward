@@ -14,8 +14,9 @@ import { formRules } from '@/assets/js/formRules.js'
 Vue.prototype.formRules = formRules
 
 // 组件形式使用axiosUtils
-import { postRequest } from '@/assets/js/axiosUtil.js'
+import { postRequest, getRequest } from '@/assets/js/axiosUtil.js'
 Vue.prototype.postRequest = postRequest
+Vue.prototype.getRequest = getRequest
 
 Vue.use(VueRouter)
 Vue.config.productionTip = false
