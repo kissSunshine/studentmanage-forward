@@ -9,6 +9,10 @@ import Vuex from 'vuex'
 import store from './store/index.js'
 import './assets/css/global.css'
 
+// 每个页面引入表单规则太麻烦，使用组件形式
+import { formRules } from '@/assets/js/formRules.js'
+Vue.prototype.formRules = formRules
+
 Vue.use(VueRouter)
 Vue.config.productionTip = false
 Vue.use(ElementUI)

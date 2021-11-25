@@ -44,9 +44,6 @@
 </template>
 
 <script>
-// 引入统一校验规则
-import {fromRules} from '@/assets/js/formRules.js'
-
 export default {
   name: 'Login',
   data() {
@@ -58,8 +55,8 @@ export default {
   		},
   		checked: '', // 记住密码
       loginRules: {
-  			nickname: fromRules.nickname,
-  			password: fromRules.password
+  			nickname: this.formRules.nickname,
+  			password: this.formRules.password
   		}
   	}
   },
@@ -78,11 +75,7 @@ export default {
         this.axios({
           method: 'post',
           url: 'http://localhost:8090/user/login',
-          data: {
-            nickname: this.loginForm.nickname,
-            password: this.loginForm.password,
-            userType: this.loginForm.userType
-          }
+          data: this.loginForm
         }).then((res) => {
           const data = res.data
           //登录失败

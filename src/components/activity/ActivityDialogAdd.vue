@@ -104,9 +104,6 @@
 </template>
 
 <script>
-// 引入统一校验规则
-import {fromRules} from '@/assets/js/formRules.js'
-
 import ActivityTeacherDrawerAdd from './ActivityTeacherDrawerAdd.vue'
 
 export default {
@@ -167,7 +164,7 @@ export default {
       activityRealTeacher: [],
       // 校验添加的学生信息
       addRules: {
-        name: fromRules.name,
+        name: this.formRules.name,
         startDateTime: [
           { required: true, message: '请选择开始时间', trigger: 'blur' },
           { validator: startDateTimeRule, trigger: 'blur'},
@@ -176,9 +173,9 @@ export default {
           { required: true, message: '请选择结束时间', trigger: 'blur' },
           { validator: endDateTimeRule, trigger: 'blur'},
         ],
-        status: fromRules.status,
-        cost: fromRules.cost,
-        discount: fromRules.discount
+        status: this.formRules.status,
+        cost: this.formRules.cost,
+        discount: this.formRules.discount
       },
       // 当前日期
       currentDate: '',

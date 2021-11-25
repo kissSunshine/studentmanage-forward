@@ -132,9 +132,6 @@
 </template>
 
 <script>
-// 引入统一校验规则
-import {fromRules} from '@/assets/js/formRules.js'
-
 export default {
   name: 'DialogUpdate',
   props: ['genderOptions','statusOptions','schoolOptions','oneUpdate','departmentOptions','positionOptions','subjectOptions'],
@@ -161,17 +158,17 @@ export default {
 
       // 校验教师信息
       updateRules: {
-        name: fromRules.name,
-      	nickname: fromRules.nickname,
-        idcard: fromRules.idcard,
-        gender: fromRules.gender,
-        birthday: fromRules.birthday,
-        phone: fromRules.phone,
-        status: fromRules.status,
-        schoolid: fromRules.schoolid,
-      	password: fromRules.password,
-        passwordsecond: fromRules.passwordsecond,
-        homeaddress: fromRules.homeaddress
+        name: this.formRules.name,
+      	nickname: this.formRules.nickname,
+        idcard: this.formRules.idcard,
+        gender: this.formRules.gender,
+        birthday: this.formRules.birthday,
+        phone: this.formRules.phone,
+        status: this.formRules.status,
+        schoolid: this.formRules.schoolid,
+      	password: this.formRules.password,
+        passwordsecond: this.formRules.passwordsecond,
+        homeaddress: this.formRules.homeaddress
       }
     }
   },

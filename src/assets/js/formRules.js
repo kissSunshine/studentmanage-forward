@@ -38,7 +38,7 @@ var discountRule = (rule, value, callback) => {
     callback()
 };
 // 4、基本规则
-const fromRules = {
+const formRules = {
     name: [
         { required: true, message: '请输入姓名', trigger: 'blur' },
         { min: 1, max: 20, message: '姓名在20个字符以内', trigger: 'blur' }
@@ -75,4 +75,4 @@ const fromRules = {
     discount: [{ validator: discountRule, trigger: 'blur' }]
 }
 
-export {fromRules}
+export {formRules}
