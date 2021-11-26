@@ -134,31 +134,24 @@ export default {
   },
   methods: {
     queryStudentList(currentPage,pageSize){
-      this.axios({
-        method: 'get',
-        url: 'http://localhost:8090/student/query',
-        params: {
-          name: this.studentForm.name,
-          nickname: this.studentForm.nickname,
-          gender: this.studentForm.gender,
-          status: this.studentForm.status,
-          currentPage,
-          pageSize,
-        }
-      }).then((res) => {
-        const resVo = res.data
-        //查询失败
-        if(resVo.status !== 1) {
-          this.$message({showClose: true, message: resVo.msg, type: 'error'})
-          return false
-        }
+      // 拼装请求参数
+      let queryParams = {
+        name: this.studentForm.name,
+        nickname: this.studentForm.nickname,
+        gender: this.studentForm.gender,
+        status: this.studentForm.status,
+        currentPage,
+        pageSize
+      }
+      
+      this.getRequest('/student/query',queryParams).then((responsevo) => {
+        if(!responsevo){return} // 查询失败
+        const pageVo = responsevo.data
 
         // 查询成功
-        this.studentList = resVo.data.data
-        this.pageComponents.total = resVo.data.total
+        this.studentList = pageVo.data
+        this.pageComponents.total = pageVo.total
 
-      }).catch((error) => {
-        this.$message({showClose: true, message: "服务器错误，请重试或联系管理员", type: 'error'})
       })
     },
     tableRowClassName({row, rowIndex}) {
@@ -239,36 +232,17 @@ export default {
       }).then(() => {
         this.deleteStudent(id)
       }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '已取消'
-        });
+        this.$message({ type: 'info', message: '已取消' });
       });
     },
     deleteStudent(id){
-      this.axios({
-        method: 'post',
-        url: 'http://localhost:8090/student/delete',
-        data: {
-          id,
-        }
-      }).then((res) => {
-        const resVo = res.data
-        // 删除失败
-        if(resVo.status !== 1) {
-          this.$message({showClose: true, message: resVo.msg, type: 'error'})
-          return false
-        }
-
+      this.postRequest('/student/delete',{id}).then((responsevo) => {
+        if(!responsevo){return}
         // 删除成功
-        this.$message({showClose: true, message: resVo.msg, type: 'success'})
+        this.$message({showClose: true, message: responsevo.msg, type: 'success'})
         this.queryStudentList(1,this.pageComponents.pageSize)
-
-      }).catch((error) => {
-        this.$message({showClose: true, message: "服务器错误，请重试或联系管理员", type: 'error'})
       })
     }
-
   },
   mounted() {
     this.querySchoolList()
