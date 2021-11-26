@@ -139,16 +139,15 @@ export default {
         gender: this.formQuery.gender,
         status: this.formQuery.status,
         currentPage,
-        pageSize,
+        pageSize
       }
       // 发送请求
       this.getRequest('/teacher/query',queryParams).then((responsevo) => {
         if(!responsevo){return} // 查询失败
-      
+        const pageVo = responsevo.data
         // 查询成功
-        this.queryResultList = responsevo.data
-        this.pageComponents.total = responsevo.total
-
+        this.queryResultList = pageVo.data
+        this.pageComponents.total = pageVo.total
       })
     },
     tableRowClassName({row, rowIndex}) {

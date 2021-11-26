@@ -10,7 +10,6 @@ axios.interceptors.response.use(success => {
             return false
         }
     }
-    
     return success.data
 }, error => {
     Message.error({ showClose: true, message: "服务器错误，请重试或联系管理员"})

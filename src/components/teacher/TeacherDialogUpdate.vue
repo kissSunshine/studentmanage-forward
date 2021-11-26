@@ -270,7 +270,7 @@ export default {
   mounted(){
     this.genderOptions = this.$store.state.genderOptions
     this.statusOptions = this.$store.state.statusOptions
-    this.schoolOptions = this.$store.state.schoolOption
+    this.schoolOptions = this.$store.state.schoolOptions
     this.departmentOptions = this.$store.state.departmentOptions
     this.positionOptions = this.$store.state.positionOptions
     this.subjectOptions = this.$store.state.subjectOptions
