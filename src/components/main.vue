@@ -85,6 +85,13 @@ export default {
     isCollapse(){
       return this.$store.state.isCollapse
     }
+  },
+  mounted(){
+    // 请求校区、部门、职位、学科存放于vuex
+    this.$store.commit('getSchoolOptions')
+    this.$store.commit('getDepartmentOptions')
+    this.$store.commit('getPositionOptions')
+    this.$store.commit('getSubjectOptions')
   }
 }
 

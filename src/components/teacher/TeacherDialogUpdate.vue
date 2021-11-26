@@ -134,7 +134,7 @@
 <script>
 export default {
   name: 'DialogUpdate',
-  props: ['genderOptions','statusOptions','schoolOptions','oneUpdate','departmentOptions','positionOptions','subjectOptions'],
+  props: ['oneUpdate'],
   data(){
     return {
       formUpdate: {
@@ -155,6 +155,12 @@ export default {
       },
       passwordsecond: '', // 再次输入密码
       updateFlag: false, // 判断是否进行了信息变更
+      genderOptions: [],
+      statusOptions: [],
+      schoolOptions: [],
+      departmentOptions: [],
+      positionOptions: [],
+      subjectOptions: [],
 
       // 校验教师信息
       updateRules: {
@@ -260,6 +266,14 @@ export default {
       },
       immediate: true // 代表第一次就执行；不加则第一次进入修改信息页面带不出数据
     }
+  },
+  mounted(){
+    this.genderOptions = this.$store.state.genderOptions
+    this.statusOptions = this.$store.state.statusOptions
+    this.schoolOptions = this.$store.state.schoolOption
+    this.departmentOptions = this.$store.state.departmentOptions
+    this.positionOptions = this.$store.state.positionOptions
+    this.subjectOptions = this.$store.state.subjectOptions
   }
 }
 </script>

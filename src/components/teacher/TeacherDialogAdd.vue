@@ -150,7 +150,6 @@
 <script>
 export default {
   name: 'DialogAdd',
-  props: ['genderOptions','statusOptions','schoolOptions','departmentOptions','positionOptions','subjectOptions'],
   data(){
     return {
       formAdd: {
@@ -169,7 +168,12 @@ export default {
         homeaddress: ''
       },
       passwordsecond: '', // 再次输入密码
-
+      genderOptions: [],
+      statusOptions: [],
+      schoolOptions: [],
+      departmentOptions: [],
+      positionOptions: [],
+      subjectOptions: [],
       // 校验添加的教师信息
       addRules: {
         name: this.formRules.name,
@@ -238,6 +242,14 @@ export default {
     closeDialogAdd(addFlag){
       this.$emit("closeDialogAdd",addFlag)
     }
+  },
+  mounted(){
+    this.genderOptions = this.$store.state.genderOptions
+    this.statusOptions = this.$store.state.statusOptions
+    this.schoolOptions = this.$store.state.schoolOption
+    this.departmentOptions = this.$store.state.departmentOptions
+    this.positionOptions = this.$store.state.positionOptions
+    this.subjectOptions = this.$store.state.subjectOptions
   }
 }
 </script>

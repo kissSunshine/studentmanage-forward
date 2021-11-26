@@ -86,13 +86,13 @@
 
     <!-- 点击新增，弹出对话框填写教师信息 -->
     <el-dialog :visible.sync="showFlagDialogAdd" width="80%" :show-close="false" :close-on-press-escape="false" >
-      <DialogAdd @closeDialogAdd="closeDialogAdd" :genderOptions="genderOptions" :statusOptions="statusOptions" :schoolOptions="schoolOptions" :departmentOptions="departmentOptions" :positionOptions="positionOptions" :subjectOptions="subjectOptions">
+      <DialogAdd @closeDialogAdd="closeDialogAdd">
       </DialogAdd>
     </el-dialog>
 
     <!-- 点击修改，弹出对话框修改教师信息 -->
     <el-dialog :visible.sync="showFlagDialogUpdate" width="80%" :destroy-on-close="true" :show-close="false" :close-on-press-escape="false" :close-on-click-modal="false">
-      <DialogUpdate @closeDialogUpdate="closeDialogUpdate" :oneUpdate="oneUpdate" :genderOptions="genderOptions" :statusOptions="statusOptions" :schoolOptions="schoolOptions" :departmentOptions="departmentOptions" :positionOptions="positionOptions" :subjectOptions="subjectOptions">
+      <DialogUpdate @closeDialogUpdate="closeDialogUpdate" :oneUpdate="oneUpdate">
       </DialogUpdate>
     </el-dialog>
 
@@ -117,8 +117,6 @@ export default {
         gender: '',
         status: ''
       },
-      genderOptions: [{ value: 0, label: '女' }, { value: 1, label: '男' }], // 查询条件
-      statusOptions: [{ value: 0, label: '离校' }, { value: 1, label: '在校' }],
       queryResultList: [], // 查询出的教师信息
       showFlagDialogAdd: false, //新增教师对话框是否显示；true-显示；false-隐藏
       pageComponents: {
@@ -128,40 +126,29 @@ export default {
       showFlagDialogUpdate: false, //修改教师对话框是否显示；true-显示；false-隐藏
       oneUpdate: [], // 需要修改的教师信息
       //-------------------------------------------------------------------------------------------
-      schoolList: [], //初始化查询校区
-      schoolOptions: [], // 校区下拉选
-      departmentOptions: '', // 部门下拉选值
-      positionOptions: '', // 职位下拉选值
-      subjectOptions: '', // 学科下拉选值
+      genderOptions: [],
+      statusOptions: []
     }
   },
   methods: {
     queryList(currentPage,pageSize){
-      this.axios({
-        method: 'get',
-        url: 'http://localhost:8090/teacher/query',
-        params: {
-          name: this.formQuery.name,
-          nickname: this.formQuery.nickname,
-          gender: this.formQuery.gender,
-          status: this.formQuery.status,
-          currentPage,
-          pageSize,
-        }
-      }).then((res) => {
-        const resVo = res.data
-        //查询失败
-        if(resVo.status !== 1) {
-          this.$message({showClose: true, message: resVo.msg, type: 'error'})
-          return false
-        }
-
+      // 拼装请求参数
+      let queryParams = {
+        name: this.formQuery.name,
+        nickname: this.formQuery.nickname,
+        gender: this.formQuery.gender,
+        status: this.formQuery.status,
+        currentPage,
+        pageSize,
+      }
+      // 发送请求
+      this.getRequest('/teacher/query',queryParams).then((responsevo) => {
+        if(!responsevo){return} // 查询失败
+      
         // 查询成功
-        this.queryResultList = resVo.data.data
-        this.pageComponents.total = resVo.data.total
+        this.queryResultList = responsevo.data
+        this.pageComponents.total = responsevo.total
 
-      }).catch((error) => {
-        this.$message({showClose: true, message: "服务器错误，请重试或联系管理员", type: 'error'})
       })
     },
     tableRowClassName({row, rowIndex}) {
@@ -173,15 +160,6 @@ export default {
       return ''
     },
     opeanDialogAdd(){
-      if(this.schoolOptions.length === 0){
-        for(let i = 0; i < this.schoolList.length; i++ ){
-          let school = { value: '', label: ''}
-          school.value = this.schoolList[i].id
-          school.label = this.schoolList[i].name
-          this.schoolOptions.push(school)
-        }
-      }
-
       this.showFlagDialogAdd = false;
       this.showFlagDialogAdd = true;
     },
@@ -197,14 +175,6 @@ export default {
     },
     opeanDialogUpdate(row){
       this.oneUpdate = row
-      if(this.schoolOptions.length === 0){
-        for(let i = 0; i < this.schoolList.length; i++ ){
-          let school = { value: '', label: ''}
-          school.value = this.schoolList[i].id
-          school.label = this.schoolList[i].name
-          this.schoolOptions.push(school)
-        }
-      }
       this.showFlagDialogUpdate = false
       this.showFlagDialogUpdate = true
     },
@@ -223,127 +193,22 @@ export default {
       }).then(() => {
         this.deleteOne(id)
       }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '已取消'
-        });
+        this.$message({ type: 'info', message: '已取消'});
       });
     },
     deleteOne(id){
-      this.axios({
-        method: 'post',
-        url: 'http://localhost:8090/teacher/delete',
-        data: {
-          id
-        }
-      }).then((res) => {
-        const resVo = res.data
-        // 删除失败
-        if(resVo.status !== 1) {
-          this.$message({showClose: true, message: resVo.msg, type: 'error'})
-          return false
-        }
-
+      this.postRequest('/teacher/delete',id).then((responsevo) => {
+        if(!responsevo){return}
+        
         // 删除成功
-        this.$message({showClose: true, message: resVo.msg, type: 'success'})
+        this.$message({showClose: true, message: responsevo.msg, type: 'success'})
         this.queryList(1,this.pageComponents.pageSize)
-
-      }).catch((error) => {
-        this.$message({showClose: true, message: "服务器错误，请重试或联系管理员", type: 'error'})
       })
-    },
-    //------------------------------------------------------------------------------------------------------
-    querySchoolList(){
-       this.axios({
-        method: 'get',
-        url: 'http://localhost:8090/school/queryAll'
-      }).then((res) => {
-        const data = res.data
-        //查询失败
-        if(data.status !== 1) {
-          return false
-        }
-        // 查询成功
-        this.schoolList = data.data
-
-      }).catch((error) => {
-        const data = error.data
-        this.$message({showClose: true, message: data.msg,type: 'error'})
-        return false
-      })
-    },
-    getDepartmentOptions(){
-      if(this.departmentOptions != ''){
-        return true
-      }
-
-      this.axios({
-        method: 'get',
-        url: 'http://localhost:8090/enum/department'
-      }).then((res) => {
-        const data = res.data
-         // 获取部门失败
-        if(data.status !== 1) {
-          this.$message({showClose: true, message: data.msg,type: 'error'})
-          return false
-        }
-
-        // 获取部门成功
-        this.departmentOptions = data.data;
-      }).catch((error) => {
-       this.$message({showClose: true, message: "服务器错误，请重试或联系管理员", type: 'error'})
-      })
-    },
-    // 职位下拉选值
-    getPositionOptions(){
-      if(this.positionOptions != ''){
-        return true
-      }
-      this.axios({
-        method: 'get',
-        url: 'http://localhost:8090/enum/position'
-      }).then((res) => {
-        const data = res.data
-         // 获取职位失败
-        if(data.status !== 1) {
-          this.$message({showClose: true, message: data.msg,type: 'error'})
-          return false
-        }
-
-        // 获取职位成功
-        this.positionOptions = data.data;
-      }).catch((error) => {
-       this.$message({showClose: true, message: "服务器错误，请重试或联系管理员", type: 'error'})
-      })
-    },
-    // 学科下拉选值
-    getSubjectOptions(){
-      if(this.subjectOptions != ''){
-        return true
-      }
-      this.axios({
-        method: 'get',
-        url: 'http://localhost:8090/enum/subject'
-      }).then((res) => {
-        const data = res.data
-         // 获取学科失败
-        if(data.status !== 1) {
-          this.$message({showClose: true, message: data.msg,type: 'error'})
-          return false
-        }
-
-        // 获取学科成功
-        this.subjectOptions = data.data;
-      }).catch((error) => {
-       this.$message({showClose: true, message: "服务器错误，请重试或联系管理员", type: 'error'})
-      })
-    }
+    }    
   },
   mounted() {
-    this.querySchoolList()
-    this.getDepartmentOptions()
-    this.getPositionOptions()
-    this.getSubjectOptions()
+    this.genderOptions = this.$store.state.genderOptions
+    this.statusOptions = this.$store.state.statusOptions
   }
 }
 </script>
