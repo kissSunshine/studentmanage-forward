@@ -113,8 +113,8 @@
 <script>
 export default {
   name: 'ActivityTeacherDrawerAdd',
-  // schoolList：查询条件下拉校区；schoolidSelected：准备添加教师的校区；activityRealTeacherSelectedtList：已经添加的教师
-  props: ['schoolList','schoolidSelected','activityRealTeacherSelectedtList'],
+  // schoolidSelected：准备添加教师的校区；activityRealTeacherSelectedtList：已经添加的教师
+  props: ['schoolidSelected','activityRealTeacherSelectedtList'],
   data(){
     return {
       formQuery: {
@@ -138,31 +138,20 @@ export default {
   },
   methods: {
     queryList(currentPage,pageSize){
-      this.axios({
-        method: 'get',
-        url: 'http://localhost:8090/teacher/query',
-        params: {
-          name: this.formQuery.name,
-          nickname: this.formQuery.nickname,
-          schoolid: this.formQuery.schoolid,
-          status: this.formQuery.status,
-          currentPage,
-          pageSize,
-        }
-      }).then((res) => {
-        const resVo = res.data
-        //查询失败
-        if(resVo.status !== 1) {
-          this.$message({showClose: true, message: resVo.msg, type: 'error'})
-          return false
-        }
-
-        // 查询成功
-        this.queryResultList = resVo.data.data
-        this.pageComponents.total = resVo.data.total
-
-      }).catch((error) => {
-        this.$message({showClose: true, message: "服务器错误，请重试或联系管理员", type: 'error'})
+      // 拼装请求参数
+      let queryParams = {
+        name: this.formQuery.name,
+        nickname: this.formQuery.nickname,
+        schoolid: this.formQuery.schoolid,
+        status: this.formQuery.status,
+        currentPage,
+        pageSize
+      }
+      this.getRequest('/teacher/query',queryParams).then( responsevo => {
+        if(!responsevo){return} // 查询失败
+        const pageVo = responsevo.data
+        this.queryResultList = pageVo.data
+        this.pageComponents.total = pageVo.total
       })
     },
     tableRowClassName({row, rowIndex}) {
@@ -257,19 +246,9 @@ export default {
       })
     },
     //------------------------------------------------------------------------------------------------------
-    getSchoolOptions(){
-      if(this.schoolOptions.length === 0){
-        for(let i = 0; i < this.schoolList.length; i++ ){
-          let school = { value: '', label: ''}
-          school.value = this.schoolList[i].id
-          school.label = this.schoolList[i].name
-          this.schoolOptions.push(school)
-        }
-      }
-    }
   },
   mounted() {
-    this.getSchoolOptions()
+    this.schoolOptions = this.$store.state.schoolOptions
   },
   updated() {
     this.setQueryResultTableSelected()

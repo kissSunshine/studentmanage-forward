@@ -101,7 +101,7 @@
     </div>
 
     <!-- 点击新增，弹出对话框填写活动信息 -->
-    <el-dialog :visible.sync="showDialogFormAdd" width="80%" :show-close="false" :close-on-press-escape="false" :top="0">
+    <el-dialog :visible.sync="showDialogFormAdd" width="80%" :show-close="false" :close-on-press-escape="false" top="0">
       <ActivityDialogAdd @changeDialogFormAdd="closeDialogFormAdd">
       </ActivityDialogAdd>
     </el-dialog>
@@ -161,31 +161,21 @@ export default {
       this.defaultDateTime = new Date()
     },
     queryActivityList(currentPage,pageSize){
-      this.axios({
-        method: 'get',
-        url: 'http://localhost:8090/activity/query',
-        params: {
-          name: this.activityForm.name,
-          status: this.activityForm.status,
-          startDateTime: this.activityForm.startDateTime,
-          endDateTime: this.activityForm.endDateTime,
-          currentPage,
-          pageSize,
-        }
-      }).then((res) => {
-        const resVo = res.data
-        //查询失败
-        if(resVo.status !== 1) {
-          this.$message({showClose: true, message: resVo.msg, type: 'error'})
-          return false
-        }
-
+      // 拼装请求参数
+      let queryParams = {
+        name: this.activityForm.name,
+        status: this.activityForm.status,
+        startDateTime: this.activityForm.startDateTime,
+        endDateTime: this.activityForm.endDateTime,
+        currentPage,
+        pageSize
+      }
+      this.getRequest('/activity/query',queryParams).then( responsevo => {
+        if(!responsevo){return} // 查询失败
+        const pageVo = responsevo.data
         // 查询成功
-        this.activityList = resVo.data.data
-        this.pageComponents.total = resVo.data.total
-
-      }).catch((error) => {
-        this.$message({showClose: true, message: "服务器错误，请重试或联系管理员", type: 'error'})
+        this.activityList = pageVo.data
+        this.pageComponents.total = pageVo.total
       })
     },
     openDialogFormAdd(){ // 展示【新增】卡片
@@ -199,6 +189,10 @@ export default {
       }
 
       this.showDialogFormAdd = false
+    },
+    // 点击活动卡片，显示详细信息，并可以更新
+    opeanDialogUpdate(){
+
     }
   },
   mounted(){

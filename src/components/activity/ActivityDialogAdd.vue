@@ -97,7 +97,7 @@
 
     <!-- 添加每个校区付责教师 -->
     <el-drawer :visible.sync="showFlagAddActivityTeacher" direction="rtl" size="60%" :modal="false" :show-close="false">
-      <ActivityTeacherDrawerAdd @closeDrawerAdd="closeDrawerAdd" @addActivityTeacher="addActivityTeacher" :schoolList="schoolList" :schoolidSelected="schoolidSelected" :activityRealTeacherSelectedtList="activityRealTeacherSelectedtList"></ActivityTeacherDrawerAdd>
+      <ActivityTeacherDrawerAdd @closeDrawerAdd="closeDrawerAdd" @addActivityTeacher="addActivityTeacher" :schoolidSelected="schoolidSelected" :activityRealTeacherSelectedtList="activityRealTeacherSelectedtList"></ActivityTeacherDrawerAdd>
     </el-drawer>
 
   </el-card>
@@ -220,34 +220,21 @@ export default {
       }
 
       // 3、校验成功，发送ajax请求
-      this.axios({
-        method: 'post',
-        url: 'http://localhost:8090/activity/add',
-        data: {
-          name: this.activityFormAdd.name,
-          startDateTime: this.activityFormAdd.startDateTime,
-          endDateTime: this.activityFormAdd.endDateTime,
-          cost: this.activityFormAdd.cost,
-          discount: (this.activityFormAdd.discount / 10),
-          status: this.activityFormAdd.status,
-          activityRealAddress: this.activityRealAddress,
-          activityRealTeacher: this.activityRealTeacher,
-          updatedPerson: "Tea666" // 待调整
-        }
-      }).then((res) => {
-        const data = res.data
-          // 3、添加活动失败
-        if(data.status !== 1) {
-          this.$message({showClose: true, message: data.msg, type: 'error'})
-          return false
-        }
-
+      let addParams = {
+        name: this.activityFormAdd.name,
+        startDateTime: this.activityFormAdd.startDateTime,
+        endDateTime: this.activityFormAdd.endDateTime,
+        cost: this.activityFormAdd.cost,
+        discount: (this.activityFormAdd.discount / 10),
+        status: this.activityFormAdd.status,
+        activityRealAddress: this.activityRealAddress,
+        activityRealTeacher: this.activityRealTeacher,
+        updatedPerson: "Tea666" // 待调整
+      }
+      this.postRequest('/activity/add',addParams).then( responsevo => {
         // 4、添加活动成功
-        this.$message({showClose: true, message: data.msg, type: 'success'})
+        this.$message({showClose: true, message: responsevo.msg, type: 'success'})
         this.changeDialogFormVisible(true);
-
-      }).catch((error) => {
-        this.$message({showClose: true, message: "服务器错误，请重试或联系管理员", type: 'error'})
       })
     },
     // 关闭添加活动对话框
@@ -273,21 +260,8 @@ export default {
     },
     // 查询所有校区
     getSchool(){
-      this.axios({
-        method: 'get',
-        url: 'http://localhost:8090/school/queryAll'
-      }).then((res) => {
-        const data = res.data
-          // 1、查询失败
-        if(data.status !== 1) {
-          this.$message({showClose: true, message: data.msg, type: 'error'})
-          return false
-        }
-
-        // 2、查询成功
-        this.schoolList = data.data
-      }).catch((error) => {
-        this.$message({showClose: true, message: "服务器错误，请重试或联系管理员", type: 'error'})
+      this.getRequest('/school/queryAll',{}).then( responsevo => {
+        this.schoolList = responsevo.data
       })
     },
     // 显示添加活动老师的抽屉

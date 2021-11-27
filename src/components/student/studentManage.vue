@@ -141,7 +141,7 @@ export default {
         pageSize
       }
       
-      this.getRequest('/student/query',queryParams).then((responsevo) => {
+      this.getRequest('/student/query',queryParams).then( responsevo => {
         if(!responsevo){return} // 查询失败
         const pageVo = responsevo.data
 
