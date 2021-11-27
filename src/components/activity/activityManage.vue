@@ -56,18 +56,6 @@
 
     <!-- 结果展示区 -->
     <div>
-      <!-- <el-table :data="activityList" style="width: 100%">
-        <el-table-column prop="name" label="名称"/>
-        <el-table-column prop="startDateTime" label="开始时间"/>
-        <el-table-column prop="endDateTime" label="结束时间"/>
-        <el-table-column prop="address" label="活动地点"/>
-        <el-table-column prop="cost" label="费用"/>
-        <el-table-column prop="status" label="状态"/>
-        <el-table-column label="操作">
-
-        </el-table-column>
-      </el-table> -->
-      <!-- 以卡片形式展示 -->
       <!-- 行：1 -->
       <el-row :gutter="30">
         <el-col :span="elColSpan" v-for="activity in activityListFirstRow" :key="activity.id">
