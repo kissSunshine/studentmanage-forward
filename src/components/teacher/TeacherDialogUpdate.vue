@@ -132,6 +132,8 @@
 </template>
 
 <script>
+import {getUpdateFlag} from '@/assets/js/toolUtil.js'
+
 export default {
   name: 'DialogUpdate',
   props: ['oneUpdate'],
@@ -154,7 +156,6 @@ export default {
         updatedPerson: ''
       },
       passwordsecond: '', // 再次输入密码
-      updateFlag: false, // 判断是否进行了信息变更
       genderOptions: [],
       statusOptions: [],
       schoolOptions: [],
@@ -181,10 +182,8 @@ export default {
   methods: {
     // 添加教师
     updateOne(){
-      // 0、先判断是否页面信息是否更改过
-      this.getUpdateFlag(this.oneUpdate,this.formUpdate)
-      // 没更改，直接阻断提示
-      if(!this.updateFlag){
+      // 0、先判断是否页面信息是否更改过，没更改则直接阻断提示
+      if(!getUpdateFlag(this.oneUpdate,this.formUpdate)){
         this.$message({showClose: true, message: '未修改教师信息，不需要更新', type: 'error'})
         return false
       }
@@ -207,16 +206,6 @@ export default {
     // 关闭添加教师对话框
     closeDialogUpdate(updateFlag){
       this.$emit("closeDialogUpdate",updateFlag)
-    },
-    getUpdateFlag(oldForm,newForm){
-      for(let key in oldForm){
-        // 当需要对比的对象有一个属性不是同时拥有的就跳过不比较
-        if(typeof(oldForm[key]) == 'undefined' || typeof(newForm[key]) == 'undefined'){continue}
-        if(oldForm[key] != newForm[key]){
-          this.updateFlag = true
-          break
-        }
-      }
     }
   },
   watch: {
