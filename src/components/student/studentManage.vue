@@ -86,14 +86,13 @@
     <!-- 点击新增，弹出对话框填写学生信息 -->
     <el-dialog :visible.sync="dialogFormAdd" width="80%" :show-close="false" :close-on-press-escape="false" >
       <StudentDialogAdd @changeDialogFormAdd="closeDialogFormAdd"
-        :dialogFormVisible="dialogFormAdd" :genderOptions="genderOptions" :statusOptions="statusOptions" :schoolOptions="schoolOptions">
+        :dialogFormVisible="dialogFormAdd">
       </StudentDialogAdd>
     </el-dialog>
 
     <!-- 点击修改，弹出对话框修改学生信息 -->
     <el-dialog :visible.sync="dialogFormUpdate" width="80%" :destroy-on-close="true" :show-close="false" :close-on-press-escape="false" :close-on-click-modal="false">
-      <StudentDialogUpdate @changeDialogFormUpdate="closeDialogFormUpdate" :studentForm="studentFormUpdate"
-        :genderOptions="genderOptions" :statusOptions="statusOptions" :schoolOptions="schoolOptions">
+      <StudentDialogUpdate @changeDialogFormUpdate="closeDialogFormUpdate" :studentForm="studentFormUpdate">
       </StudentDialogUpdate>
     </el-dialog>
 
@@ -118,12 +117,10 @@ export default {
         gender: '',
         status: ''
       },
-      genderOptions: [{ value: 0, label: '女' }, { value: 1, label: '男' }], // 查询条件
-      statusOptions: [{ value: 0, label: '离校' }, { value: 1, label: '在校' }],
+      genderOptions: [], // 查询条件
+      statusOptions: [],
       studentList: [], // 查询出的学生信息
       dialogFormAdd: false, //新增学生对话框是否显示；true-显示；false-隐藏
-      schoolList: [], //初始化查询校区
-      schoolOptions: [], // 校区下拉选
       pageComponents: {
         total: 0, // 查询出的学生总人数
         pageSize: 5, // 分页组件每页显示数量
@@ -163,15 +160,6 @@ export default {
       return ''
     },
     opeanDialogFormAdd(){
-      if(this.schoolOptions.length === 0){
-        for(let i = 0; i < this.schoolList.length; i++ ){
-          let school = { value: '', label: ''}
-          school.value = this.schoolList[i].id
-          school.label = this.schoolList[i].name
-          this.schoolOptions.push(school)
-        }
-      }
-
       this.dialogFormAdd = false;
       this.dialogFormAdd = true;
     },
@@ -182,38 +170,11 @@ export default {
       }
       this.dialogFormAdd = false;
     },
-    querySchoolList(){
-       this.axios({
-        method: 'get',
-        url: 'http://localhost:8090/school/queryAll'
-      }).then((res) => {
-        const data = res.data
-        //查询失败
-        if(data.status !== 1) {
-          return false
-        }
-        // 查询成功
-        this.schoolList = data.data
-
-      }).catch((error) => {
-        const data = error.data
-        this.$message({showClose: true, message: data.msg,type: 'error'})
-        return false
-      })
-    },
     queryCurrentPage(currentPage){
       this.queryStudentList(currentPage,this.pageComponents.pageSize)
     },
     opeanDialogFormUpdate(row){
       this.studentFormUpdate = row
-      if(this.schoolOptions.length === 0){
-        for(let i = 0; i < this.schoolList.length; i++ ){
-          let school = { value: '', label: ''}
-          school.value = this.schoolList[i].id
-          school.label = this.schoolList[i].name
-          this.schoolOptions.push(school)
-        }
-      }
       this.dialogFormUpdate = false
       this.dialogFormUpdate = true
     },
@@ -245,7 +206,8 @@ export default {
     }
   },
   mounted() {
-    this.querySchoolList()
+    this.genderOptions = this.$store.state.genderOptions
+    this.statusOptions = this.$store.state.statusOptions
   }
 }
 </script>

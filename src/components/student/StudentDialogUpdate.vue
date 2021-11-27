@@ -106,7 +106,7 @@
 <script>
 export default {
   name: 'StudentDialogUpdate',
-  props: ['genderOptions','statusOptions','schoolOptions','studentForm'],
+  props: ['studentForm'],
   data(){
     return {
       studentFormUpdate: {
@@ -123,7 +123,9 @@ export default {
       },
       passwordsecond: '', // 再次输入密码
       updateFlag: false, // 判断是否进行了信息变更
-
+      genderOptions: [], // 查询条件
+      statusOptions: [],
+      schoolOptions: [],
       // 校验学生信息
       updateRules: {
         name: this.formRules.name,
@@ -224,6 +226,11 @@ export default {
       },
       immediate: true // 代表第一次就执行；不加则第一次进入修改信息页面带不出数据
     }
+  },
+  mounted() {
+    this.schoolOptions = this.$store.state.schoolOptions
+    this.genderOptions = this.$store.state.genderOptions
+    this.statusOptions = this.$store.state.statusOptions
   }
 }
 </script>

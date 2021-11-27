@@ -122,7 +122,7 @@
 <script>
 export default {
   name: 'StudentDialogAdd',
-  props: ['dialogFormVisible','genderOptions','statusOptions','schoolOptions'],
+  props: ['dialogFormVisible'],
   data(){
     return {
       studentFormAdd: {
@@ -138,7 +138,9 @@ export default {
         homeaddress: ''
       },
       passwordsecond: '', // 再次输入密码
-
+      genderOptions: [], // 查询条件
+      statusOptions: [],
+      schoolOptions: [],
       // 校验添加的学生信息
       addRules: {
         name: this.formRules.name,
@@ -205,6 +207,11 @@ export default {
     changeDialogFormVisible(addFlag){
       this.$emit("changeDialogFormAdd",addFlag)
     }
+  },
+  mounted() {
+    this.schoolOptions = this.$store.state.schoolOptions
+    this.genderOptions = this.$store.state.genderOptions
+    this.statusOptions = this.$store.state.statusOptions
   }
 }
 </script>
