@@ -104,6 +104,8 @@
 </template>
 
 <script>
+import {getUpdateFlag} from '@/assets/js/toolUtil.js'
+
 export default {
   name: 'StudentDialogUpdate',
   props: ['studentForm'],
@@ -122,7 +124,6 @@ export default {
         homeaddress: ''
       },
       passwordsecond: '', // 再次输入密码
-      updateFlag: false, // 判断是否进行了信息变更
       genderOptions: [], // 查询条件
       statusOptions: [],
       schoolOptions: [],
@@ -145,11 +146,9 @@ export default {
   methods: {
     // 添加学生
     updateStudent(){
-      // 0、先判断是否页面信息是否更改过
-      this.getUpdateFlag(this.studentForm,this.studentFormUpdate)
-      // 没更改，直接阻断提示
-      if(!this.updateFlag){
-        this.$message({showClose: true, message: '未修改学生信息', type: 'error'})
+      // 0、先判断是否页面信息是否更改过，没更改则直接阻断提示
+      if(!getUpdateFlag(this.oneUpdate,this.formUpdate)){
+        this.$message({showClose: true, message: '未修改学生信息，不需要更新', type: 'error'})
         return false
       }
       // 1、校验
@@ -161,52 +160,17 @@ export default {
         }
 
         // 2、校验成功，发送ajax请求
-        this.axios({
-          method: 'post',
-          url: 'http://localhost:8090/student/update',
-          data: {
-            id: this.studentFormUpdate.id,
-            name: this.studentFormUpdate.name,
-            nickname: this.studentFormUpdate.nickname,
-            idcard: this.studentFormUpdate.idcard,
-            gender: this.studentFormUpdate.gender,
-            birthday: this.studentFormUpdate.birthday,
-            phone: this.studentFormUpdate.phone,
-            status: this.studentFormUpdate.status,
-            schoolid: this.studentFormUpdate.schoolid,
-            homeaddress: this.studentFormUpdate.homeaddress,
-            updatedPerson: this.studentFormUpdate.updatedPerson
-          }
-        }).then((res) => {
-          const data = res.data
-           // 3、添加学生失败
-          if(data.status !== 1) {
-            this.$message({showClose: true, message: data.msg,type: 'error'})
-            return false
-          }
-
-          // 4、添加学生成功
+        this.postRequest('/student/update',this.studentFormUpdate).then( responsevo => {
+          // 2.1、添加学生成功
           this.$message({showClose: true, message: data.msg,type: 'success'})
-          // 5、关闭添加卡片，更新标志置为true
+          // 2.2、关闭添加卡片，更新标志置为true
           this.changeDialogFormVisible(true);
-
-        }).catch((error) => {
-          this.$message({showClose: true, message: "服务器错误，请重试或联系管理员", type: 'error'})
         })
-
       })
     },
     // 关闭添加学生对话框
     changeDialogFormVisible(updateFlag){
       this.$emit("changeDialogFormUpdate",updateFlag)
-    },
-    getUpdateFlag(oldForm,newForm){
-      for(let key in oldForm){
-        if(oldForm[key] != newForm[key]){
-          this.updateFlag = true
-          break
-        }
-      }
     }
   },
   watch: {

@@ -161,7 +161,7 @@ export default {
     // 添加学生
     addStudent(){
       // 1、校验
-      this.$refs.studentFormAdd.validate((valid) => {
+      this.$refs.studentFormAdd.validate( valid => {
         // 校验失败，则阻断提示
         if (!valid) {
           this.$message({showClose: true, message: '请按照要求，重新输入!', type: 'error'})
@@ -169,38 +169,11 @@ export default {
         }
 
         // 2、校验成功，发送ajax请求
-        this.axios({
-          method: 'post',
-          url: 'http://localhost:8090/student/add',
-          data: {
-            name: this.studentFormAdd.name,
-            nickname: this.studentFormAdd.nickname,
-            idcard: this.studentFormAdd.idcard,
-            gender: this.studentFormAdd.gender,
-            birthday: this.studentFormAdd.birthday,
-            phone: this.studentFormAdd.phone,
-            status: this.studentFormAdd.status,
-            schoolid: this.studentFormAdd.schoolid,
-            password: this.studentFormAdd.password,
-            homeaddress: this.studentFormAdd.homeaddress,
-            updatedPerson: "Tea666" // 待调整
-          }
-        }).then((res) => {
-          const data = res.data
-           // 3、添加学生失败
-          if(data.status !== 1) {
-            this.$message({showClose: true, message: data.msg,type: 'error'})
-            return false
-          }
-
-          // 4、添加学生成功
+        this.postRequest('/student/add',this.studentFormAdd).then( responsevo => {
+          // 2.1、添加学生成功
           this.$message({showClose: true, message: data.msg,type: 'success'})
           this.changeDialogFormVisible(true);
-
-        }).catch((error) => {
-         this.$message({showClose: true, message: "服务器错误，请重试或联系管理员", type: 'error'})
         })
-
       })
     },
     // 关闭添加学生对话框
