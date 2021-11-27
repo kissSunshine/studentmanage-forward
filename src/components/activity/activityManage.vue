@@ -59,8 +59,8 @@
       <!-- 行：1 -->
       <el-row :gutter="30">
         <el-col :span="elColSpan" v-for="activity in activityListFirstRow" :key="activity.id">
-          <el-card :body-style="{ padding: '0px' }" @click="opeanDialogUpdate">
-            <img src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png" class="image">
+          <el-card :body-style="{ padding: '0px' }" >
+            <img src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png" class="image" @click="opeanDialogUpdate(activity.id)">
             <div style="padding: 14px;">
               <span>{{activity.name}}</span>
               <div class="bottom clearfix">
@@ -75,7 +75,7 @@
       <el-row :gutter="30" style="margin-top: 20px;">
         <el-col :span="elColSpan" v-for="activity in activityListSecondRow" :key="activity.id">
           <el-card :body-style="{ padding: '0px' }" @click="opeanDialogUpdate">
-            <img src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png" class="image">
+            <img src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png" class="image" @click="opeanDialogUpdate(activity.id)">
             <div style="padding: 14px;">
               <span>{{activity.name}}</span>
               <div class="bottom clearfix">
@@ -94,16 +94,24 @@
       </ActivityDialogAdd>
     </el-dialog>
 
+    <!-- 点击新增，弹出对话框填写活动信息 -->
+    <el-dialog :visible.sync="showFlagDialogUpdate" width="80%" :show-close="false" :close-on-press-escape="false" top="0">
+      <ActivityDialogUpdate @closeDialogUpdate="closeDialogUpdate" :oneUpdate="oneUpdate">
+      </ActivityDialogUpdate>
+    </el-dialog>
+
   </el-card>
 </template>
 
 <script>
 import ActivityDialogAdd from '@/components/activity/ActivityDialogAdd.vue'
+import ActivityDialogUpdate from '@/components/activity/ActivityDialogUpdate.vue'
 
 export default {
   name: 'ActivityManage',
   components: {
     ActivityDialogAdd,
+    ActivityDialogUpdate
   },
   data(){
     return {
@@ -122,6 +130,7 @@ export default {
       },
       showDialogFormAdd: false, // 是否展示添加活动卡片  true-展示；false-隐藏
       showFlagDialogUpdate: false, //修改活动对话框是否显示；true-显示；false-隐藏
+      oneUpdate: {}
     }
   },
   computed: {
@@ -179,8 +188,13 @@ export default {
       this.showDialogFormAdd = false
     },
     // 点击活动卡片，显示详细信息，并可以更新
-    opeanDialogUpdate(){
-
+    opeanDialogUpdate(activityid){
+      this.oneUpdate = this.activityList.find( item => item.id == activityid)
+      this.showFlagDialogUpdate = false
+      this.showFlagDialogUpdate = true
+    },
+    closeDialogUpdate(){
+      this.showFlagDialogUpdate = false
     }
   },
   mounted(){
