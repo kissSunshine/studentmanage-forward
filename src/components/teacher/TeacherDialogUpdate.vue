@@ -185,7 +185,7 @@ export default {
       this.getUpdateFlag(this.oneUpdate,this.formUpdate)
       // 没更改，直接阻断提示
       if(!this.updateFlag){
-        this.$message({showClose: true, message: '未修改教师信息', type: 'error'})
+        this.$message({showClose: true, message: '未修改教师信息，不需要更新', type: 'error'})
         return false
       }
       // 1、校验
@@ -197,40 +197,11 @@ export default {
         }
       })
       // 2、校验成功，发送ajax请求
-      this.axios({
-        method: 'post',
-        url: 'http://localhost:8090/teacher/update',
-        data: {
-          id: this.formUpdate.id,
-          name: this.formUpdate.name,
-          nickname: this.formUpdate.nickname,
-          idcard: this.formUpdate.idcard,
-          gender: this.formUpdate.gender,
-          birthday: this.formUpdate.birthday,
-          phone: this.formUpdate.phone,
-          status: this.formUpdate.status,
-          schoolid: this.formUpdate.schoolid,
-          department: this.formUpdate.department,
-          position: this.formUpdate.position,
-          subject: this.formUpdate.subject,
-          homeaddress: this.formUpdate.homeaddress,
-          updatedPerson: this.formUpdate.updatedPerson
-        }
-      }).then((res) => {
-        const data = res.data
-         // 3、添加教师失败
-        if(data.status !== 1) {
-          this.$message({showClose: true, message: data.msg,type: 'error'})
-          return false
-        }
-
+      this.postRequest('/teacher/update',this.formUpdate).then( responsevo => {
         // 4、添加教师成功
-        this.$message({showClose: true, message: data.msg,type: 'success'})
+        this.$message({showClose: true, message: responsevo.msg,type: 'success'})
         // 5、关闭添加卡片，更新标志置为true
         this.closeDialogUpdate(true);
-
-      }).catch((error) => {
-        this.$message({showClose: true, message: "服务器错误，请重试或联系管理员", type: 'error'})
       })
     },
     // 关闭添加教师对话框
@@ -239,6 +210,8 @@ export default {
     },
     getUpdateFlag(oldForm,newForm){
       for(let key in oldForm){
+        // 当需要对比的对象有一个属性不是同时拥有的就跳过不比较
+        if(typeof(oldForm[key]) == 'undefined' || typeof(newForm[key]) == 'undefined'){continue}
         if(oldForm[key] != newForm[key]){
           this.updateFlag = true
           break

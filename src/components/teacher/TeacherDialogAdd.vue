@@ -201,41 +201,11 @@ export default {
           return false
         }
       })
-
       // 2、校验成功，发送ajax请求
-      this.axios({
-        method: 'post',
-        url: 'http://localhost:8090/teacher/add',
-        data: {
-          name: this.formAdd.name,
-          nickname: this.formAdd.nickname,
-          idcard: this.formAdd.idcard,
-          gender: this.formAdd.gender,
-          birthday: this.formAdd.birthday,
-          phone: this.formAdd.phone,
-          status: this.formAdd.status,
-          schoolid: this.formAdd.schoolid,
-          department: this.formAdd.department,
-          position: this.formAdd.position,
-          subject: this.formAdd.subject,
-          password: this.formAdd.password,
-          homeaddress: this.formAdd.homeaddress,
-          updatedPerson: "Tea666" // 待调整
-        }
-      }).then((res) => {
-        const data = res.data
-         // 3、添加教师失败
-        if(data.status !== 1) {
-          this.$message({showClose: true, message: data.msg,type: 'error'})
-          return false
-        }
-
+      this.postRequest('/teacher/add',this.formAdd).then( responsevo => {
         // 4、添加教师成功
-        this.$message({showClose: true, message: data.msg,type: 'success'})
+        this.$message({showClose: true, message: responsevo.msg,type: 'success'})
         this.closeDialogAdd(true);
-
-      }).catch((error) => {
-       this.$message({showClose: true, message: "服务器错误，请重试或联系管理员", type: 'error'})
       })
     },
     // 关闭添加教师对话框
