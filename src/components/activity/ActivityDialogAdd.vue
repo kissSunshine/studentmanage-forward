@@ -108,7 +108,6 @@ import ActivityTeacherDrawerAdd from './ActivityTeacherDrawerAdd.vue'
 
 export default {
   name: 'ActivityDialogAdd',
-  props: ['statusOptions'],
   components: {
     ActivityTeacherDrawerAdd
   },
@@ -162,6 +161,7 @@ export default {
       activityRealAddress: [],
       // 活动校区及对应的老师
       activityRealTeacher: [],
+      statusOptions: [],
       // 校验添加的学生信息
       addRules: {
         name: this.formRules.name,
@@ -373,6 +373,7 @@ export default {
   },
   mounted(){
     this.getSchool()
+    this.statusOptions = this.$store.state.activityStatusOptions
   }
 }
 </script>

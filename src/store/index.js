@@ -11,6 +11,8 @@ const state = {
   genderOptions: [{ value: 0, label: '女' }, { value: 1, label: '男' }],
   // 下拉选项：人员状态
   statusOptions: [{ value: 0, label: '离校' }, { value: 1, label: '在校' }],
+  // 下拉选项：活动状态
+  activityStatusOptions: [{ value: 0, label: '未开始' }, { value: 1, label: '活动中' }, { value: 2, label: '已结束' }],
   // 下拉选项：校区
   schoolOptions: [],
   // 下拉选项：部门

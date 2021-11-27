@@ -102,7 +102,7 @@
 
     <!-- 点击新增，弹出对话框填写活动信息 -->
     <el-dialog :visible.sync="showDialogFormAdd" width="80%" :show-close="false" :close-on-press-escape="false" :top="0">
-      <ActivityDialogAdd @changeDialogFormAdd="closeDialogFormAdd" :statusOptions="statusOptions">
+      <ActivityDialogAdd @changeDialogFormAdd="closeDialogFormAdd">
       </ActivityDialogAdd>
     </el-dialog>
 
@@ -125,7 +125,7 @@ export default {
         startDateTime: '',
         endDateTime: ''
       },
-      statusOptions: [{ value: 0, label: '未开始' }, { value: 1, label: '活动中' }, { value: 2, label: '已结束' }],
+      statusOptions: [],
       defaultDateTime: {}, // 默认开始日期时间为当前时间
       activityList: [], // 查询出的活动列表
       pageComponents: {
@@ -203,6 +203,7 @@ export default {
   },
   mounted(){
     this.getDefaultDateTime()
+    this.statusOptions = this.$store.state.activityStatusOptions
   }
 }
 </script>
