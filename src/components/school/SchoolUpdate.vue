@@ -70,6 +70,12 @@
                         <el-button @click="closeUpdatePage">取 消</el-button>
                     </el-form-item>
                 </el-col>
+                <el-col :span="8">
+                    <el-form-item label="">
+                        <!-- 直接关闭新增卡片，新增标志就是false -->
+                        <el-button type="error" @click="deleteOne">删 除</el-button>
+                    </el-form-item>
+                </el-col>
             </el-row>
 
         </el-form>
@@ -126,6 +132,20 @@
             },
             closeUpdatePage(){
                 this.$emit("closeUpdatePage")
+            },
+            deleteOne(){
+                this.$confirm('此操作将永久删除该校区, 是否继续？', '警告', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'error'
+                }).then(() => {
+                    this.postRequest('/school/delete',this.formUpdate).then( responsevo => {
+                        if(!responsevo){ return }
+                        this.$store.commit('getSchoolList',true)
+                    })
+                }).catch(() => {
+                    this.$message({ type: 'info', message: '已取消' });
+                });
             }
         },
         watch: {

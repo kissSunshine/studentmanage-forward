@@ -107,9 +107,9 @@ const mutations = {
         })
     },
     // 6、获取校区信息
-    getSchoolList(state) {
+    getSchoolList(state,queryFlag) {
         // 已经有值，直接返回
-        if (state.schoolList != '') {
+        if (!queryFlag && state.schoolList != '') {
             return
         }
         // 没有值，请求后端
