@@ -22,7 +22,9 @@ const state = {
     // 下拉选项：学科
     subjectOptions: [],
     // 校区信息
-    schoolList: []
+    schoolList: [],
+    // 当前日期，格式：yyyy-mm-dd
+    currentDate: ''
 }
 // 接收组件中dispatch触发的方法，如：this.$store.dispatch('handlerAdd', value)
 const actions = {
@@ -120,6 +122,9 @@ const mutations = {
                 state.schoolList.push(one)
             });
         })
+    },
+    getCurrentDate(state){
+        state.currentDate = new Date().toLocaleDateString().replace(new RegExp("/", "gm"), "-");
     }
 }
 // 导出，供main.js使用

@@ -19,7 +19,7 @@
         
         <!-- 新增校区页面 -->
         <el-dialog :visible.sync="showFlagAdd" width="80%" :show-close="false" :close-on-press-escape="false" >
-            <SchoolAdd @closeAddPage="closeAddPage"></SchoolAdd>
+            <SchoolAdd :schoolmasterOptions="schoolmasterOptions" @closeAddPage="closeAddPage"></SchoolAdd>
         </el-dialog>
     </div>
 </template>
@@ -35,7 +35,8 @@ export default {
     data(){
         return {
             schoolList: [],//校区列表
-            showFlagAdd: false,//新增校区页面展示标志；true-展示；false-隐藏
+            showFlagAdd: false,//新增校区页面展示标志；true-展示；false-隐藏,
+            schoolmasterOptions: []
         }
     },
     methods:{
@@ -44,13 +45,38 @@ export default {
                 this.$store.commit('getSchoolList')
             }
             this.showFlagAdd = false
+        },
+        getSchoolmasterList(){
+            let queryparams = {
+                position: '01',
+                currentPage: 1,
+                pageSize: 999
+            }
+            this.getRequest('/teacher/query',queryparams).then( responsevo => {
+                if(!responsevo){ return }
+                // 查询成功，封装为下拉选
+                const schoolmasterList = responsevo.data.data
+                for (let i = 0; i < schoolmasterList.length; i++) {
+                    let schoolmaster = {
+                        value: '',
+                        label: ''
+                    }
+                    schoolmaster.value = schoolmasterList[i].id
+                    schoolmaster.label = schoolmasterList[i].name
+                    this.schoolmasterOptions.push(schoolmaster)
+                }
+            })
         }
     },
     mounted() {
         this.schoolList = this.$store.state.schoolList
+        this.getSchoolmasterList()
     }
 }
 </script>
 
 <style>
+    .el-dialog {
+        background-color: #f0f9eb;
+    }
 </style>

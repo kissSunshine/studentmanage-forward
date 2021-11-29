@@ -80,6 +80,7 @@
 <script>
     export default {
         name: 'SchoolAdd',
+        props: ['schoolmasterOptions'],
         data() {
             return {
                 formAdd: {
@@ -90,43 +91,44 @@
                     address: '',
                     schoolmaster: ''
                 },
-                schoolmasterOptions: [],
+                // 校验添加的校区信息
+                addRules: {
+                    name: this.formRules.name,
+                    birthday: this.formRules.birthday,
+                    phone: this.formRules.phone,
+                    telephone: this.formRules.telephone,
+                    address: this.formRules.schoolAddress,
+                    schoolmaster: [{required: true, message: '请选择校长', trigger: 'blur'}]
+                },
             }
         },
         methods: {
             // 添加活动
             addOne() {
                 // 1、校验
-                this.$refs.formAdd.validate((valid) => {
+                this.$refs.formAdd.validate( valid => {
                     // 校验失败，则阻断提示
                     if (!valid) {
-                        this.$message({
-                            showClose: true,
-                            message: '请按照要求，重新输入!',
-                            type: 'error'
-                        })
+                        this.$message({ showClose: true, message: '请按照要求，重新输入!', type: 'error'})
                         return false
                     }
-                })
-
-                this.postRequest('/activity/add', addParams).then(responsevo => {
-                    // 4、添加活动成功
-                    this.$message({
-                        showClose: true,
-                        message: responsevo.msg,
-                        type: 'success'
+                    
+                    this.postRequest('/school/add', this.formAdd).then(responsevo => {
+                        if(!responsevo){  return  }
+                        
+                        // 添加活动成功
+                        this.$message({ showClose: true, message: responsevo.msg, type: 'success'})
+                        this.closeAddPage(true);
                     })
-                    this.changeDialogFormVisible(true);
-                })
+                })  
             },
             // 关闭添加活动对话框
             closeAddPage(addFlag) {
                 this.$emit("closeAddPage", addFlag)
-            },
-            // 获取当前时间，格式为  yyyy-mm-dd
-            getDefaultDateTime() {
-                this.currentDate = new Date().toLocaleDateString().replace(new RegExp("/", "gm"), "-");
-            },
+            }
+        },
+        mounted() {
+            this.formAdd.birthday = this.$store.state.currentDate
         }
     }
 </script>
@@ -134,9 +136,6 @@
 <style scoped="scoped">
     .el-card {
         margin-bottom: 30px;
-    }
-
-    .el-card>>>.el-drawer {
-        background-color: #f0f9eb;
+        background-color: #d6d6d6;
     }
 </style>

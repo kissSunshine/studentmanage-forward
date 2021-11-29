@@ -37,6 +37,14 @@ var discountRule = (rule, value, callback) => {
     }
     callback()
 };
+var birthdayRule = (rule, value, callback) => {
+    
+    callback()
+};
+var telephoneRule = (rule, value, callback) => {
+    
+    callback()
+};
 // 4、基本规则
 const formRules = {
     name: [
@@ -72,7 +80,17 @@ const formRules = {
         { required: true, message: '请填写费用', trigger: 'blur' },
         { validator: costRule, trigger: 'blur' }, // 自定义规则
     ],
-    discount: [{ validator: discountRule, trigger: 'blur' }]
+    discount: [{ validator: discountRule, trigger: 'blur' }],
+    birthday: [
+        { required: true, message: '请选择建校日期时间', trigger: 'blur' },
+        { validator: birthdayRule, trigger: 'blur'},
+    ],
+    telephone: [
+        { validator: telephoneRule, trigger: 'blur'}
+    ],
+    schoolAddress: [
+        { required: true, message: '请填写校区地址', trigger: 'blur' }
+    ]
 }
 
 export {formRules}
