@@ -21,22 +21,31 @@
         <el-dialog :visible.sync="showFlagAdd" width="80%" :show-close="false" :close-on-press-escape="false" >
             <SchoolAdd :schoolmasterOptions="schoolmasterOptions" @closeAddPage="closeAddPage"></SchoolAdd>
         </el-dialog>
+        
+        <!-- 修改校区页面 -->
+        <el-dialog :visible.sync="showFlagUpdate" width="80%" :show-close="false" :close-on-press-escape="false" >
+            <SchoolUpdate :schoolmasterOptions="schoolmasterOptions" :oneUpdate="oneUpdate" @closeUpdatePage="showFlagUpdate = false"></SchoolUpdate>
+        </el-dialog>
     </div>
 </template>
 
 <script>
 import SchoolAdd from './SchoolAdd.vue'    
+import SchoolUpdate from './SchoolUpdate.vue'    
     
 export default {
     name: 'schoolManage',
     components: {
-        SchoolAdd
+        SchoolAdd,
+        SchoolUpdate
     },
     data(){
         return {
             schoolList: [],//校区列表
-            showFlagAdd: false,//新增校区页面展示标志；true-展示；false-隐藏,
-            schoolmasterOptions: []
+            showFlagAdd: false,//新增校区页面展示标志；true-展示；false-隐藏
+            showFlagUpdate: false,//修改校区页面展示标志；true-展示；false-隐藏
+            schoolmasterOptions: [],
+            oneUpdate: {},//待修改的校区信息
         }
     },
     methods:{
@@ -74,6 +83,11 @@ export default {
                     this.schoolmasterOptions.push(schoolmaster)
                 }
             })
+        },
+        opeanUpdate(id){
+            this.oneUpdate = this.schoolList.find( item => item.id == id)
+            this.showFlagUpdate = false,
+            this.showFlagUpdate = true
         }
     },
     mounted() {
