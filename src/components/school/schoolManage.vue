@@ -19,14 +19,19 @@
         
         <!-- 新增校区页面 -->
         <el-dialog :visible.sync="showFlagAdd" width="80%" :show-close="false" :close-on-press-escape="false" >
-        
+            <SchoolAdd @closeAddPage="closeAddPage"></SchoolAdd>
         </el-dialog>
     </div>
 </template>
 
 <script>
+import SchoolAdd from './SchoolAdd.vue'    
+    
 export default {
     name: 'schoolManage',
+    components: {
+        SchoolAdd
+    },
     data(){
         return {
             schoolList: [],//校区列表
@@ -34,7 +39,12 @@ export default {
         }
     },
     methods:{
-        
+        closeAddPage(addFlag){
+            if(addFlag){
+                this.$store.commit('getSchoolList')
+            }
+            this.showFlagAdd = false
+        }
     },
     mounted() {
         this.schoolList = this.$store.state.schoolList

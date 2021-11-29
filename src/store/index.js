@@ -20,7 +20,9 @@ const state = {
     // 下拉选项：职位
     positionOptions: [],
     // 下拉选项：学科
-    subjectOptions: []
+    subjectOptions: [],
+    // 校区信息
+    schoolList: []
 }
 // 接收组件中dispatch触发的方法，如：this.$store.dispatch('handlerAdd', value)
 const actions = {
