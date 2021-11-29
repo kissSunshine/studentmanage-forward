@@ -42,7 +42,15 @@ export default {
     methods:{
         closeAddPage(addFlag){
             if(addFlag){
-                this.$store.commit('getSchoolList')
+                this.getRequest('/school/queryAll', '').then(responsevo => {
+                    if (!responsevo) {
+                        return []
+                    }
+                    this.schoolList = []
+                    responsevo.data.forEach(one => {
+                        this.schoolList.push(one)
+                    });
+                })
             }
             this.showFlagAdd = false
         },

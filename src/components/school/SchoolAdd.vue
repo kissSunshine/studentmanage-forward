@@ -89,7 +89,8 @@
                     phone: '',
                     telephone: '',
                     address: '',
-                    schoolmaster: ''
+                    schoolmaster: '',
+                    updatedPerson: '大熊'
                 },
                 // 校验添加的校区信息
                 addRules: {
