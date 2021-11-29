@@ -193,7 +193,11 @@ export default {
       this.showFlagDialogUpdate = false
       this.showFlagDialogUpdate = true
     },
-    closeDialogUpdate(){
+    closeDialogUpdate(updateFlag){
+      // 如果删除了活动，需要重新查询
+      if(updateFlag){
+        this.queryActivityList(1,this.pageComponents.pageSize)
+      }
       this.showFlagDialogUpdate = false
     }
   },

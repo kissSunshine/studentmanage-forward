@@ -91,6 +91,12 @@
                     <el-button @click="closeDialogUpdate(false)">取 消</el-button>
                 </el-form-item>
             </el-col>
+            <el-col :span="8">
+                <el-form-item label="">
+                    <!-- 直接关闭修改卡片，修改标志就是false -->
+                    <el-button @click="deleteActivity">删 除</el-button>
+                </el-form-item>
+            </el-col>
         </el-row>
 
         </el-form>
@@ -356,6 +362,14 @@ export default {
                 this.$refs.schoolTable.toggleRowSelection(row,selectedFlag)
             })
         },
+        // 删除活动
+        deleteActivity(){
+            this.postRequest('/activity/delete',{id:this.formUpdate.id}).then( responsevo => {
+                if(!responsevo){return}
+
+                this.closeDialogUpdate(true)
+            })
+        }
     },
     watch: {
         oneUpdate: {
