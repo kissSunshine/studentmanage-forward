@@ -61,7 +61,7 @@
             <el-row :gutter="20">
                 <el-col :span="8">
                     <el-form-item label="">
-                        <el-button type="primary" @click="updateOne">添 加</el-button>
+                        <el-button type="primary" @click="updateOne">修 改</el-button>
                     </el-form-item>
                 </el-col>
                 <el-col :span="8">

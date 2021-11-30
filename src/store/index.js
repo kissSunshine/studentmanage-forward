@@ -112,7 +112,7 @@ const mutations = {
         if (!queryFlag && state.schoolList.length != 0) {
             return
         }
-        
+        state.schoolList.splice(0,state.schoolList.length)
         // 没有值，请求后端
         getRequest('/school/queryAll', '').then(responsevo => {
             if (!responsevo) {
