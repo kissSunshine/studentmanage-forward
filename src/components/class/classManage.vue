@@ -9,7 +9,7 @@
                     <!-- 列：1 -->
                     <el-col :span="6">
                         <el-form-item label="校区">
-                            <el-select v-model="formAdd.schoolid" clearable placeholder="请选择">
+                            <el-select v-model="classForm.schoolid" clearable placeholder="请选择">
                                 <el-option v-for="item in schoolOptions" :key="item.value" :label="item.label" :value="item.value"/>
                             </el-select>
                         </el-form-item>
@@ -17,9 +17,22 @@
                     <!-- 列：2 -->
                     <el-col :span="6">
                         <el-form-item label="年级">
-                            <el-select v-model="formAdd.grade" clearable placeholder="请选择">
+                            <el-select v-model="classForm.grade" clearable placeholder="请选择">
                                 <el-option v-for="item in  gradeOptions" :key="item.value" :label="item.label" :value="item.value"/>
                             </el-select>
+                        </el-form-item>
+                    </el-col>
+                    <!-- 列：3 -->
+                    <el-col :span="3">
+                        <el-form-item>
+                            <!-- 查询按钮默认都查询第1页 -->
+                            <el-button type="primary" @click="queryClassList(1,pageComponents.pageSize)">查询</el-button>
+                        </el-form-item>
+                    </el-col>
+                    <!-- 列：4 -->
+                    <el-col :span="3">
+                        <el-form-item>
+                            <el-button type="success" @click="openAddPage">新增</el-button>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -28,15 +41,30 @@
 
         <!-- 结果展示区 -->
         <div>
-            <el-table :data="queryResultList" style="width: 100%" :row-class-name="tableRowClassName">
+            <el-table :data="resultList" style="width: 100%" :row-class-name="tableRowClassName">
                 <el-table-column prop="schoolName" label="校区" />
                 <el-table-column prop="gradeName" label="年级" />
                 <el-table-column prop="yuwen" label="语文" />
                 <el-table-column prop="math" label="数学" />
                 <el-table-column prop="english" label="英语" />
-                <el-table-column label="操作">
+                <el-table-column label="操作" width="260">
                     <template slot-scope="scope">
-                        
+                        <!-- 更新 -->
+                        <el-tooltip effect="dark" content="更新班级" placement="top">
+                            <el-button size="mini" type="warning" icon="el-icon-edit" @click="openClassUpdatePage(scope.row)"></el-button>
+                        </el-tooltip>
+                        <!-- 删除 -->
+                        <el-tooltip effect="dark" content="删除班级" placement="top">
+                            <el-button size="mini" type="danger" icon="el-icon-delete" @click="openClassDeletePage(scope.row.id)"></el-button>
+                        </el-tooltip>
+                        <!-- 增删改班级教师 -->
+                        <el-tooltip effect="dark" content="修改教师" placement="top">
+                            <el-button size="mini" type="warning" icon="el-icon-s-custom" @click="openClassTeacherPage(scope.row)"></el-button>
+                        </el-tooltip>
+                        <!-- 增删改班级学生 -->
+                        <el-tooltip effect="dark" content="修改学生" placement="top">
+                            <el-button size="mini" type="warning" icon="el-icon-user" @click="openClassStudentPage(scope.row)"></el-button>
+                        </el-tooltip>
                     </template>
                 </el-table-column>
             </el-table>
@@ -64,6 +92,7 @@
                     schoolid: '',
                     grade: ''
                 },
+                resultList: [],
                 schoolOptions: [], 
                 gradeOptions: [],
                 pageComponents: {
@@ -92,7 +121,7 @@
                 return ''
             },
             queryCurrentPage(currentPage) {
-                this.queryqueryResultList(currentPage, this.pageComponents.pageSize)
+                this.queryClassList(currentPage, this.pageComponents.pageSize)
             },
             deleteStudentConfirm(id) {
                 this.$confirm('此操作将永久删除该班级, 是否继续？', '警告', {
@@ -106,16 +135,37 @@
                 });
             },
             deleteClass(id) {
-                this.postRequest('/student/delete', { id }).then( responsevo => {
+                this.postRequest('/class/delete', { id }).then( responsevo => {
                     if (!responsevo) { return }
                     // 删除成功
                     this.$message({ showClose: true, message: responsevo.msg, type: 'success' })
-                    this.queryqueryResultList(1, this.pageComponents.pageSize)
+                    this.queryClassList(1, this.pageComponents.pageSize)
                 })
+            },
+            // 打开新增页面
+            openAddPage(){
+
+            },
+            // 打开修改页面
+            openUpdatePage(row){
+
+            },
+            // 打开关闭页面
+            openDeletePage(id){
+
+            },
+            // 增删改班级教师
+            openClassTeacherPage(row){
+
+            },
+            // 增删改班级学生
+            openClassStudentPage(){
+
             }
         },
         mounted() {
             this.schoolOptions = this.$store.state.schoolOptions
+            this.gradeOptions = this.$store.state.gradeOptions
         }
     }
 </script>
