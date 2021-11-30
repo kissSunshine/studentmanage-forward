@@ -40,7 +40,7 @@ const mutations = {
     // 2、获取下拉选项：校区
     getSchoolOptions(state) {
         // 已经有值，直接返回
-        if (state.schoolOptions != '') {
+        if (state.schoolOptions.length != 0) {
             return
         }
         // 没有值，请求后端
@@ -63,7 +63,7 @@ const mutations = {
     },
     // 3、获取下拉选项：部门
     getDepartmentOptions(state) {
-        if (state.departmentOptions != '') {
+        if (state.departmentOptions.length != 0) {
             return
         }
         getRequest('/enum/department', '').then(responsevo => {
@@ -78,7 +78,7 @@ const mutations = {
     },
     // 4、获取下拉选项：职位
     getPositionOptions(state) {
-        if (state.positionOptions != '') {
+        if (state.positionOptions.length != 0) {
             return
         }
         getRequest('/enum/position', '').then(responsevo => {
@@ -93,7 +93,7 @@ const mutations = {
     },
     // 5、获取下拉选项：学科
     getSubjectOptions(state) {
-        if (state.subjectOptions != '') {
+        if (state.subjectOptions.length != 0) {
             return
         }
         getRequest('/enum/subject', '').then(responsevo => {
@@ -109,15 +109,15 @@ const mutations = {
     // 6、获取校区信息
     getSchoolList(state,queryFlag) {
         // 已经有值，直接返回
-        if (!queryFlag && state.schoolList != '') {
+        if (!queryFlag && state.schoolList.length != 0) {
             return
         }
+        
         // 没有值，请求后端
         getRequest('/school/queryAll', '').then(responsevo => {
             if (!responsevo) {
                 return []
             }
-            
             responsevo.data.forEach(one => {
                 state.schoolList.push(one)
             });

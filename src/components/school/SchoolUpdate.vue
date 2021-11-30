@@ -73,7 +73,7 @@
                 <el-col :span="8">
                     <el-form-item label="">
                         <!-- 直接关闭新增卡片，新增标志就是false -->
-                        <el-button type="error" @click="deleteOne">删 除</el-button>
+                        <el-button type="danger" @click="deleteOne">删 除</el-button>
                     </el-form-item>
                 </el-col>
             </el-row>
@@ -142,6 +142,8 @@
                     this.postRequest('/school/delete',this.formUpdate).then( responsevo => {
                         if(!responsevo){ return }
                         this.$store.commit('getSchoolList',true)
+                        this.closeUpdatePage()
+                        this.$message({ type: 'success', message: responsevo.msg });
                     })
                 }).catch(() => {
                     this.$message({ type: 'info', message: '已取消' });

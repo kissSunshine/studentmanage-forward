@@ -119,9 +119,12 @@
                         
                         // 添加成功
                         this.$message({ showClose: true, message: responsevo.msg, type: 'success'})
-                        this.$emit("closeAddPage", true)
+                        this.closeAddPage(true)
                     })
                 })  
+            },
+            closeAddPage(addFlag){
+                this.$emit("closeAddPage", addFlag)
             }
         },
         mounted() {

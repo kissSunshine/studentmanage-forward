@@ -88,7 +88,7 @@ export default {
   },
   mounted(){
     // 请求校区信息、校区下拉、部门下拉、职位下拉、学科下拉存放于vuex
-    this.$store.commit('getSchoolList')
+    this.$store.commit('getSchoolList',false)
     this.$store.commit('getSchoolOptions')
     this.$store.commit('getDepartmentOptions')
     this.$store.commit('getPositionOptions')

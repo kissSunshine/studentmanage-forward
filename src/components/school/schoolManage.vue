@@ -24,7 +24,7 @@
         
         <!-- 修改校区页面 -->
         <el-dialog :visible.sync="showFlagUpdate" width="80%" :show-close="false" :close-on-press-escape="false" >
-            <SchoolUpdate :schoolmasterOptions="schoolmasterOptions" :oneUpdate="oneUpdate" @closeUpdatePage="showFlagUpdate = false"></SchoolUpdate>
+            <SchoolUpdate :schoolmasterOptions="schoolmasterOptions" :oneUpdate="oneUpdate" @closeUpdatePage="closeUpdatePage"></SchoolUpdate>
         </el-dialog>
     </div>
 </template>
@@ -88,6 +88,10 @@ export default {
             this.oneUpdate = this.schoolList.find( item => item.id == id)
             this.showFlagUpdate = false,
             this.showFlagUpdate = true
+        },
+        closeUpdatePage(){
+            this.schoolList = this.$store.state.schoolList
+            this.showFlagUpdate = false
         }
     },
     mounted() {
