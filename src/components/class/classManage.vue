@@ -103,12 +103,20 @@
         },
         methods: {
             queryClassList(currentPage, pageSize) {
-                this.getRequest('/class/query', this.classForm).then(responsevo => {
+                // 拼装请求参数
+                let queryParams = {
+                  schoolid: this.classForm.schoolid,
+                  grade: this.classForm.grade,
+                  currentPage,
+                  pageSize
+                }
+                
+                this.getRequest('/classes/query', queryParams).then(responsevo => {
                     if (!responsevo) { return } // 查询失败
                     const pageVo = responsevo.data
 
                     // 查询成功
-                    this.queryResultList = pageVo.data
+                    this.resultList = pageVo.data
                     this.pageComponents.total = pageVo.total
                 })
             },

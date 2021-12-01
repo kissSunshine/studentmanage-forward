@@ -5,7 +5,7 @@ import { Message } from 'element-ui';
 axios.interceptors.response.use(success => {
     if(success.status && success.status == 200){
         const data = success.data
-        if (data.status !== 1) {
+        if (data.status !== "1") {
             Message.error({ showClose: true, message: data.msg})
             return false
         }
