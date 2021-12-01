@@ -94,6 +94,7 @@ export default {
     this.$store.commit('getPositionOptions')
     this.$store.commit('getSubjectOptions')
     this.$store.commit('getCurrentDate') //当前日期
+    this.$store.commit('getClassmasterOptions') //当前日期
   }
 }
 

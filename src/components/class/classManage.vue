@@ -75,16 +75,22 @@
             </el-pagination>
         </div>
 
+         <!-- 点击新增，弹出对话框填写学生信息 -->
+        <el-dialog :visible.sync="showFlagAddPage" width="80%" :show-close="false" :close-on-press-escape="false" >
+            <ClassAdd >
+            </ClassAdd>
+        </el-dialog>
+
     </el-card>
 </template>
 
 <script>
-  
+    import ClassAdd from '@/components/class/ClassAdd.vue' 
 
     export default {
         name: 'studentManage',
         components: {
-           
+           ClassAdd,
         },
         data() {
             return {
@@ -95,6 +101,7 @@
                 resultList: [],
                 schoolOptions: [], 
                 gradeOptions: [],
+                showFlagAddPage: false,
                 pageComponents: {
                     total: 0, // 查询出的学生总人数
                     pageSize: 5, // 分页组件每页显示数量

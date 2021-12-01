@@ -27,7 +27,9 @@ const state = {
     // 校区信息
     schoolList: [],
     // 当前日期，格式：yyyy-mm-dd
-    currentDate: ''
+    currentDate: '',
+    // // 下拉选项：班主任
+    classmasterOptions: []
 }
 // 接收组件中dispatch触发的方法，如：this.$store.dispatch('handlerAdd', value)
 const actions = {
@@ -128,6 +130,30 @@ const mutations = {
     },
     getCurrentDate(state){
         state.currentDate = new Date().toLocaleDateString().replace(new RegExp("/", "gm"), "-");
+    },
+    getClassmasterOptions(state){
+        if (state.classmasterOptions.length != 0){
+            return
+        }
+
+        let queryparams = {
+            position: "13"
+        }
+        getRequest("/teacher/queryByParams",queryparams).then( responsevo => {
+            if (!responsevo) {
+                return []
+            }
+            const teacherVoList = responsevo.data.data
+            for (let i = 0; i < teacherVoList.length; i++) {
+                let master = {
+                    value: '',
+                    label: ''
+                }
+                master.value = teacherVoList[i].id
+                master.label = teacherVoList[i].nickname
+                state.classmasterOptions.push(master)
+            }
+        })
     }
 }
 // 导出，供main.js使用
