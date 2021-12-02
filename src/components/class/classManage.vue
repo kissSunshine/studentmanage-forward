@@ -42,8 +42,9 @@
         <!-- 结果展示区 -->
         <div>
             <el-table :data="resultList" style="width: 100%" :row-class-name="tableRowClassName">
-                <el-table-column prop="schoolName" label="校区" />
-                <el-table-column prop="gradeName" label="年级" />
+                <el-table-column prop="schoolid" label="校区" :formatter="getTableSchoolname"/>
+                <el-table-column prop="gradeName" label="年级" :formatter="getTableGradeName"/>
+                <el-table-column prop="name" label="班级"/>
                 <el-table-column prop="yuwen" label="语文" />
                 <el-table-column prop="math" label="数学" />
                 <el-table-column prop="english" label="英语" />
@@ -178,6 +179,15 @@
             // 增删改班级学生
             openClassStudentPage(){
 
+            },
+            // 获取表格中校区名称
+            getTableSchoolname(row){
+                const one = this.schoolOptions.find( item => item.value == row.schoolid)
+                return one.label
+            },
+            // 获取表格中班级名称
+            getTableGradeName(row){
+                return this.gradeOptions.find( item => item.value == row.grade).label
             }
         },
         mounted() {
