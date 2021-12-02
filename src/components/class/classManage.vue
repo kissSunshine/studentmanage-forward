@@ -76,10 +76,15 @@
             </el-pagination>
         </div>
 
-         <!-- 点击新增，弹出对话框填写学生信息 -->
+        <!-- 点击新增，弹出对话框填写学生信息 -->
         <el-dialog :visible.sync="showFlagAddPage" width="80%" :show-close="false" :close-on-press-escape="false" >
-            <ClassAdd @closeAddPage="closeAddPage">
+            <ClassAdd @closeClassAddPage="closeClassAddPage">
             </ClassAdd>
+        </el-dialog>
+        <!-- 点击修改，弹出对话框填写学生信息 -->
+        <el-dialog :visible.sync="showFlagUpdatePage" width="80%" :show-close="false" :close-on-press-escape="false" >
+            <ClassUpdate @closeClassUpdatePage="closeClassUpdatePage" :oneUpdate="oneUpdate">
+            </ClassUpdate>
         </el-dialog>
 
     </el-card>
@@ -87,11 +92,13 @@
 
 <script>
     import ClassAdd from '@/components/class/ClassAdd.vue' 
+    import ClassUpdate from '@/components/class/ClassUpdate.vue'
 
     export default {
         name: 'studentManage',
         components: {
            ClassAdd,
+           ClassUpdate
         },
         data() {
             return {
@@ -103,6 +110,8 @@
                 schoolOptions: [], 
                 gradeOptions: [],
                 showFlagAddPage: false,
+                showFlagUpdatePage: false,
+                oneUpdate: {},//需要更新的班级原信息
                 pageComponents: {
                     total: 0, // 查询出的学生总人数
                     pageSize: 5, // 分页组件每页显示数量
@@ -158,17 +167,25 @@
                 })
             },
             // 关闭增加页面
-            closeAddPage(addFlag){
+            closeClassAddPage(addFlag){
                 if(addFlag){
                     this.queryClassList(1,this.pageComponents.pageSize)
                 }
                 this.showFlagAddPage = false
             },
-            // 打开修改页面
-            openUpdatePage(row){
-
+            openClassUpdatePage(row){
+                this.oneUpdate = row
+                this.showFlagUpdatePage = false
+                this.showFlagUpdatePage =true
             },
-            // 打开关闭页面
+            // 关闭修改页面
+            closeClassUpdatePage(updateFlag){
+                if(updateFlag){
+                    this.queryClassList(1,this.pageComponents.pageSize)
+                }
+                this.showFlagUpdatePage = false
+            },
+            // 打开删除页面
             openDeletePage(id){
 
             },
@@ -182,8 +199,7 @@
             },
             // 获取表格中校区名称
             getTableSchoolname(row){
-                const one = this.schoolOptions.find( item => item.value == row.schoolid)
-                return one.label
+                return this.schoolOptions.find( item => item.value == row.schoolid).label
             },
             // 获取表格中班级名称
             getTableGradeName(row){
