@@ -200,12 +200,13 @@ export default {
           this.$message({showClose: true, message: '请按照要求，重新输入!', type: 'error'})
           return false
         }
-      })
-      // 2、校验成功，发送ajax请求
-      this.postRequest('/teacher/add',this.formAdd).then( responsevo => {
-        // 4、添加教师成功
-        this.$message({showClose: true, message: responsevo.msg,type: 'success'})
-        this.closeDialogAdd(true);
+      
+        // 2、校验成功，发送ajax请求
+        this.postRequest('/teacher/add',this.formAdd).then( responsevo => {
+          // 4、添加教师成功
+          this.$message({showClose: true, message: responsevo.msg,type: 'success'})
+          this.closeDialogAdd(true);
+        })
       })
     },
     // 关闭添加教师对话框
