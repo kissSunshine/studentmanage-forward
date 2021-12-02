@@ -32,7 +32,7 @@
                     <!-- 列：4 -->
                     <el-col :span="3">
                         <el-form-item>
-                            <el-button type="success" @click="openAddPage">新增</el-button>
+                            <el-button type="success" @click="showFlagAddPage = false;showFlagAddPage = true">新增</el-button>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -77,7 +77,7 @@
 
          <!-- 点击新增，弹出对话框填写学生信息 -->
         <el-dialog :visible.sync="showFlagAddPage" width="80%" :show-close="false" :close-on-press-escape="false" >
-            <ClassAdd >
+            <ClassAdd @closeAddPage="closeAddPage">
             </ClassAdd>
         </el-dialog>
 
@@ -121,7 +121,6 @@
                 this.getRequest('/classes/query', queryParams).then(responsevo => {
                     if (!responsevo) { return } // 查询失败
                     const pageVo = responsevo.data
-
                     // 查询成功
                     this.resultList = pageVo.data
                     this.pageComponents.total = pageVo.total
@@ -157,9 +156,12 @@
                     this.queryClassList(1, this.pageComponents.pageSize)
                 })
             },
-            // 打开新增页面
-            openAddPage(){
-
+            // 关闭增加页面
+            closeAddPage(addFlag){
+                if(addFlag){
+                    this.queryClassList(1,this.pageComponents.pageSize)
+                }
+                this.showFlagAddPage = false
             },
             // 打开修改页面
             openUpdatePage(row){

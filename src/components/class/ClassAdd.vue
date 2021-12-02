@@ -40,13 +40,13 @@
                 <!-- 列：1 -->
                 <el-col :span="8">
                     <el-form-item label="名称" prop="name">
-                        <el-input v-model="formAdd.name" autocomplete="off" placeholder=""></el-input>
+                        <el-input v-model="formAdd.name" autocomplete="off"></el-input>
                     </el-form-item>
                 </el-col>
                 <!-- 列：2 -->
                 <el-col :span="8">
                     <el-form-item label="开班日期" prop="birthday">
-                        <el-input v-model="formAdd.birthday" autocomplete="off" :placeholder="currentDate"></el-input>
+                        <el-input v-model="formAdd.birthday" autocomplete="off" :disabled="true"></el-input>
                     </el-form-item>
                 </el-col>
             </el-row>
@@ -77,26 +77,23 @@
         data() {
             return {
                 formAdd: {
+                    schoolid: '',
+                    grade: '',
+                    classmaster: '',
                     name: '',
-                    birthday: '',
-                    phone: '',
-                    telephone: '',
-                    address: '',
-                    schoolmaster: '',
+                    birthday: this.$store.state.currentDate,
                     updatedPerson: '大熊'
                 },
                 schoolOptions: [],
                 gradeOptions: [],
                 classmasterOptions: [],
-                currentDate: '',
                 // 校验添加的班级信息
                 addRules: {
-                    name: this.formRules.name,
-                    birthday: this.formRules.birthday,
-                    phone: this.formRules.phone,
-                    telephone: this.formRules.telephone,
-                    address: this.formRules.schoolAddress,
-                    schoolmaster: [{required: true, message: '请选择校长', trigger: 'blur'}]
+                    schoolid: this.formRules.schoolid,
+                    grade: [{required: true, message: '请选择年级', trigger: 'blur'}],
+                    classmaster: [{required: true, message: '请选择校长', trigger: 'blur'}],
+                    name: [{required: true, message: '请填写班级名称', trigger: 'blur'}],
+                    birthday: [{required: true, message: '请填写开班日期', trigger: 'blur'}],
                 },
             }
         },
@@ -111,7 +108,7 @@
                         return false
                     }
                     
-                    this.postRequest('/school/add', this.formAdd).then(responsevo => {
+                    this.postRequest('/classes/add', this.formAdd).then(responsevo => {
                         if(!responsevo){  return  }
                         
                         // 添加成功
@@ -127,8 +124,8 @@
         mounted() {
             this.schoolOptions = this.$store.state.schoolOptions
             this.gradeOptions = this.$store.state.gradeOptions
+            this.$store.commit('getClassmasterOptions') //班主任
             this.classmasterOptions = this.$store.state.classmasterOptions
-            this.currentDate = this.$store.state.currentDate
         }
     }
 </script>

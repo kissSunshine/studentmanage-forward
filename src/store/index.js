@@ -131,6 +131,7 @@ const mutations = {
     getCurrentDate(state){
         state.currentDate = new Date().toLocaleDateString().replace(new RegExp("/", "gm"), "-");
     },
+    // 获取班主任信息
     getClassmasterOptions(state){
         if (state.classmasterOptions.length != 0){
             return
@@ -143,7 +144,7 @@ const mutations = {
             if (!responsevo) {
                 return []
             }
-            const teacherVoList = responsevo.data.data
+            const teacherVoList = responsevo.data
             for (let i = 0; i < teacherVoList.length; i++) {
                 let master = {
                     value: '',
