@@ -56,7 +56,7 @@
                         </el-tooltip>
                         <!-- 删除 -->
                         <el-tooltip effect="dark" content="删除班级" placement="top">
-                            <el-button size="mini" type="danger" icon="el-icon-delete" @click="openClassDeletePage(scope.row.id)"></el-button>
+                            <el-button size="mini" type="danger" icon="el-icon-delete" @click="deleteClass(scope.row.id)"></el-button>
                         </el-tooltip>
                         <!-- 增删改班级教师 -->
                         <el-tooltip effect="dark" content="修改教师" placement="top">
@@ -159,7 +159,7 @@
                 });
             },
             deleteClass(id) {
-                this.postRequest('/class/delete', { id }).then( responsevo => {
+                this.postRequest('/class/deleteClass', { id }).then( responsevo => {
                     if (!responsevo) { return }
                     // 删除成功
                     this.$message({ showClose: true, message: responsevo.msg, type: 'success' })
