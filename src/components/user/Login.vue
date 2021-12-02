@@ -76,7 +76,7 @@ export default {
           // 如果经过响应拦截器返回了false，则不往下进行业务处理
           if(!responsevo){return}
           // 登录成功
-          sessionStorage.setItem('USER', responsevo.data) // 保存学生对象
+          sessionStorage.setItem('USER', JSON.stringify(responsevo.data)) // 保存学生对象
           this.$router.replace("/main") // 跳转页面
         })
       })

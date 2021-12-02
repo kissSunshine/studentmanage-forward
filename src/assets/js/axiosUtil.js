@@ -16,10 +16,16 @@ axios.interceptors.response.use(success => {
     return
 })
 
+
 // 统一前缀请求
 let baseUrl = 'http://localhost:8090'
 
 export const postRequest = (url,params) =>{
+    // 如果是更新或新增请求，需要添加更新人
+    if (url.search("update") != -1 || url.search("add") != -1){
+        const currentuser = JSON.parse(sessionStorage.getItem("USER"))
+        params.updatedPerson = currentuser.nickname
+    }
     return axios({
         method: 'post',
         url: baseUrl + url,
