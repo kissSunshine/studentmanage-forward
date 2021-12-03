@@ -59,18 +59,14 @@
                             <el-button size="mini" type="danger" icon="el-icon-delete" @click="deleteClass(scope.row.id)"></el-button>
                         </el-tooltip>
                         <!-- 增删改班级教师 -->
-                        <el-tooltip effect="dark" content="修改教师" placement="top">
-                            <el-button size="mini" type="warning" icon="el-icon-s-custom" @click="openClassTeacherPage(scope.row)"></el-button>
-                        </el-tooltip>
-                        <!-- 增删改班级学生 -->
-                        <el-tooltip effect="dark" content="修改学生" placement="top">
-                            <el-button size="mini" type="warning" icon="el-icon-user" @click="openClassStudentPage(scope.row)"></el-button>
+                        <el-tooltip effect="dark" content="修改教师、学生" placement="top">
+                            <el-button size="mini" type="warning" icon="el-icon-s-custom" @click="openClassTASPage(scope.row)"></el-button>
                         </el-tooltip>
                     </template>
                 </el-table-column>
             </el-table>
             <!-- 分页 -->
-            <!-- @current-change:当前页码改变时触发 -->
+            <!-- @current-change:当前页码改变时触发、 -->
             <el-pagination background layout="prev, pager, next" :hide-on-single-page="true"
                 :total="pageComponents.total" :page-size="pageComponents.pageSize" @current-change="queryCurrentPage">
             </el-pagination>
@@ -86,6 +82,11 @@
             <ClassUpdate @closeClassUpdatePage="closeClassUpdatePage" :oneUpdate="oneUpdate">
             </ClassUpdate>
         </el-dialog>
+        <!-- 点击修改，展示班级学生教师修改页面 -->
+        <el-dialog :visible.sync="showFlagClassTASPage" width="80%" :show-close="false" :close-on-press-escape="false" >
+            <ClassTeachersAndStudents @closeClassTASPage="closeClassTASPage">
+            </ClassTeachersAndStudents>
+        </el-dialog>
 
     </el-card>
 </template>
@@ -93,12 +94,14 @@
 <script>
     import ClassAdd from '@/components/class/ClassAdd.vue' 
     import ClassUpdate from '@/components/class/ClassUpdate.vue'
+    import ClassTeachersAndStudents from '@/components/class/ClassTeachersAndStudents.vue'
 
     export default {
         name: 'studentManage',
         components: {
            ClassAdd,
-           ClassUpdate
+           ClassUpdate,
+           ClassTeachersAndStudents
         },
         data() {
             return {
@@ -111,6 +114,7 @@
                 gradeOptions: [],
                 showFlagAddPage: false,
                 showFlagUpdatePage: false,
+                showFlagClassTASPage: false,//展示班级学生教师修改页面标记
                 oneUpdate: {},//需要更新的班级原信息
                 pageComponents: {
                     total: 0, // 查询出的学生总人数
@@ -158,6 +162,7 @@
                     this.$message({ type: 'info', message: '已取消' });
                 });
             },
+            // 删除班级
             deleteClass(id) {
                 this.postRequest('/class/deleteClass', { id }).then( responsevo => {
                     if (!responsevo) { return }
@@ -173,6 +178,7 @@
                 }
                 this.showFlagAddPage = false
             },
+            // 打开修改班级信息页面
             openClassUpdatePage(row){
                 this.oneUpdate = row
                 this.showFlagUpdatePage = false
@@ -185,17 +191,16 @@
                 }
                 this.showFlagUpdatePage = false
             },
-            // 打开删除页面
-            openDeletePage(id){
-
+            // 展示班级学生教师修改页面
+            openClassTASPage(row){
+                this.showFlagClassTASPage = false
+                this.showFlagClassTASPage = true
             },
-            // 增删改班级教师
-            openClassTeacherPage(row){
-
-            },
-            // 增删改班级学生
-            openClassStudentPage(){
-
+            closeClassTASPage(update){
+                if(update){
+                    this.queryCurrentPage(1)
+                }
+                this.showFlagClassTASPage = false
             },
             // 获取表格中校区名称
             getTableSchoolname(row){

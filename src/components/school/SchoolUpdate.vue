@@ -84,6 +84,8 @@
 </template>
 
 <script>
+    import {getUpdateFlag} from '@/assets/js/toolUtil.js'
+    
     export default {
         name: 'SchoolUpdate',
         props: ['schoolmasterOptions','oneUpdate'],
@@ -113,6 +115,12 @@
         methods: {
             // 修改校区信息
             updateOne() {
+                // 0、先判断是否页面信息是否更改过，没更改则直接阻断提示
+                if(!getUpdateFlag(this.oneUpdate,this.formUpdate)){
+                  this.$message({showClose: true, message: '未修改学生信息，不需要更新', type: 'error'})
+                  return false
+                }
+                
                 // 1、校验
                 this.$refs.formUpdate.validate( valid => {
                     // 校验失败，则阻断提示

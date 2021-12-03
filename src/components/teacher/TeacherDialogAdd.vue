@@ -156,7 +156,7 @@ export default {
         name: '',
         nickname: '',
         idcard: '',
-        gender: 1,
+        gender: 0,
         birthday: '',
         phone: '',
         status: 1,
@@ -203,9 +203,10 @@ export default {
       
         // 2、校验成功，发送ajax请求
         this.postRequest('/teacher/add',this.formAdd).then( responsevo => {
-          // 4、添加教师成功
-          this.$message({showClose: true, message: responsevo.msg,type: 'success'})
-          this.closeDialogAdd(true);
+            if(!responsevo){ return }
+            // 4、添加教师成功
+            this.$message({showClose: true, message: responsevo.msg,type: 'success'})
+            this.closeDialogAdd(true);
         })
       })
     },
