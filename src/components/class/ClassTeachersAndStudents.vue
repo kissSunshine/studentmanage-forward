@@ -7,43 +7,30 @@
     
 		<!-- 查询表单 -->
 		<el-form ref="formUpdate" :model="formUpdate" label-width="70px">
-			<!-- 行：1 -->
+			<!-- 行：2 -->
 			<el-row :gutter="20">
-				<!-- 列：1 -->
-				<el-col :span="8">
-					<el-form-item label="语文" prop="yuwen">
-						<el-select v-model="formUpdate.yuwen" clearable placeholder="请选择">
-							<el-option v-for="item in yuwenOptions" :key="item.value" :label="item.label" :value="item.value"/>
-						</el-select>
-					</el-form-item>
-				</el-col>
-				<!-- 列：2 -->
-				<el-col :span="8">
-					<el-form-item label="数学" prop="math">
-						<el-select v-model="formUpdate.math" clearable placeholder="请选择">
-							<el-option v-for="item in mathOptions" :key="item.value" :label="item.label" :value="item.value"/>
-						</el-select>
-					</el-form-item>
-				</el-col>
-				<!-- 列：2 -->
-				<el-col :span="8">
-					<el-form-item label="英语" prop="english">
-						<el-select v-model="formUpdate.english" clearable placeholder="请选择">
-							<el-option v-for="item in englishOptions" :key="item.value" :label="item.label" :value="item.value"/>
-						</el-select>
-					</el-form-item>
-				</el-col>
-				<!-- 列：3 -->
-				<el-col :span="3">
-					<el-form-item>
-						<!-- 查询按钮默认都查询第1页 -->
-						<el-button type="primary" @click="queryList(1,pageComponents.pageSize)">查询</el-button>
+				<el-col :span="24">
+					<el-form-item label="" >
+						<!-- 查询结果展示区 -->
+						<div>
+							<el-table ref="queryResultTable" :data="queryResultList" style="width: 100%" :row-class-name="tableRowClassName" 
+								@select="resultTableSelectedOne" @select-all="resultTableSelectedAll">
+
+								<el-table-column type="selection" width="55"></el-table-column>
+								<el-table-column prop="nickname" label="昵称" />
+								<el-table-column prop="schoolName" label="所在校区" />
+								<el-table-column prop="phone" label="手机" />
+							</el-table>
+							<!-- 分页 -->
+							<!-- @current-change:当前页码改变时触发 -->
+							<el-pagination background layout="prev, pager, next" :hide-on-single-page="true"
+								:total="pageComponents.total" :page-size="pageComponents.pageSize" @current-change="queryCurrentPage">
+							</el-pagination>
+						</div>
 					</el-form-item>
 				</el-col>
 			</el-row>
 			
-			
-		
 			<!-- 添加按钮 -->
 			<el-row :gutter="20">
 				<el-col :span="6">

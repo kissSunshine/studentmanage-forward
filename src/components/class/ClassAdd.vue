@@ -50,6 +50,108 @@
                     </el-form-item>
                 </el-col>
             </el-row>
+
+            <!-- 行：3 -->
+			<el-row :gutter="20">
+				<!-- 列：1 -->
+				<el-col :span="6">
+					<el-form-item label="语文" prop="yuwen">
+						<el-select v-model="formAdd.yuwen" clearable placeholder="请选择">
+							<el-option v-for="item in yuwenOptions" :key="item.value" :label="item.label" :value="item.value"/>
+						</el-select>
+					</el-form-item>
+				</el-col>
+				<!-- 列：2 -->
+				<el-col :span="6">
+					<el-form-item label="日期" prop="yuwenWeek">
+						<el-select v-model="formAdd.yuwenWeek" clearable placeholder="请选择">
+							<el-option v-for="item in weekOptions" :key="item.value" :label="item.label" :value="item.value"/>
+						</el-select>
+					</el-form-item>
+				</el-col>
+				<!-- 列：3 -->
+				<el-col :span="6">
+					<el-form-item label="开始" prop="yuwenStartTime">
+                        <el-select v-model="formAdd.yuwenStartTime" clearable placeholder="请选择" @change="setEndTime(formAdd.yuwenStartTime,'yuwen')">
+							<el-option v-for="item in startTimeOptions" :key="item.value" :value="item.value"/>
+						</el-select>
+					</el-form-item>
+				</el-col>
+                <!-- 列：4 -->
+				<el-col :span="6">
+					<el-form-item label="结束" prop="yuwenEndTime">
+                        <el-input v-model="formAdd.yuwenEndTime" :disabled="true"></el-input>
+					</el-form-item>
+				</el-col>
+			</el-row>
+
+            <!-- 行：4 -->
+			<el-row :gutter="20">
+				<!-- 列：1 -->
+				<el-col :span="6">
+					<el-form-item label="数学" prop="math">
+						<el-select v-model="formAdd.math" clearable placeholder="请选择">
+							<el-option v-for="item in mathOptions" :key="item.value" :label="item.label" :value="item.value"/>
+						</el-select>
+					</el-form-item>
+				</el-col>
+				<!-- 列：2 -->
+				<el-col :span="6">
+					<el-form-item label="日期" prop="mathWeek">
+						<el-select v-model="formAdd.mathWeek" clearable placeholder="请选择">
+							<el-option v-for="item in weekOptions" :key="item.value" :value="item.value"/>
+						</el-select>
+					</el-form-item>
+				</el-col>
+				<!-- 列：3 -->
+				<el-col :span="6">
+					<el-form-item label="开始" prop="mathStartTime">
+                        <el-select v-model="formAdd.mathStartTime" clearable placeholder="请选择" @change="setEndTime(formAdd.mathStartTime,'math')">
+							<el-option v-for="item in startTimeOptions" :key="item.value" :value="item.value"/>
+						</el-select>
+					</el-form-item>
+				</el-col>
+                <!-- 列：4 -->
+				<el-col :span="6">
+					<el-form-item label="结束" prop="mathEndTime">
+                        <el-input v-model="formAdd.mathEndTime" :disabled="true"></el-input>
+					</el-form-item>
+				</el-col>
+			</el-row>
+
+            <!-- 行：5 -->
+			<el-row :gutter="20">
+				<!-- 列：1 -->
+				<el-col :span="6">
+					<el-form-item label="英语" prop="english">
+						<el-select v-model="formAdd.english" clearable placeholder="请选择">
+							<el-option v-for="item in englishOptions" :key="item.value" :value="item.value"/>
+						</el-select>
+					</el-form-item>
+				</el-col>
+				<!-- 列：2 -->
+				<el-col :span="6">
+					<el-form-item label="日期" prop="englishWeek">
+						<el-select v-model="formAdd.englishWeek" clearable placeholder="请选择">
+							<el-option v-for="item in weekOptions" :key="item.value" :label="item.label" :value="item.value"/>
+						</el-select>
+					</el-form-item>
+				</el-col>
+				<!-- 列：3 -->
+				<el-col :span="6">
+					<el-form-item label="开始" prop="englishStartTime">
+                        <el-select v-model="formAdd.englishStartTime" clearable placeholder="请选择" @change="setEndTime(formAdd.englishStartTime,'english')">
+							<el-option v-for="item in startTimeOptions" :key="item.value" :value="item.value"/>
+						</el-select>
+					</el-form-item>
+				</el-col>
+                <!-- 列：4 -->
+				<el-col :span="6">
+					<el-form-item label="结束" prop="englishEndTime">
+                        <el-input v-model="formAdd.englishEndTime" :disabled="true"></el-input>
+					</el-form-item>
+				</el-col>
+			</el-row>
             
             <!-- 添加按钮 -->
             <el-row :gutter="20">
@@ -82,11 +184,27 @@
                     classmaster: '',
                     name: '',
                     birthday: this.$store.state.currentDate,
+                    yuwen: '',
+                    yuwenWeek: '',
+                    yuwenStartTime: '',
+                    yuwenEndTime: '',
+                    math: '',
+                    mathWeek: '',
+                    mathStartTime: '',
+                    mathEndTime: '',
+                    english: '',
+                    englishWeek: '',
+                    englishStartTime: '',
+                    englishEndTime: '',
                     updatedPerson: '大熊'
                 },
                 schoolOptions: [],
                 gradeOptions: [],
                 classmasterOptions: [],
+                subjectTeachers: [],//三大学科教师
+                weekOptions: [{ value: "1", label: '周一' }, { value: "2", label: '周二' }, { value: "3", label: '周三' },
+                              { value: "4", label: '周四' }, { value: "5", label: '周五' }, { value: "6", label: '周六' }, { value: "7", label: '周日' }],
+                startTimeOptions: [{ value: "08:30"}, { value: "10:30"}, { value: "13:30"}, { value: "15:30"}, { value: "17:30"}],
                 // 校验添加的班级信息
                 addRules: {
                     schoolid: this.formRules.schoolid,
@@ -94,7 +212,21 @@
                     classmaster: [{required: true, message: '请选择校长', trigger: 'blur'}],
                     name: [{required: true, message: '请填写班级名称', trigger: 'blur'}],
                     birthday: [{required: true, message: '请填写开班日期', trigger: 'blur'}],
+                    yuwen: [{required: true, message: '请选择语文教师', trigger: 'blur'}],
+                    math: [{required: true, message: '请选择数学教师', trigger: 'blur'}],
+                    english: [{required: true, message: '请选择英语教师', trigger: 'blur'}],
                 },
+            }
+        },
+        computed: {
+            yuwenOptions(){
+                return this.getOneSubjectOptions("语文")
+            },
+            mathOptions(){
+                return this.getOneSubjectOptions("数学")
+            },
+            englishOptions(){
+                return this.getOneSubjectOptions("英语")
             }
         },
         methods: {
@@ -119,12 +251,54 @@
             },
             closeAddPage(addFlag){
                 this.$emit("closeClassAddPage", addFlag)
+            },
+            // 获取三大学科老师
+            getSubjectTeachers(){
+                this.getRequest('/teacher/querySubjectTeacher').then( responsevo => {
+                    if(!responsevo){ return }
+                    this.subjectTeachers = responsevo.data
+                })
+            },
+            // 获取学科教师下拉选
+            getOneSubjectOptions(subject){
+                const subjectOptions = this.$store.state.subjectOptions.find( item => item.label == subject)
+                const options = []
+                this.subjectTeachers.forEach( item => {
+                    if(item[2] == subjectOptions.value){
+                        let option = {
+                            value: '',
+                            label: ''
+                        }
+                        option.value = item[0]
+                        option.label = item[1]
+                        options.push(option)
+                    }
+                })
+                
+                return options
+            },
+            // 选择开始时间后自动计算结束时间
+            setEndTime(startTime,subject){
+                let endTime = ""
+                switch(startTime){
+                    case "08:30": endTime = "10:30";break
+                    case "10:30": endTime = "12:30";break
+                    case "13:30": endTime = "15:30";break
+                    case "15:30": endTime = "17:30";break
+                    case "17:30": endTime = "19:30";break
+                }
+                switch(subject){
+                    case "yuwen": this.formAdd.yuwenEndTime = endTime;break
+                    case "math": this.formAdd.mathEndTime = endTime;break
+                    case "english": this.formAdd.englishEndTime = endTime;break
+                }
             }
         },
         mounted() {
             this.schoolOptions = this.$store.state.schoolOptions
             this.gradeOptions = this.$store.state.gradeOptions
             this.$store.commit('getClassmasterOptions') //班主任
+            this.getSubjectTeachers()
             this.classmasterOptions = this.$store.state.classmasterOptions
         }
     }
