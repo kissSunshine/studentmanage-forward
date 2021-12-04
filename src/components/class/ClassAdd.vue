@@ -176,6 +176,7 @@
 <script>
     export default {
         name: 'ClassAdd',
+        props: ['yuwenOptions','mathOptions','englishOptions'],
         data() {
             return {
                 formAdd: {
@@ -201,7 +202,6 @@
                 schoolOptions: [],
                 gradeOptions: [],
                 classmasterOptions: [],
-                subjectTeachers: [],//三大学科教师
                 weekOptions: [{ value: "1", label: '周一' }, { value: "2", label: '周二' }, { value: "3", label: '周三' },
                               { value: "4", label: '周四' }, { value: "5", label: '周五' }, { value: "6", label: '周六' }, { value: "7", label: '周日' }],
                 startTimeOptions: [{ value: "08:30"}, { value: "10:30"}, { value: "13:30"}, { value: "15:30"}, { value: "17:30"}],
@@ -227,17 +227,6 @@
                 },
             }
         },
-        computed: {
-            yuwenOptions(){
-                return this.getOneSubjectOptions("语文")
-            },
-            mathOptions(){
-                return this.getOneSubjectOptions("数学")
-            },
-            englishOptions(){
-                return this.getOneSubjectOptions("英语")
-            }
-        },
         methods: {
             // 添加班级
             addOne() {
@@ -261,31 +250,6 @@
             closeAddPage(addFlag){
                 this.$emit("closeClassAddPage", addFlag)
             },
-            // 获取三大学科老师
-            getSubjectTeachers(){
-                this.getRequest('/teacher/querySubjectTeacher').then( responsevo => {
-                    if(!responsevo){ return }
-                    this.subjectTeachers = responsevo.data
-                })
-            },
-            // 获取学科教师下拉选
-            getOneSubjectOptions(subject){
-                const subjectOptions = this.$store.state.subjectOptions.find( item => item.label == subject)
-                const options = []
-                this.subjectTeachers.forEach( item => {
-                    if(item[2] == subjectOptions.value){
-                        let option = {
-                            value: '',
-                            label: ''
-                        }
-                        option.value = item[0]
-                        option.label = item[1]
-                        options.push(option)
-                    }
-                })
-                
-                return options
-            },
             // 选择开始时间后自动计算结束时间
             setEndTime(startTime,subject){
                 let endTime = ""
@@ -306,8 +270,6 @@
         mounted() {
             this.schoolOptions = this.$store.state.schoolOptions
             this.gradeOptions = this.$store.state.gradeOptions
-            this.$store.commit('getClassmasterOptions') //班主任
-            this.getSubjectTeachers()
             this.classmasterOptions = this.$store.state.classmasterOptions
         }
     }

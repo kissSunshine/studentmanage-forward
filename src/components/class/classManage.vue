@@ -44,10 +44,12 @@
             <el-table :data="resultList" style="width: 100%" :row-class-name="tableRowClassName">
                 <el-table-column prop="schoolid" label="校区" :formatter="getTableSchoolname"/>
                 <el-table-column prop="gradeName" label="年级" :formatter="getTableGradeName"/>
-                <el-table-column prop="name" label="班级"/>
-                <el-table-column prop="yuwen" label="语文" />
-                <el-table-column prop="math" label="数学" />
-                <el-table-column prop="english" label="英语" />
+                <el-table-column prop="name" label="班名"/>
+                <el-table-column prop="classmaster" label="班主任" :formatter="getTableClassmasterName"/>
+                <el-table-column prop="yuwen" label="语文" :formatter="getTableYuwenName"/>
+                <el-table-column prop="math" label="数学" :formatter="getTableMathName"/>
+                <el-table-column prop="english" label="英语" :formatter="getTableEnglishName"/>
+                <el-table-column prop="studentCount" label="学生（人）"/>
                 <el-table-column label="操作" width="260">
                     <template slot-scope="scope">
                         <!-- 更新 -->
@@ -68,7 +70,7 @@
 
         <!-- 点击新增，弹出对话框填写学生信息 -->
         <el-dialog :visible.sync="showFlagAddPage" width="80%" :show-close="false" :close-on-press-escape="false" >
-            <ClassAdd @closeClassAddPage="closeClassAddPage">
+            <ClassAdd @closeClassAddPage="closeClassAddPage" :yuwenOptions="yuwenOptions" :mathOptions="mathOptions" :englishOptions="englishOptions">
             </ClassAdd>
         </el-dialog>
         <!-- 点击修改，弹出对话框填写学生信息 -->
@@ -110,10 +112,24 @@
                 showFlagUpdatePage: false,
                 showFlagClassTASPage: false,//展示班级学生教师修改页面标记
                 oneUpdate: {},//需要更新的班级原信息
+                classmasterOptions: [],//班主任
+                subjectTeachers: [],//三大学科教师
                 pageComponents: {
                     total: 0, // 查询出的学生总人数
                     pageSize: 5, // 分页组件每页显示数量
                 }
+            }
+        },
+        computed: {
+            yuwenOptions(){
+                debugger
+                return this.getOneSubjectOptions("语文")
+            },
+            mathOptions(){
+                return this.getOneSubjectOptions("数学")
+            },
+            englishOptions(){
+                return this.getOneSubjectOptions("英语")
             }
         },
         methods: {
@@ -196,11 +212,55 @@
             // 获取表格中班级名称
             getTableGradeName(row){
                 return this.gradeOptions.find( item => item.value == row.grade).label
+            },
+            // 获取表格中班主任名字
+            getTableClassmasterName(row){
+                return this.classmasterOptions.find( item => item.value == row.classmaster).label
+            },
+            // 获取三大学科老师
+            getSubjectTeachers(){
+                this.getRequest('/teacher/querySubjectTeacher').then( responsevo => {
+                    if(!responsevo){ return }
+                    this.subjectTeachers = responsevo.data
+                })
+            },
+            // 获取学科教师下拉选
+            getOneSubjectOptions(subject){
+                const subjectOptions = this.$store.state.subjectOptions.find( item => item.label == subject)
+                const options = []
+                this.subjectTeachers.forEach( item => {
+                    if(item[2] == subjectOptions.value){
+                        let option = {
+                            value: '',
+                            label: ''
+                        }
+                        option.value = item[0]
+                        option.label = item[1]
+                        options.push(option)
+                    }
+                })
+                
+                return options
+            },
+            // 获取表格中语文教师名字
+            getTableYuwenName(row){
+                return this.yuwenOptions.find( item => item.value == row.yuwen).label
+            },
+            // 获取表格中数学教师名字
+            getTableMathName(row){
+                return this.mathOptions.find( item => item.value == row.math).label
+            },
+            // 获取表格中英语教师名字
+            getTableEnglishName(row){
+                return this.englishOptions.find( item => item.value == row.english).label
             }
         },
         mounted() {
             this.schoolOptions = this.$store.state.schoolOptions
             this.gradeOptions = this.$store.state.gradeOptions
+            this.$store.commit('getClassmasterOptions') //班主任
+            this.classmasterOptions = this.$store.state.classmasterOptions
+            this.getSubjectTeachers()
         }
     }
 </script>
