@@ -151,25 +151,18 @@
             queryCurrentPage(currentPage) {
                 this.queryClassList(currentPage, this.pageComponents.pageSize)
             },
-            deleteStudentConfirm(id) {
-                this.$confirm('此操作将永久删除该班级, 是否继续？', '警告', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'error'
-                }).then(() => {
-                    this.deleteClass(id)
+            // 删除班级
+            deleteClass(id) {
+                this.$confirm('此操作将永久删除该班级, 是否继续？', '警告', { confirmButtonText: '确定', cancelButtonText: '取消', type: 'error'}).then(() => {
+                   this.postRequest('/classes/deleteClass', { id }).then( responsevo => {
+                        if (!responsevo) { return }
+                        // 删除成功
+                        this.$message({ showClose: true, message: responsevo.msg, type: 'success' })
+                        this.queryClassList(1, this.pageComponents.pageSize)
+                    })
                 }).catch(() => {
                     this.$message({ type: 'info', message: '已取消' });
                 });
-            },
-            // 删除班级
-            deleteClass(id) {
-                this.postRequest('/class/deleteClass', { id }).then( responsevo => {
-                    if (!responsevo) { return }
-                    // 删除成功
-                    this.$message({ showClose: true, message: responsevo.msg, type: 'success' })
-                    this.queryClassList(1, this.pageComponents.pageSize)
-                })
             },
             // 关闭增加页面
             closeClassAddPage(addFlag){

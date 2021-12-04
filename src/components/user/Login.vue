@@ -18,7 +18,7 @@
         </el-form-item>
 
         <el-form-item  prop="password">
-          <el-input type="password" auto-complete="false" v-model="loginForm.password" placeholder="请输入密码"/>
+          <el-input type="password" auto-complete="false" v-model="loginForm.password" placeholder="请输入密码" @keyup.enter.native="login"/>
         </el-form-item>
 
         <el-row :gutter="20">
