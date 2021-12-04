@@ -99,7 +99,7 @@
 				<el-col :span="6">
 					<el-form-item label="日期" prop="mathWeek">
 						<el-select v-model="formAdd.mathWeek" clearable placeholder="请选择">
-							<el-option v-for="item in weekOptions" :key="item.value" :value="item.value"/>
+							<el-option v-for="item in weekOptions" :key="item.value" :label="item.label" :value="item.value"/>
 						</el-select>
 					</el-form-item>
 				</el-col>
@@ -125,7 +125,7 @@
 				<el-col :span="6">
 					<el-form-item label="英语" prop="english">
 						<el-select v-model="formAdd.english" clearable placeholder="请选择">
-							<el-option v-for="item in englishOptions" :key="item.value" :value="item.value"/>
+							<el-option v-for="item in englishOptions" :key="item.value" :label="item.label" :value="item.value"/>
 						</el-select>
 					</el-form-item>
 				</el-col>
@@ -213,8 +213,17 @@
                     name: [{required: true, message: '请填写班级名称', trigger: 'blur'}],
                     birthday: [{required: true, message: '请填写开班日期', trigger: 'blur'}],
                     yuwen: [{required: true, message: '请选择语文教师', trigger: 'blur'}],
+                    yuwenWeek: [{required: true, message: '请选择语文上课日期', trigger: 'blur'}],
+                    yuwenStartTime: [{required: true, message: '请选择语文上课时间', trigger: 'blur'}],
+                    yuwenEndTime: [{required: true, message: '请选择语文上课时间', trigger: 'blur'}],
                     math: [{required: true, message: '请选择数学教师', trigger: 'blur'}],
+                    mathWeek: [{required: true, message: '请选择数学上课日期', trigger: 'blur'}],
+                    mathStartTime: [{required: true, message: '请选择数学上课时间', trigger: 'blur'}],
+                    mathEndTime: [{required: true, message: '请选择数学上课时间', trigger: 'blur'}],
                     english: [{required: true, message: '请选择英语教师', trigger: 'blur'}],
+                    englishWeek: [{required: true, message: '请选择英语上课日期', trigger: 'blur'}],
+                    englishStartTime: [{required: true, message: '请选择英语上课时间', trigger: 'blur'}],
+                    englishEndTime: [{required: true, message: '请选择英语上课时间', trigger: 'blur'}],
                 },
             }
         },

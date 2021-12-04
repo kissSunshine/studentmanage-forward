@@ -51,17 +51,11 @@
                 <el-table-column label="操作" width="260">
                     <template slot-scope="scope">
                         <!-- 更新 -->
-                        <el-tooltip effect="dark" content="更新班级" placement="top">
-                            <el-button size="mini" type="warning" icon="el-icon-edit" @click="openClassUpdatePage(scope.row)"></el-button>
-                        </el-tooltip>
+                        <el-button size="mini" type="warning" icon="el-icon-edit" @click="openClassUpdatePage(scope.row)"></el-button>
                         <!-- 删除 -->
-                        <el-tooltip effect="dark" content="删除班级" placement="top">
-                            <el-button size="mini" type="danger" icon="el-icon-delete" @click="deleteClass(scope.row.id)"></el-button>
-                        </el-tooltip>
+                        <el-button size="mini" type="danger" icon="el-icon-delete" @click="deleteClass(scope.row.id)"></el-button>
                         <!-- 增删改班级教师 -->
-                        <el-tooltip effect="dark" content="修改教师、学生" placement="top">
-                            <el-button size="mini" type="warning" icon="el-icon-s-custom" @click="openClassTASPage(scope.row)"></el-button>
-                        </el-tooltip>
+                        <el-button size="mini" type="warning" icon="el-icon-s-custom" @click="openClassTASPage(scope.row)"></el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -154,7 +148,7 @@
             // 删除班级
             deleteClass(id) {
                 this.$confirm('此操作将永久删除该班级, 是否继续？', '警告', { confirmButtonText: '确定', cancelButtonText: '取消', type: 'error'}).then(() => {
-                   this.postRequest('/classes/deleteClass', { id }).then( responsevo => {
+                   this.postRequest('/classes/delete', { id }).then( responsevo => {
                         if (!responsevo) { return }
                         // 删除成功
                         this.$message({ showClose: true, message: responsevo.msg, type: 'success' })
