@@ -176,7 +176,7 @@
 <script>
     export default {
         name: 'ClassAdd',
-        props: ['yuwenOptions','mathOptions','englishOptions'],
+        props: ['yuwenOptions','mathOptions','englishOptions','weekOptions','startTimeOptions'],
         data() {
             return {
                 formAdd: {
@@ -202,9 +202,6 @@
                 schoolOptions: [],
                 gradeOptions: [],
                 classmasterOptions: [],
-                weekOptions: [{ value: "1", label: '周一' }, { value: "2", label: '周二' }, { value: "3", label: '周三' },
-                              { value: "4", label: '周四' }, { value: "5", label: '周五' }, { value: "6", label: '周六' }, { value: "7", label: '周日' }],
-                startTimeOptions: [{ value: "08:30"}, { value: "10:30"}, { value: "13:30"}, { value: "15:30"}, { value: "17:30"}],
                 // 校验添加的班级信息
                 addRules: {
                     schoolid: this.formRules.schoolid,

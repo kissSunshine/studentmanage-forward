@@ -70,12 +70,12 @@
 
         <!-- 点击新增，弹出对话框填写学生信息 -->
         <el-dialog :visible.sync="showFlagAddPage" width="80%" :show-close="false" :close-on-press-escape="false" >
-            <ClassAdd @closeClassAddPage="closeClassAddPage" :yuwenOptions="yuwenOptions" :mathOptions="mathOptions" :englishOptions="englishOptions">
+            <ClassAdd @closeClassAddPage="closeClassAddPage" :yuwenOptions="yuwenOptions" :mathOptions="mathOptions" :englishOptions="englishOptions" :weekOptions="weekOptions" :startTimeOptions="startTimeOptions">
             </ClassAdd>
         </el-dialog>
         <!-- 点击修改，弹出对话框填写学生信息 -->
         <el-dialog :visible.sync="showFlagUpdatePage" width="80%" :show-close="false" :close-on-press-escape="false" >
-            <ClassUpdate @closeClassUpdatePage="closeClassUpdatePage" :oneUpdate="oneUpdate">
+            <ClassUpdate @closeClassUpdatePage="closeClassUpdatePage" :oneUpdate="oneUpdate" :yuwenOptions="yuwenOptions" :mathOptions="mathOptions" :englishOptions="englishOptions" :weekOptions="weekOptions" :startTimeOptions="startTimeOptions">
             </ClassUpdate>
         </el-dialog>
         <!-- 点击修改，展示班级学生教师修改页面 -->
@@ -117,12 +117,14 @@
                 pageComponents: {
                     total: 0, // 查询出的学生总人数
                     pageSize: 5, // 分页组件每页显示数量
-                }
+                },
+                weekOptions: [{ value: "1", label: '周一' }, { value: "2", label: '周二' }, { value: "3", label: '周三' },
+                              { value: "4", label: '周四' }, { value: "5", label: '周五' }, { value: "6", label: '周六' }, { value: "7", label: '周日' }],
+                startTimeOptions: [{ value: "08:30"}, { value: "10:30"}, { value: "13:30"}, { value: "15:30"}, { value: "17:30"}],
             }
         },
         computed: {
             yuwenOptions(){
-                debugger
                 return this.getOneSubjectOptions("语文")
             },
             mathOptions(){

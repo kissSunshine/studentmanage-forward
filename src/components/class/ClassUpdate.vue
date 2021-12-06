@@ -51,6 +51,108 @@
                 </el-col>
             </el-row>
             
+            <!-- 行：3 -->
+            <el-row :gutter="20">
+            	<!-- 列：1 -->
+            	<el-col :span="6">
+            		<el-form-item label="语文" prop="yuwen">
+            			<el-select v-model="formUpdate.yuwen" clearable placeholder="请选择">
+            				<el-option v-for="item in yuwenOptions" :key="item.value" :label="item.label" :value="item.value"/>
+            			</el-select>
+            		</el-form-item>
+            	</el-col>
+            	<!-- 列：2 -->
+            	<el-col :span="6">
+            		<el-form-item label="日期" prop="yuwenWeek">
+            			<el-select v-model="formUpdate.yuwenWeek" clearable placeholder="请选择">
+            				<el-option v-for="item in weekOptions" :key="item.value" :label="item.label" :value="item.value"/>
+            			</el-select>
+            		</el-form-item>
+            	</el-col>
+            	<!-- 列：3 -->
+            	<el-col :span="6">
+            		<el-form-item label="开始" prop="yuwenStartTime">
+                        <el-select v-model="formUpdate.yuwenStartTime" clearable placeholder="请选择" @change="setEndTime(formUpdate.yuwenStartTime,'yuwen')">
+            				<el-option v-for="item in startTimeOptions" :key="item.value" :value="item.value"/>
+            			</el-select>
+            		</el-form-item>
+            	</el-col>
+                <!-- 列：4 -->
+            	<el-col :span="6">
+            		<el-form-item label="结束" prop="yuwenEndTime">
+                        <el-input v-model="formUpdate.yuwenEndTime" :disabled="true"></el-input>
+            		</el-form-item>
+            	</el-col>
+            </el-row>
+            
+            <!-- 行：4 -->
+            <el-row :gutter="20">
+            	<!-- 列：1 -->
+            	<el-col :span="6">
+            		<el-form-item label="数学" prop="math">
+            			<el-select v-model="formUpdate.math" clearable placeholder="请选择">
+            				<el-option v-for="item in mathOptions" :key="item.value" :label="item.label" :value="item.value"/>
+            			</el-select>
+            		</el-form-item>
+            	</el-col>
+            	<!-- 列：2 -->
+            	<el-col :span="6">
+            		<el-form-item label="日期" prop="mathWeek">
+            			<el-select v-model="formUpdate.mathWeek" clearable placeholder="请选择">
+            				<el-option v-for="item in weekOptions" :key="item.value" :label="item.label" :value="item.value"/>
+            			</el-select>
+            		</el-form-item>
+            	</el-col>
+            	<!-- 列：3 -->
+            	<el-col :span="6">
+            		<el-form-item label="开始" prop="mathStartTime">
+                        <el-select v-model="formUpdate.mathStartTime" clearable placeholder="请选择" @change="setEndTime(formUpdate.mathStartTime,'math')">
+            				<el-option v-for="item in startTimeOptions" :key="item.value" :value="item.value"/>
+            			</el-select>
+            		</el-form-item>
+            	</el-col>
+                <!-- 列：4 -->
+            	<el-col :span="6">
+            		<el-form-item label="结束" prop="mathEndTime">
+                        <el-input v-model="formUpdate.mathEndTime" :disabled="true"></el-input>
+            		</el-form-item>
+            	</el-col>
+            </el-row>
+            
+            <!-- 行：5 -->
+            <el-row :gutter="20">
+            	<!-- 列：1 -->
+            	<el-col :span="6">
+            		<el-form-item label="英语" prop="english">
+            			<el-select v-model="formUpdate.english" clearable placeholder="请选择">
+            				<el-option v-for="item in englishOptions" :key="item.value" :label="item.label" :value="item.value"/>
+            			</el-select>
+            		</el-form-item>
+            	</el-col>
+            	<!-- 列：2 -->
+            	<el-col :span="6">
+            		<el-form-item label="日期" prop="englishWeek">
+            			<el-select v-model="formUpdate.englishWeek" clearable placeholder="请选择">
+            				<el-option v-for="item in weekOptions" :key="item.value" :label="item.label" :value="item.value"/>
+            			</el-select>
+            		</el-form-item>
+            	</el-col>
+            	<!-- 列：3 -->
+            	<el-col :span="6">
+            		<el-form-item label="开始" prop="englishStartTime">
+                        <el-select v-model="formUpdate.englishStartTime" clearable placeholder="请选择" @change="setEndTime(formUpdate.englishStartTime,'english')">
+            				<el-option v-for="item in startTimeOptions" :key="item.value" :value="item.value"/>
+            			</el-select>
+            		</el-form-item>
+            	</el-col>
+                <!-- 列：4 -->
+            	<el-col :span="6">
+            		<el-form-item label="结束" prop="englishEndTime">
+                        <el-input v-model="formUpdate.englishEndTime" :disabled="true"></el-input>
+            		</el-form-item>
+            	</el-col>
+            </el-row>
+            
             <!-- 修改按钮 -->
             <el-row :gutter="20">
                 <el-col :span="8">
@@ -76,7 +178,7 @@
 
     export default {
         name: 'ClassUpdate',
-        props: ['oneUpdate'],
+        props: ['oneUpdate','yuwenOptions','mathOptions','englishOptions','weekOptions','startTimeOptions'],
         data() {
             return {
                 formUpdate: {
@@ -85,6 +187,18 @@
                     classmaster: '',
                     name: '',
                     birthday: '',
+                    yuwen: '',
+                    yuwenWeek: '',
+                    yuwenStartTime: '',
+                    yuwenEndTime: '',
+                    math: '',
+                    mathWeek: '',
+                    mathStartTime: '',
+                    mathEndTime: '',
+                    english: '',
+                    englishWeek: '',
+                    englishStartTime: '',
+                    englishEndTime: '',
                     updatedPerson: '大熊'
                 },
                 schoolOptions: [],
@@ -97,6 +211,18 @@
                     classmaster: [{required: true, message: '请选择校长', trigger: 'blur'}],
                     name: [{required: true, message: '请填写班级名称', trigger: 'blur'}],
                     birthday: [{required: true, message: '请填写开班日期', trigger: 'blur'}],
+                    yuwen: [{required: true, message: '请选择语文教师', trigger: 'blur'}],
+                    yuwenWeek: [{required: true, message: '请选择语文上课日期', trigger: 'blur'}],
+                    yuwenStartTime: [{required: true, message: '请选择语文上课时间', trigger: 'blur'}],
+                    yuwenEndTime: [{required: true, message: '请选择语文上课时间', trigger: 'blur'}],
+                    math: [{required: true, message: '请选择数学教师', trigger: 'blur'}],
+                    mathWeek: [{required: true, message: '请选择数学上课日期', trigger: 'blur'}],
+                    mathStartTime: [{required: true, message: '请选择数学上课时间', trigger: 'blur'}],
+                    mathEndTime: [{required: true, message: '请选择数学上课时间', trigger: 'blur'}],
+                    english: [{required: true, message: '请选择英语教师', trigger: 'blur'}],
+                    englishWeek: [{required: true, message: '请选择英语上课日期', trigger: 'blur'}],
+                    englishStartTime: [{required: true, message: '请选择英语上课时间', trigger: 'blur'}],
+                    englishEndTime: [{required: true, message: '请选择英语上课时间', trigger: 'blur'}],
                 },
             }
         },
@@ -127,6 +253,22 @@
             },
             closeUpdatePage(updateFlag){
                 this.$emit("closeClassUpdatePage", updateFlag)
+            },
+            // 选择开始时间后自动计算结束时间
+            setEndTime(startTime,subject){
+                let endTime = ""
+                switch(startTime){
+                    case "08:30": endTime = "10:30";break
+                    case "10:30": endTime = "12:30";break
+                    case "13:30": endTime = "15:30";break
+                    case "15:30": endTime = "17:30";break
+                    case "17:30": endTime = "19:30";break
+                }
+                switch(subject){
+                    case "yuwen": this.formUpdate.yuwenEndTime = endTime;break
+                    case "math": this.formUpdate.mathEndTime = endTime;break
+                    case "english": this.formUpdate.englishEndTime = endTime;break
+                }
             }
         },
         watch: {
