@@ -76,7 +76,7 @@
             				<el-option v-for="item in startTimeOptions" :key="item.value" :value="item.value"/>
             			</el-select>
             		</el-form-item>
-            	</el-col>
+            	</el-col>   
                 <!-- 列：4 -->
             	<el-col :span="6">
             		<el-form-item label="结束" prop="yuwenEndTime">
@@ -187,14 +187,17 @@
                     classmaster: '',
                     name: '',
                     birthday: '',
+                    yuwenCRTID: '',
                     yuwen: '',
                     yuwenWeek: '',
                     yuwenStartTime: '',
                     yuwenEndTime: '',
+                    mathCRTID: '',
                     math: '',
                     mathWeek: '',
                     mathStartTime: '',
                     mathEndTime: '',
+                    englishCRTID: '',
                     english: '',
                     englishWeek: '',
                     englishStartTime: '',
