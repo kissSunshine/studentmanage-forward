@@ -2,18 +2,49 @@
     <el-card class="box-card">
       	<!-- 查询条件区 -->
 		<div slot="header">
-			<h3 style="text-align:center">添加教师学生</h3>
+			<h3 style="text-align:center">添加学生</h3>
 		</div>
     
 		<!-- 查询表单 -->
-		<el-form ref="formUpdate" :model="formUpdate" label-width="70px">
+		<el-form ref="formAdd" :model="formAdd" label-width="70px">
+        <!-- 行：1 -->
+            <el-row :gutter="20">
+                <!-- 列：1 -->
+                <el-col :span="6">
+                    <el-form-item label="昵称">
+                        <el-input v-model="formQuery.name"></el-input>
+                    </el-form-item>
+                </el-col>
+                <!-- 列：2 -->
+                <el-col :span="6">
+                    <el-form-item label="昵称">
+                        <el-input v-model="formQuery.nickname"></el-input>
+                    </el-form-item>
+                </el-col>
+                <!-- 列：2 -->
+                <el-col :span="6">
+                    <el-form-item label="活动校区" prop="schoolid">
+                        <el-select v-model="formQuery.schoolid" clearable placeholder="请选择">
+                        <el-option v-for="item in schoolOptions" :key="item.value" :label="item.label" :value="item.value"/>
+                        </el-select>
+                    </el-form-item>
+                </el-col>
+                <!-- 列：3 -->
+                <el-col :span="3">
+                    <el-form-item>
+                        <!-- 查询按钮默认都查询第1页 -->
+                        <el-button type="primary" @click="queryList(1,pageComponents.pageSize)">查询</el-button>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+
 			<!-- 行：2 -->
 			<el-row :gutter="20">
 				<el-col :span="24">
 					<el-form-item label="" >
 						<!-- 查询结果展示区 -->
 						<div>
-							<el-table ref="queryResultTable" :data="queryResultList" style="width: 100%" :row-class-name="tableRowClassName" 
+							<el-table ref="queryResultList" :data="queryResultList" style="width: 100%" :row-class-name="tableRowClassName" 
 								@select="resultTableSelectedOne" @select-all="resultTableSelectedAll">
 
 								<el-table-column type="selection" width="55"></el-table-column>
@@ -35,7 +66,7 @@
 			<el-row :gutter="20">
 				<el-col :span="6">
 					<el-form-item label="">
-						<el-button type="primary" >确 定</el-button>
+						<el-button type="primary" @click="submitData">确 定</el-button>
 					</el-form-item>
 				</el-col>
 				<el-col :span="6">
@@ -55,58 +86,53 @@
         name: 'ClassTeachersAndStudents',
         data() {
             return {
-                formUpdate: {
+                formAdd: {
                     yuwen: '',
                     math: '',
                     english: ''
                 },
-                subjectTeachers: [],
-            }
-        },
-        computed: {
-            yuwenOptions(){
-                return this.getOneSubjectOptions("语文")
-            },
-            mathOptions(){
-                return this.getOneSubjectOptions("数学")
-            },
-            englishOptions(){
-                return this.getOneSubjectOptions("英语")
+                pageComponents: {
+                    total: 0, // 查询出的学生总人数
+                    pageSize: 5, // 分页组件每页显示数量
+                },
+                queryResultList: [],
             }
         },
         methods: {
-            // 获取三大学科老师
-            getSubjectTeachers(){
-                this.getRequest('/teacher/querySubjectTeacher').then( responsevo => {
-                    if(!responsevo){ return }
-                    this.subjectTeachers = responsevo.data
-                })
+            // 单选
+            resultTableSelectedOne(){
+
             },
-            // 获取学科教师下拉选
-            getOneSubjectOptions(subject){
-                const subjectOptions = this.$store.state.subjectOptions.find( item => item.label == subject)
-                const options = []
-                this.subjectTeachers.forEach( item => {
-                    if(item[2] == subjectOptions.value){
-                        let option = {
-                            value: '',
-                            label: ''
-                        }
-                        option.value = item[0]
-                        option.label = item[1]
-                        options.push(option)
-                    }
-                })
-                
-                return options
+            // 全选
+            resultTableSelectedAll(){
+
+            },
+            // 确定
+            submitData(){
+
             },
             // 关闭该页面
             closeClassTASPage(updateFlag){
                 this.$emit('closeClassTASPage',updateFlag)
-            }
+            },
+            queryCurrentPage(){
+
+            },
+            // 
+            getStudentList(){
+
+            },
+            tableRowClassName({ row, rowIndex }) {
+                if ((rowIndex % 5) == 1) {
+                    return 'rowOne'
+                } else if ((rowIndex % 5) == 3) {
+                    return 'rowTwo'
+                }
+                return ''
+            },
         },
         mounted() {
-            this.getSubjectTeachers()
+            
         }
     }
 </script>
