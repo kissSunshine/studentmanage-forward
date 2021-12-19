@@ -25,6 +25,12 @@
               <el-button type="primary" @click="queryStudentList(1,pageComponents.pageSize)">查询</el-button>
             </el-form-item>
           </el-col>
+          <!-- 列：4 -->
+          <el-col :span="3">
+            <el-form-item>
+              <el-button type="success" @click="opeanDialogFormAdd">新增</el-button>
+            </el-form-item>
+          </el-col>
         </el-row>
 
         <!-- 行：2 -->
@@ -48,7 +54,7 @@
           <!-- 列：3 -->
           <el-col :span="3">
             <el-form-item>
-              <el-button type="success" @click="opeanDialogFormAdd">新增</el-button>
+              <el-button type="success" @click="exportStudents">全部导出</el-button>
             </el-form-item>
           </el-col>
         </el-row>
@@ -203,6 +209,9 @@ export default {
         this.$message({showClose: true, message: responsevo.msg, type: 'success'})
         this.queryStudentList(1,this.pageComponents.pageSize)
       })
+    },
+    exportStudents(){
+      this.downloadRequest('/student/export');
     }
   },
   mounted() {

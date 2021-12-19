@@ -18,6 +18,10 @@ import { postRequest, getRequest } from '@/assets/js/axiosUtil.js'
 Vue.prototype.postRequest = postRequest
 Vue.prototype.getRequest = getRequest
 
+// 组件形式使用下载请求
+import { downloadRequest } from './assets/js/download'
+Vue.prototype.downloadRequest = downloadRequest
+
 Vue.use(VueRouter)
 Vue.config.productionTip = false
 Vue.use(ElementUI)
