@@ -57,6 +57,15 @@
               <el-button type="success" @click="exportStudents">全部导出</el-button>
             </el-form-item>
           </el-col>
+          <!-- 列：4 -->
+          <el-col :span="3">
+            <el-form-item>
+              <el-upload class="upload-demo" :action="importUrl" :disabled="importBtnDisable" :show-file-list="false" 
+                :before-upload="beforeUpload" :on-success="importSuccess" :on-error="importError">
+                <el-button type="success" :disabled="importBtnDisable" @click="importStudents">{{importBtnText}}</el-button>
+              </el-upload>
+            </el-form-item>
+          </el-col>
         </el-row>
 
       </el-form>
@@ -133,6 +142,9 @@ export default {
       },
       dialogFormUpdate: false, //修改学生对话框是否显示；true-显示；false-隐藏
       studentFormUpdate: [], // 需要修改的学生信息
+      importBtnText: '批量导入',
+      importBtnDisable: false,
+      importUrl: 'http://localhost:8090/student/import'
     }
   },
   methods: {
@@ -212,6 +224,19 @@ export default {
     },
     exportStudents(){
       this.downloadRequest('/student/export');
+    },
+    beforeUpload(){
+      this.importBtnText = "正在导入"
+      this.importBtnDisable = true
+    },
+    importSuccess(){
+      this.importBtnText = "批量导入"
+      this.importBtnDisable = false
+      this.queryCurrentPage(1)
+    },
+    importError(){
+      this.importBtnText = "批量导入"
+      this.importBtnDisable = false
     }
   },
   mounted() {
